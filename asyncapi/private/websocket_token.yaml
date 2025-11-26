@@ -1,0 +1,104 @@
+asyncapi: 3.0.0
+info:
+  title: WhiteBit WebSocket Token
+  version: 1.0.0
+  description: Obtain a WebSocket authentication token for private API access
+
+servers:
+  production:
+    host: api.whitebit.com
+    protocol: wss
+    description: Production WebSocket server
+
+channels:
+  /ws:
+    address: /ws
+    description: WebSocket token request for authentication
+    messages:
+      websocketTokenRequest:
+        $ref: '#/components/messages/websocketTokenRequest'
+      websocketTokenResponse:
+        $ref: '#/components/messages/websocketTokenResponse'
+
+operations:
+  sendWebsocketTokenRequest:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/websocketTokenRequest'
+
+  receiveWebsocketTokenResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/websocketTokenResponse'
+
+components:
+  messages:
+    websocketTokenRequest:
+      name: WebsocketTokenRequest
+      title: WebSocket Token Request
+      summary: Request authentication token for WebSocket access
+      payload:
+        $ref: '#/components/schemas/WebsocketTokenRequest'
+      examples:
+        - name: tokenRequest
+          summary: Request WebSocket token
+          payload:
+            id: 0
+            method: websocket_token
+            params: []
+
+    websocketTokenResponse:
+      name: WebsocketTokenResponse
+      title: WebSocket Token Response
+      summary: Authentication token for WebSocket private API
+      payload:
+        $ref: '#/components/schemas/WebsocketTokenResponse'
+      examples:
+        - name: tokenResponse
+          summary: Token response
+          payload:
+            id: 0
+            result:
+              token: "example_token_string"
+            error: null
+
+  schemas:
+    WebsocketTokenRequest:
+      type: object
+      required:
+        - id
+        - method
+        - params
+      properties:
+        id:
+          type: integer
+          description: Unique request identifier
+        method:
+          const: websocket_token
+        params:
+          type: array
+          maxItems: 0
+
+    WebsocketTokenResponse:
+      type: object
+      required:
+        - id
+        - result
+        - error
+      properties:
+        id:
+          type: integer
+        result:
+          type: object
+          required:
+            - token
+          properties:
+            token:
+              type: string
+              description: WebSocket authentication token
+        error:
+          type: "null"

@@ -1,0 +1,117 @@
+asyncapi: 3.0.0
+info:
+  title: WhiteBit Margin Balance
+  version: 1.0.0
+  description: Get and subscribe to margin wallet balance updates
+
+servers:
+  production:
+    host: api.whitebit.com
+    protocol: wss
+    description: Production WebSocket server
+
+channels:
+  /ws:
+    address: /ws
+    description: Margin balance operations
+    messages:
+      balanceMarginRequest:
+        $ref: '#/components/messages/balanceMarginRequest'
+      balanceMarginResponse:
+        $ref: '#/components/messages/balanceMarginResponse'
+      balanceMarginSubscribe:
+        $ref: '#/components/messages/balanceMarginSubscribe'
+      balanceMarginSubscribeResponse:
+        $ref: '#/components/messages/balanceMarginSubscribeResponse'
+      balanceMarginUpdate:
+        $ref: '#/components/messages/balanceMarginUpdate'
+      balanceMarginUnsubscribe:
+        $ref: '#/components/messages/balanceMarginUnsubscribe'
+
+operations:
+  sendBalanceMarginRequest:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/balanceMarginRequest'
+
+  receiveBalanceMarginResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/balanceMarginResponse'
+
+  sendBalanceMarginSubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/balanceMarginSubscribe'
+
+  receiveBalanceMarginSubscribeResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/balanceMarginSubscribeResponse'
+
+  receiveBalanceMarginUpdates:
+    action: send
+    description: Receive real-time margin balance updates
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/balanceMarginUpdate'
+
+  sendBalanceMarginUnsubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/balanceMarginUnsubscribe'
+
+components:
+  messages:
+    balanceMarginRequest:
+      name: BalanceMarginRequest
+      title: Balance Margin Query
+      summary: Get current margin wallet balance
+      payload:
+        type: object
+
+    balanceMarginResponse:
+      name: BalanceMarginResponse
+      title: Balance Margin Response
+      summary: Current margin wallet balances
+      payload:
+        type: object
+
+    balanceMarginSubscribe:
+      name: BalanceMarginSubscribe
+      title: Subscribe to Margin Balance
+      summary: Subscribe to margin balance updates
+      payload:
+        type: object
+
+    balanceMarginSubscribeResponse:
+      name: BalanceMarginSubscribeResponse
+      title: Subscribe Response
+      summary: Subscription confirmation
+      payload:
+        type: object
+
+    balanceMarginUpdate:
+      name: BalanceMarginUpdate
+      title: Balance Margin Update
+      summary: Real-time margin balance update
+      payload:
+        type: object
+
+    balanceMarginUnsubscribe:
+      name: BalanceMarginUnsubscribe
+      title: Unsubscribe from Balance Margin
+      summary: Stop receiving margin balance updates
+      payload:
+        type: object

@@ -1,0 +1,85 @@
+asyncapi: 3.0.0
+info:
+  title: WhiteBit Borrows Events
+  version: 1.0.0
+  description: Subscribe to borrows events
+
+servers:
+  production:
+    host: api.whitebit.com
+    protocol: wss
+    description: Production WebSocket server
+
+channels:
+  /ws:
+    address: /ws
+    description: Borrows events operations
+    messages:
+      borrowsEventsSubscribe:
+        $ref: '#/components/messages/borrowsEventsSubscribe'
+      borrowsEventsSubscribeResponse:
+        $ref: '#/components/messages/borrowsEventsSubscribeResponse'
+      borrowsEventsUpdate:
+        $ref: '#/components/messages/borrowsEventsUpdate'
+      borrowsEventsUnsubscribe:
+        $ref: '#/components/messages/borrowsEventsUnsubscribe'
+
+operations:
+  sendBorrowsEventsSubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/borrowsEventsSubscribe'
+
+  receiveBorrowsEventsSubscribeResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/borrowsEventsSubscribeResponse'
+
+  receiveBorrowsEventsUpdates:
+    action: send
+    description: Receive real-time borrows events
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/borrowsEventsUpdate'
+
+  sendBorrowsEventsUnsubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/borrowsEventsUnsubscribe'
+
+components:
+  messages:
+    borrowsEventsSubscribe:
+      name: BorrowsEventsSubscribe
+      title: Subscribe to Borrows Events
+      summary: Subscribe to borrows events
+      payload:
+        type: object
+
+    borrowsEventsSubscribeResponse:
+      name: BorrowsEventsSubscribeResponse
+      title: Subscribe Response
+      summary: Subscription confirmation
+      payload:
+        type: object
+
+    borrowsEventsUpdate:
+      name: BorrowsEventsUpdate
+      title: Borrows Events Update
+      summary: Real-time borrows events
+      payload:
+        type: object
+
+    borrowsEventsUnsubscribe:
+      name: BorrowsEventsUnsubscribe
+      title: Unsubscribe from Borrows Events
+      summary: Stop receiving borrows events
+      payload:
+        type: object

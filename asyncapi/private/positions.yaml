@@ -1,0 +1,117 @@
+asyncapi: 3.0.0
+info:
+  title: WhiteBit Positions
+  version: 1.0.0
+  description: Get and subscribe to positions updates
+
+servers:
+  production:
+    host: api.whitebit.com
+    protocol: wss
+    description: Production WebSocket server
+
+channels:
+  /ws:
+    address: /ws
+    description: Positions operations
+    messages:
+      positionsRequest:
+        $ref: '#/components/messages/positionsRequest'
+      positionsResponse:
+        $ref: '#/components/messages/positionsResponse'
+      positionsSubscribe:
+        $ref: '#/components/messages/positionsSubscribe'
+      positionsSubscribeResponse:
+        $ref: '#/components/messages/positionsSubscribeResponse'
+      positionsUpdate:
+        $ref: '#/components/messages/positionsUpdate'
+      positionsUnsubscribe:
+        $ref: '#/components/messages/positionsUnsubscribe'
+
+operations:
+  sendPositionsRequest:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/positionsRequest'
+
+  receivePositionsResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/positionsResponse'
+
+  sendPositionsSubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/positionsSubscribe'
+
+  receivePositionsSubscribeResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/positionsSubscribeResponse'
+
+  receivePositionsUpdates:
+    action: send
+    description: Receive real-time positions updates
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/positionsUpdate'
+
+  sendPositionsUnsubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/positionsUnsubscribe'
+
+components:
+  messages:
+    positionsRequest:
+      name: PositionsRequest
+      title: Positions Query
+      summary: Get current positions
+      payload:
+        type: object
+
+    positionsResponse:
+      name: PositionsResponse
+      title: Positions Response
+      summary: List of positions
+      payload:
+        type: object
+
+    positionsSubscribe:
+      name: PositionsSubscribe
+      title: Subscribe to Positions
+      summary: Subscribe to positions updates
+      payload:
+        type: object
+
+    positionsSubscribeResponse:
+      name: PositionsSubscribeResponse
+      title: Subscribe Response
+      summary: Subscription confirmation
+      payload:
+        type: object
+
+    positionsUpdate:
+      name: PositionsUpdate
+      title: Positions Update
+      summary: Real-time positions update
+      payload:
+        type: object
+
+    positionsUnsubscribe:
+      name: PositionsUnsubscribe
+      title: Unsubscribe from Positions
+      summary: Stop receiving positions updates
+      payload:
+        type: object

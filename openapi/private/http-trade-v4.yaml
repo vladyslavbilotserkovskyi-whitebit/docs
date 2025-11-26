@@ -1,0 +1,2025 @@
+openapi: 3.0.3
+info:
+  title: Private HTTP API V4 - Collateral Trading
+  description: |
+    WhiteBIT Private HTTP API V4 for collateral/margin trading operations.
+    
+    Base URL: https://whitebit.com
+    
+    All endpoints return time in Unix-time format.
+    All endpoints return either a JSON object or array.
+    For receiving responses from API calls please use http method POST.
+    
+    Authentication required for all endpoints.
+  version: 4.0.0
+servers:
+  - url: https://whitebit.com
+    description: WhiteBIT Production Server
+
+paths:
+  /api/v4/collateral-account/balance:
+    post:
+      summary: Collateral Account Balance
+      description: |
+        This endpoint retrieves collateral account balance.
+        
+        <Warning>
+        Rate limit: 12000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ticker:
+                  type: string
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Collateral account balance
+
+  /api/v4/collateral-account/balance-summary:
+    post:
+      summary: Collateral Account Balance Summary
+      description: |
+        This endpoint retrieves collateral account balance summary.
+        
+        <Warning>
+        Rate limit: 12000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ticker:
+                  type: string
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Balance summary
+
+  /api/v4/order/collateral/limit:
+    post:
+      summary: Collateral Limit Order
+      description: |
+        This endpoint creates a collateral limit order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - market
+                - side
+                - amount
+                - price
+                - request
+                - nonce
+              properties:
+                market:
+                  type: string
+                side:
+                  type: string
+                  enum: [buy, sell]
+                amount:
+                  type: string
+                price:
+                  type: string
+                postOnly:
+                  type: boolean
+                ioc:
+                  type: boolean
+                clientOrderId:
+                  type: string
+                stopLoss:
+                  type: string
+                takeProfit:
+                  type: string
+                positionSide:
+                  type: string
+                  enum: [long, short]
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Order created
+
+  /api/v4/order/collateral/bulk:
+    post:
+      summary: Collateral bulk limit order
+      description: |
+        This endpoint creates multiple collateral limit orders.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orders:
+                  type: array
+                  items:
+                    type: object
+                stopOnFail:
+                  type: boolean
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Orders created
+
+  /api/v4/order/collateral/market:
+    post:
+      summary: Collateral Market Order
+      description: |
+        This endpoint creates a collateral market order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - market
+                - side
+                - amount
+                - request
+                - nonce
+              properties:
+                market:
+                  type: string
+                side:
+                  type: string
+                  enum: [buy, sell]
+                amount:
+                  type: string
+                clientOrderId:
+                  type: string
+                stopLoss:
+                  type: string
+                takeProfit:
+                  type: string
+                positionSide:
+                  type: string
+                  enum: [long, short]
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Order created
+
+  /api/v4/order/collateral/stop-limit:
+    post:
+      summary: Collateral Stop-Limit Order
+      description: |
+        This endpoint creates a collateral stop-limit order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - market
+                - side
+                - amount
+                - price
+                - activation_price
+                - request
+                - nonce
+              properties:
+                market:
+                  type: string
+                side:
+                  type: string
+                  enum: [buy, sell]
+                amount:
+                  type: string
+                price:
+                  type: string
+                activation_price:
+                  type: string
+                stopLoss:
+                  type: string
+                takeProfit:
+                  type: string
+                clientOrderId:
+                  type: string
+                positionSide:
+                  type: string
+                  enum: [long, short]
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Order created
+
+  /api/v4/order/collateral/trigger-market:
+    post:
+      summary: Collateral Trigger Market Order
+      description: |
+        This endpoint creates a collateral trigger market order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - market
+                - side
+                - amount
+                - activation_price
+                - request
+                - nonce
+              properties:
+                market:
+                  type: string
+                side:
+                  type: string
+                  enum: [buy, sell]
+                amount:
+                  type: string
+                activation_price:
+                  type: string
+                clientOrderId:
+                  type: string
+                stopLoss:
+                  type: string
+                takeProfit:
+                  type: string
+                positionSide:
+                  type: string
+                  enum: [long, short]
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Order created
+
+  /api/v4/collateral-account/summary:
+    post:
+      summary: Collateral Account Summary
+      description: |
+        This endpoint retrieves collateral account summary.
+        
+        <Warning>
+        Rate limit: 12000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Account summary
+
+  /api/v4/collateral-account/positions:
+    post:
+      summary: Open Positions
+      description: |
+        This endpoint retrieves open positions.
+        
+        <Warning>
+        Rate limit: 12000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                market:
+                  type: string
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Open positions
+
+  /api/v4/collateral-account/position/close:
+    post:
+      summary: Close Position
+      description: |
+        This endpoint closes a position.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - positionId
+                - market
+                - request
+                - nonce
+              properties:
+                positionId:
+                  type: integer
+                positionSide:
+                  type: string
+                  enum: [long, short]
+                market:
+                  type: string
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Position closed
+
+  /api/v4/collateral-account/positions/history:
+    post:
+      summary: Positions History
+      description: |
+        This endpoint retrieves positions history.
+        
+        <Warning>
+        Rate limit: 12000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                market:
+                  type: string
+                positionId:
+                  type: integer
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Positions history
+
+  /api/v4/collateral-account/funding-history:
+    post:
+      summary: Funding History
+      description: |
+        This endpoint retrieves funding history.
+        
+        <Warning>
+        Rate limit: 12000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                market:
+                  type: string
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Funding history
+
+  /api/v4/collateral-account/leverage:
+    post:
+      summary: Change Collateral Account Leverage
+      description: |
+        This endpoint changes account leverage.
+        
+        <Warning>
+        Rate limit: 1000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - leverage
+                - request
+                - nonce
+              properties:
+                leverage:
+                  type: integer
+                  minimum: 1
+                  maximum: 100
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Leverage changed
+
+  /api/v4/collateral-account/hedge-mode:
+    post:
+      summary: Collateral Account Hedge Mode
+      description: |
+        This endpoint retrieves hedge mode status.
+        
+        <Warning>
+        Rate limit: 12000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Hedge mode status
+
+  /api/v4/collateral-account/hedge-mode/update:
+    post:
+      summary: Update Collateral Account Hedge Mode
+      description: |
+        This endpoint updates hedge mode.
+        
+        <Warning>
+        Rate limit: 1000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - hedgeMode
+                - request
+                - nonce
+              properties:
+                hedgeMode:
+                  type: boolean
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Hedge mode updated
+
+  /api/v4/orders/conditional:
+    post:
+      summary: Query unexecuted(active) conditional orders
+      description: |
+        This endpoint retrieves active conditional orders.
+        
+        <Warning>
+        Rate limit: 12000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                market:
+                  type: string
+                offset:
+                  type: integer
+                  default: 0
+                limit:
+                  type: integer
+                  default: 50
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Active conditional orders
+
+  /api/v4/orders/oco:
+    post:
+      summary: Query unexecuted(active) OCO orders
+      description: |
+        This endpoint retrieves active OCO orders.
+        
+        <Warning>
+        Rate limit: 12000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                market:
+                  type: string
+                offset:
+                  type: integer
+                  default: 0
+                limit:
+                  type: integer
+                  default: 50
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Active OCO orders
+
+  /api/v4/order/collateral/oco:
+    post:
+      summary: Create collateral OCO order
+      description: |
+        This endpoint creates a collateral OCO order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - market
+                - side
+                - amount
+                - price
+                - activation_price
+                - stop_limit_price
+                - request
+                - nonce
+              properties:
+                market:
+                  type: string
+                side:
+                  type: string
+                  enum: [buy, sell]
+                amount:
+                  type: string
+                price:
+                  type: string
+                activation_price:
+                  type: string
+                stop_limit_price:
+                  type: string
+                clientOrderId:
+                  type: string
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: OCO order created
+
+  /api/v4/order/conditional-cancel:
+    post:
+      summary: Cancel conditional order
+      description: |
+        This endpoint cancels a conditional order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - market
+                - id
+                - request
+                - nonce
+              properties:
+                market:
+                  type: string
+                id:
+                  type: integer
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Order cancelled
+
+  /api/v4/order/oco-cancel:
+    post:
+      summary: Cancel OCO order
+      description: |
+        This endpoint cancels an OCO order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - market
+                - orderId
+                - request
+                - nonce
+              properties:
+                market:
+                  type: string
+                orderId:
+                  type: integer
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: OCO order cancelled
+
+  /api/v4/order/oto-cancel:
+    post:
+      summary: Cancel OTO order
+      description: |
+        This endpoint cancels an OTO order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Collateral Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - market
+                - otoId
+                - request
+                - nonce
+              properties:
+                market:
+                  type: string
+                otoId:
+                  type: integer
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: OTO order cancelled
+
+  /api/v4/convert/estimate:
+    post:
+      summary: Convert Estimate
+      description: |
+        This endpoint creates a quote for converting one currency to another. Quote lifetime is 10 seconds, then quote will be expired.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      operationId: convertEstimate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - from
+                - to
+                - direction
+                - amount
+              properties:
+                from:
+                  type: string
+                  description: "From currency. Example: BTC"
+                  example: "BTC"
+                to:
+                  type: string
+                  description: "To currency. Example: USDT"
+                  example: "USDT"
+                direction:
+                  type: string
+                  description: "Convert amount direction, defines in which currency corresponding \"amount\" field is populated. Use \"to\" in case amount is in \"to\" currency, use \"from\" if amount is in \"from\" currency"
+                  enum: ["from", "to"]
+                  example: "to"
+                amount:
+                  type: string
+                  description: "Amount to convert or receive."
+                  example: "35,103.1"
+                nonce:
+                  type: integer
+                  description: "Nonce for request"
+                request:
+                  type: string
+                  description: "Request path"
+            examples:
+              estimateReceive:
+                summary: "I would like to estimate convert of BTC to receive 35,103.1 USDT"
+                value:
+                  amount: "35,103.1"
+                  direction: "to"
+                  from: "BTC"
+                  to: "USDT"
+              estimateGive:
+                summary: "I would like to estimate convert of 1 BTC to USDT"
+                value:
+                  amount: "1"
+                  direction: "from"
+                  from: "BTC"
+                  to: "USDT"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: "Quote ID"
+                    example: "123"
+                  from:
+                    type: string
+                    description: "From currency"
+                    example: "BTC"
+                  to:
+                    type: string
+                    description: "To currency"
+                    example: "USDT"
+                  give:
+                    type: string
+                    description: "Amount to give"
+                    example: "50"
+                  receive:
+                    type: string
+                    description: "Amount to receive"
+                    example: "1714988.41577452"
+                  rate:
+                    type: string
+                    description: "Conversion rate"
+                    example: "34299.76831549"
+                  expireAt:
+                    type: integer
+                    description: "Quote expiration timestamp"
+                    example: 1699016476
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                termsNotAccepted:
+                  summary: "Terms Not Accepted"
+                  value:
+                    code: 0
+                    message: "Validation failed"
+                    errors:
+                      user: ["Terms of exchange are not accepted"]
+                directionInvalid:
+                  summary: "Direction Invalid"
+                  value:
+                    code: 30
+                    message: "Validation failed"
+                    errors:
+                      direction: ["Direction field does not exist in [from,to]."]
+                marketsNotAvailable:
+                  summary: "Markets Not Available"
+                  value:
+                    code: 0
+                    message: "Validation failed"
+                    errors:
+                      from: ["Conversion markets not available"]
+
+  /api/v4/convert/confirm:
+    post:
+      summary: Convert Confirm
+      description: |
+        This endpoint confirms an estimated quote.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      operationId: convertConfirm
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - quoteId
+              properties:
+                quoteId:
+                  type: string
+                  description: "Quote ID"
+                  example: "4050"
+                nonce:
+                  type: integer
+                  description: "Nonce for request"
+                request:
+                  type: string
+                  description: "Request path"
+            example:
+              quoteId: "4050"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  finalGive:
+                    type: string
+                    description: "Final amount given"
+                    example: "0.00002901"
+                  finalReceive:
+                    type: string
+                    description: "Final amount received"
+                    example: "1"
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                quoteNotFound:
+                  summary: "Quote Not Found"
+                  value:
+                    code: 0
+                    message: "Validation failed"
+                    errors:
+                      quoteId: ["Quote could not be found"]
+
+  /api/v4/convert/history:
+    post:
+      summary: Convert History
+      description: |
+        This endpoint returns convert history.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+        **Note:** This method can retrieve data not older than 6 months from current month. If you need older data - you can use Report on the History page in your account.
+      operationId: convertHistory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fromTicker:
+                  type: string
+                  description: "From currency. Example: BTC"
+                  example: "BTC"
+                toTicker:
+                  type: string
+                  description: "To currency. Example: USDT"
+                  example: "USDT"
+                from:
+                  type: string
+                  description: "From time filter. Example: 1699260637. Default: now()"
+                  example: "1699260637"
+                to:
+                  type: string
+                  description: "To time filter. Example: 1699260637. Default: now() +"
+                  example: "1699260637"
+                quoteId:
+                  type: string
+                  description: "Quote Id. Example: 4050"
+                  example: "4050"
+                limit:
+                  type: string
+                  description: "How many records to receive. Default: 100"
+                  example: "100"
+                offset:
+                  type: string
+                  description: "Amount to convert or receive. Default 0"
+                  example: "0"
+                nonce:
+                  type: integer
+                  description: "Nonce for request"
+                request:
+                  type: string
+                  description: "Request path"
+            example:
+              fromTicker: "BTC"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  records:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: "Convert record ID"
+                          example: "4030"
+                        date:
+                          type: integer
+                          description: "Conversion timestamp"
+                          example: 1699020642
+                        give:
+                          type: string
+                          description: "Amount given"
+                          example: "0.00002901"
+                        receive:
+                          type: string
+                          description: "Amount received"
+                          example: "1"
+                        rate:
+                          type: string
+                          description: "Conversion rate"
+                          example: "34470.87211306"
+                        path:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              from:
+                                type: string
+                                example: "BTC"
+                              to:
+                                type: string
+                                example: "USDT"
+                              rate:
+                                type: string
+                                example: "34470.87211306"
+                  total:
+                    type: integer
+                    description: "Total number of records"
+                    example: 4
+                  limit:
+                    type: integer
+                    description: "Limit used in request"
+                    example: 1
+                  offset:
+                    type: integer
+                    description: "Offset used in request"
+                    example: 0
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                fromTickerInvalid:
+                  summary: "FromTicker Invalid"
+                  value:
+                    code: 30
+                    message: "Validation failed"
+                    errors:
+                      fromTicker: ["fromTicker is invalid."]
+                toTickerInvalid:
+                  summary: "ToTicker Invalid"
+                  value:
+                    code: 30
+                    message: "Validation failed"
+                    errors:
+                      toTicker: ["toTicker is invalid."]
+
+  /api/v4/market/fee:
+    post:
+      summary: Query Market Fee
+      description: |
+        This endpoint retrieves the maker and taker fees for a specific market.
+      tags:
+        - Market Fee
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: market
+          in: query
+          required: true
+          description: "Available market. Example: BTC_USDT"
+          schema:
+            type: string
+            example: BTC_USDT
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  taker:
+                    type: string
+                    description: Taker fee percentage
+                    example: "0.1"
+                  maker:
+                    type: string
+                    description: Maker fee percentage
+                    example: "0.1"
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorV4'
+
+    get:
+      summary: Query All Market Fees
+      description: |
+        This endpoint retrieves the maker and taker fees for all markets, including any custom fees.
+      tags:
+        - Market Fee
+      security:
+        - ApiKeyAuth: []
+      parameters: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    nullable: true
+                    example: null
+                  taker:
+                    type: string
+                    description: Default taker fee percentage
+                    example: "0.1"
+                  maker:
+                    type: string
+                    description: Default maker fee percentage
+                    example: "0.1"
+                  custom_fee:
+                    type: object
+                    description: Custom fees for specific markets
+                    additionalProperties:
+                      type: object
+                      properties:
+                        taker:
+                          type: string
+                        maker:
+                          type: string
+                    example:
+                      BTC_USDT:
+                        taker: "0.05"
+                        maker: "0.05"
+                      ETH_USDT:
+                        taker: "0.08"
+                        maker: "0.08"
+
+  /api/v4/trade-account/balance:
+    post:
+      summary: Trading Balance
+      description: |
+        This endpoint retrieves the trade balance by currency ticker or all balances.
+        
+        <Warning>
+        Rate limit: 12000 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ticker:
+                  type: string
+                  description: "Currency's ticker. Example: BTC"
+                  example: BTC
+                request:
+                  type: string
+                  example: "{{request}}"
+                nonce:
+                  type: string
+                  example: "{{nonce}}"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    available:
+                      type: string
+                      description: Available balance of currency for trading
+                    freeze:
+                      type: string
+                      description: Balance of currency that is currently in active orders
+
+  /api/v4/order/new:
+    post:
+      summary: Create Limit Order
+      description: |
+        This endpoint creates limit trading order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LimitOrderRequest'
+      responses:
+        '200':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+
+  /api/v4/order/bulk:
+    post:
+      summary: Bulk limit order
+      description: |
+        This endpoint creates multiple limit orders at once.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orders:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/BulkOrderItem'
+                stopOnFail:
+                  type: boolean
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Orders created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    result:
+                      $ref: '#/components/schemas/OrderResponse'
+                    error:
+                      type: string
+                      nullable: true
+
+  /api/v4/order/market:
+    post:
+      summary: Create market order
+      description: |
+        This endpoint creates market trading order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketOrderRequest'
+      responses:
+        '200':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+
+  /api/v4/order/stock_market:
+    post:
+      summary: Create buy stock market order
+      description: |
+        This endpoint creates buy stock market order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketOrderRequest'
+      responses:
+        '200':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+
+  /api/v4/order/stop_limit:
+    post:
+      summary: Create stop-limit order
+      description: |
+        This endpoint creates stop-limit order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StopLimitOrderRequest'
+      responses:
+        '200':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+
+  /api/v4/order/stop_market:
+    post:
+      summary: Create stop-market order
+      description: |
+        This endpoint creates stop-market order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StopMarketOrderRequest'
+      responses:
+        '200':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+
+  /api/v4/order/cancel:
+    post:
+      summary: Cancel order
+      description: |
+        This endpoint cancels an existing order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - market
+                - orderId
+                - request
+                - nonce
+              properties:
+                market:
+                  type: string
+                  example: BTC_USDT
+                orderId:
+                  type: integer
+                  example: 123456
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Order cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+
+  /api/v4/order/cancel/all:
+    post:
+      summary: Cancel all orders
+      description: |
+        This endpoint cancels all active orders for a market.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                market:
+                  type: string
+                  example: BTC_USDT
+                type:
+                  type: string
+                  enum: [limit, stop_limit, stop_market]
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Orders cancelled successfully
+
+  /api/v4/orders:
+    post:
+      summary: Query unexecuted(active) orders
+      description: |
+        This endpoint retrieves unexecuted orders.
+        
+        <Warning>
+        Rate limit: 12000 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                market:
+                  type: string
+                  example: BTC_USDT
+                orderId:
+                  type: integer
+                clientOrderId:
+                  type: string
+                offset:
+                  type: integer
+                  default: 0
+                limit:
+                  type: integer
+                  default: 50
+                  maximum: 100
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: List of active orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderResponse'
+
+  /api/v4/trade-account/executed-history:
+    post:
+      summary: Query executed order history
+      description: |
+        This endpoint retrieves executed order history.
+        
+        <Warning>
+        Rate limit: 12000 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                market:
+                  type: string
+                offset:
+                  type: integer
+                  default: 0
+                limit:
+                  type: integer
+                  default: 50
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Executed order history
+
+  /api/v4/trade-account/order:
+    post:
+      summary: Query executed order deals
+      description: |
+        This endpoint retrieves deals for a specific order.
+        
+        <Warning>
+        Rate limit: 12000 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - orderId
+                - request
+                - nonce
+              properties:
+                orderId:
+                  type: integer
+                offset:
+                  type: integer
+                  default: 0
+                limit:
+                  type: integer
+                  default: 50
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Order deals
+
+  /api/v4/trade-account/order/history:
+    post:
+      summary: Query executed orders
+      description: |
+        This endpoint retrieves order history.
+        
+        <Warning>
+        Rate limit: 12000 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                market:
+                  type: string
+                offset:
+                  type: integer
+                  default: 0
+                limit:
+                  type: integer
+                  default: 50
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Order history
+
+  /api/v4/order/modify:
+    post:
+      summary: Modify order
+      description: |
+        This endpoint modifies an existing order.
+        
+        <Warning>
+        Rate limit: 10000 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - orderId
+                - market
+                - request
+                - nonce
+              properties:
+                orderId:
+                  type: integer
+                market:
+                  type: string
+                price:
+                  type: string
+                activationPrice:
+                  type: string
+                amount:
+                  type: string
+                clientOrderId:
+                  type: string
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Order modified successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+
+  /api/v4/order/kill-switch:
+    post:
+      summary: Sync kill-switch timer
+      description: |
+        This endpoint syncs the kill-switch timer.
+        
+        <Warning>
+        Rate limit: 100 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                market:
+                  type: string
+                timeout:
+                  type: integer
+                  description: Timeout in seconds
+                types:
+                  type: array
+                  items:
+                    type: string
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Kill-switch timer synced
+
+  /api/v4/order/kill-switch/status:
+    post:
+      summary: Status kill-switch timer
+      description: |
+        This endpoint retrieves the status of the kill-switch timer.
+        
+        <Warning>
+        Rate limit: 100 requests/10 sec.
+        </Warning>
+      tags:
+        - Spot Trading
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                market:
+                  type: string
+                request:
+                  type: string
+                nonce:
+                  type: string
+      responses:
+        '200':
+          description: Kill-switch status
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-TXC-APIKEY
+      description: |
+        API Key authentication for private endpoints.
+        
+        Required headers:
+        - X-TXC-APIKEY: Your API key
+        - X-TXC-PAYLOAD: Base64 encoded JSON payload
+        - X-TXC-SIGNATURE: HMAC SHA512 signature
+  schemas:
+    LimitOrderRequest:
+      type: object
+      required:
+        - market
+        - side
+        - amount
+        - price
+        - request
+        - nonce
+      properties:
+        market:
+          type: string
+          example: BTC_USDT
+        side:
+          type: string
+          enum: [buy, sell]
+        amount:
+          type: string
+          example: "0.001"
+        price:
+          type: string
+          example: "9800"
+        clientOrderId:
+          type: string
+        postOnly:
+          type: boolean
+          default: false
+        ioc:
+          type: boolean
+          default: false
+        bboRole:
+          type: integer
+          enum: [1, 2]
+        stp:
+          type: string
+          enum: [no, cancel_both, cancel_new, cancel_old]
+          default: no
+        request:
+          type: string
+        nonce:
+          type: string
+
+    MarketOrderRequest:
+      type: object
+      required:
+        - market
+        - side
+        - amount
+        - request
+        - nonce
+      properties:
+        market:
+          type: string
+        side:
+          type: string
+          enum: [buy, sell]
+        amount:
+          type: string
+        clientOrderId:
+          type: string
+        request:
+          type: string
+        nonce:
+          type: string
+
+    StopLimitOrderRequest:
+      type: object
+      required:
+        - market
+        - side
+        - amount
+        - price
+        - activation_price
+        - request
+        - nonce
+      properties:
+        market:
+          type: string
+        side:
+          type: string
+          enum: [buy, sell]
+        amount:
+          type: string
+        price:
+          type: string
+        activation_price:
+          type: string
+        clientOrderId:
+          type: string
+        request:
+          type: string
+        nonce:
+          type: string
+
+    StopMarketOrderRequest:
+      type: object
+      required:
+        - market
+        - side
+        - amount
+        - activation_price
+        - request
+        - nonce
+      properties:
+        market:
+          type: string
+        side:
+          type: string
+          enum: [buy, sell]
+        amount:
+          type: string
+        activation_price:
+          type: string
+        clientOrderId:
+          type: string
+        request:
+          type: string
+        nonce:
+          type: string
+
+    BulkOrderItem:
+      type: object
+      properties:
+        side:
+          type: string
+          enum: [buy, sell]
+        amount:
+          type: string
+        price:
+          type: string
+        market:
+          type: string
+        postOnly:
+          type: boolean
+        ioc:
+          type: boolean
+        clientOrderId:
+          type: string
+
+    OrderResponse:
+      type: object
+      properties:
+        orderId:
+          type: integer
+        clientOrderId:
+          type: string
+        market:
+          type: string
+        side:
+          type: string
+        type:
+          type: string
+        timestamp:
+          type: number
+        dealMoney:
+          type: string
+        dealStock:
+          type: string
+        amount:
+          type: string
+        left:
+          type: string
+        dealFee:
+          type: string
+        price:
+          type: string
+        postOnly:
+          type: boolean
+        ioc:
+          type: boolean
+        status:
+          type: string
+        stp:
+          type: string
+        positionSide:
+          type: string
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: "Error code"
+        message:
+          type: string
+          description: "Error message"
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          description: "Detailed error information"
+tags:
+  - name: Collateral Trading
+    description: Endpoints for collateral/margin trading operations

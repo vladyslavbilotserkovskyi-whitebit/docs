@@ -1,0 +1,85 @@
+asyncapi: 3.0.0
+info:
+  title: WhiteBit Margin Positions Events
+  version: 1.0.0
+  description: Subscribe to margin positions events
+
+servers:
+  production:
+    host: api.whitebit.com
+    protocol: wss
+    description: Production WebSocket server
+
+channels:
+  /ws:
+    address: /ws
+    description: Margin positions events operations
+    messages:
+      marginPositionsEventsSubscribe:
+        $ref: '#/components/messages/marginPositionsEventsSubscribe'
+      marginPositionsEventsSubscribeResponse:
+        $ref: '#/components/messages/marginPositionsEventsSubscribeResponse'
+      marginPositionsEventsUpdate:
+        $ref: '#/components/messages/marginPositionsEventsUpdate'
+      marginPositionsEventsUnsubscribe:
+        $ref: '#/components/messages/marginPositionsEventsUnsubscribe'
+
+operations:
+  sendMarginPositionsEventsSubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/marginPositionsEventsSubscribe'
+
+  receiveMarginPositionsEventsSubscribeResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/marginPositionsEventsSubscribeResponse'
+
+  receiveMarginPositionsEventsUpdates:
+    action: send
+    description: Receive real-time margin positions events
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/marginPositionsEventsUpdate'
+
+  sendMarginPositionsEventsUnsubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/marginPositionsEventsUnsubscribe'
+
+components:
+  messages:
+    marginPositionsEventsSubscribe:
+      name: MarginPositionsEventsSubscribe
+      title: Subscribe to Margin Positions Events
+      summary: Subscribe to margin positions events
+      payload:
+        type: object
+
+    marginPositionsEventsSubscribeResponse:
+      name: MarginPositionsEventsSubscribeResponse
+      title: Subscribe Response
+      summary: Subscription confirmation
+      payload:
+        type: object
+
+    marginPositionsEventsUpdate:
+      name: MarginPositionsEventsUpdate
+      title: Margin Positions Events Update
+      summary: Real-time margin positions events
+      payload:
+        type: object
+
+    marginPositionsEventsUnsubscribe:
+      name: MarginPositionsEventsUnsubscribe
+      title: Unsubscribe from Margin Positions Events
+      summary: Stop receiving margin positions events
+      payload:
+        type: object
