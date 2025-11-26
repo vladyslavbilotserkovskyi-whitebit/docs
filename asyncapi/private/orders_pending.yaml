@@ -1,0 +1,117 @@
+asyncapi: 3.0.0
+info:
+  title: WhiteBit Orders Pending
+  version: 1.0.0
+  description: Get and subscribe to pending orders updates
+
+servers:
+  production:
+    host: api.whitebit.com
+    protocol: wss
+    description: Production WebSocket server
+
+channels:
+  /ws:
+    address: /ws
+    description: Pending orders operations
+    messages:
+      ordersPendingRequest:
+        $ref: '#/components/messages/ordersPendingRequest'
+      ordersPendingResponse:
+        $ref: '#/components/messages/ordersPendingResponse'
+      ordersPendingSubscribe:
+        $ref: '#/components/messages/ordersPendingSubscribe'
+      ordersPendingSubscribeResponse:
+        $ref: '#/components/messages/ordersPendingSubscribeResponse'
+      ordersPendingUpdate:
+        $ref: '#/components/messages/ordersPendingUpdate'
+      ordersPendingUnsubscribe:
+        $ref: '#/components/messages/ordersPendingUnsubscribe'
+
+operations:
+  sendOrdersPendingRequest:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/ordersPendingRequest'
+
+  receiveOrdersPendingResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/ordersPendingResponse'
+
+  sendOrdersPendingSubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/ordersPendingSubscribe'
+
+  receiveOrdersPendingSubscribeResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/ordersPendingSubscribeResponse'
+
+  receiveOrdersPendingUpdates:
+    action: send
+    description: Receive real-time pending orders updates
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/ordersPendingUpdate'
+
+  sendOrdersPendingUnsubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/ordersPendingUnsubscribe'
+
+components:
+  messages:
+    ordersPendingRequest:
+      name: OrdersPendingRequest
+      title: Orders Pending Query
+      summary: Get current pending orders
+      payload:
+        type: object
+
+    ordersPendingResponse:
+      name: OrdersPendingResponse
+      title: Orders Pending Response
+      summary: List of pending orders
+      payload:
+        type: object
+
+    ordersPendingSubscribe:
+      name: OrdersPendingSubscribe
+      title: Subscribe to Pending Orders
+      summary: Subscribe to pending orders updates
+      payload:
+        type: object
+
+    ordersPendingSubscribeResponse:
+      name: OrdersPendingSubscribeResponse
+      title: Subscribe Response
+      summary: Subscription confirmation
+      payload:
+        type: object
+
+    ordersPendingUpdate:
+      name: OrdersPendingUpdate
+      title: Orders Pending Update
+      summary: Real-time pending orders update
+      payload:
+        type: object
+
+    ordersPendingUnsubscribe:
+      name: OrdersPendingUnsubscribe
+      title: Unsubscribe from Pending Orders
+      summary: Stop receiving pending orders updates
+      payload:
+        type: object

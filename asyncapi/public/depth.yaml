@@ -1,0 +1,384 @@
+asyncapi: 3.0.0
+info:
+  title: WhiteBit Order Book Depth
+  version: 1.0.0
+  description: Real-time order book depth data. Provides full and partial updates of bid/ask levels with support for multiple subscription parameters.
+
+servers:
+  production:
+    host: api.whitebit.com
+    protocol: wss
+    description: Production WebSocket server
+
+channels:
+  /ws:
+    address: /ws
+    description: |
+      Order book depth operations.
+
+      **Update Interval**: Every 100ms (for subscriptions)
+
+      **Update Types**: Full reload or partial updates containing only changes since last update
+
+      **Multiple Subscriptions**: Supported via flag parameter. One subscription with specific parameters per market allowed.
+
+      **Price Intervals**: "0" (no interval), "0.00000001", "0.0000001", "0.000001", "0.00001", "0.0001", "0.001", "0.01", "0.1"
+    messages:
+      depthRequest:
+        $ref: '#/components/messages/depthRequest'
+      depthResponse:
+        $ref: '#/components/messages/depthResponse'
+      depthSubscribe:
+        $ref: '#/components/messages/depthSubscribe'
+      depthSubscribeResponse:
+        $ref: '#/components/messages/depthSubscribeResponse'
+      depthUpdate:
+        $ref: '#/components/messages/depthUpdate'
+      depthUnsubscribe:
+        $ref: '#/components/messages/depthUnsubscribe'
+
+operations:
+  sendDepthRequest:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/depthRequest'
+
+  receiveDepthResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/depthResponse'
+
+  sendDepthSubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/depthSubscribe'
+
+  receiveDepthSubscribeResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/depthSubscribeResponse'
+
+  receiveDepthUpdates:
+    action: send
+    description: Receive real-time order book depth updates every 100ms (full reload or partial updates)
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/depthUpdate'
+
+  sendDepthUnsubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/depthUnsubscribe'
+
+components:
+  messages:
+    depthRequest:
+      name: DepthRequest
+      title: Order Book Depth Query
+      summary: Get current market depth for a specific cryptocurrency pair
+      payload:
+        $ref: '#/components/schemas/DepthRequest'
+      examples:
+        - name: depthQuery
+          summary: Get current depth
+          payload:
+            id: 11
+            method: depth_request
+            params:
+              - ETH_BTC
+              - 100
+              - "0"
+
+    depthResponse:
+      name: DepthResponse
+      title: Depth Response
+      summary: Order book depth with bids and asks
+      payload:
+        $ref: '#/components/schemas/DepthResponse'
+      examples:
+        - name: depthData
+          summary: Order book depth
+          payload:
+            id: 11
+            result:
+              timestamp: 1689600180.5164471
+              asks:
+                - - "0.020846"
+                  - "29.369"
+              bids:
+                - - "0.02083"
+                  - "9.598"
+            error: null
+
+    depthSubscribe:
+      name: DepthSubscribe
+      title: Subscribe to Order Book Depth
+      summary: Subscribe to real-time order book depth updates
+      payload:
+        $ref: '#/components/schemas/DepthSubscribe'
+      examples:
+        - name: depthSubscribe
+          summary: Subscribe to depth updates
+          payload:
+            id: 12
+            method: depth_subscribe
+            params:
+              - ETH_BTC
+              - 100
+              - "0"
+              - true
+
+    depthSubscribeResponse:
+      name: DepthSubscribeResponse
+      title: Subscribe Response
+      summary: Subscription confirmation
+      payload:
+        $ref: '#/components/schemas/SubscriptionResponse'
+
+    depthUpdate:
+      name: DepthUpdate
+      title: Depth Update
+      summary: Real-time order book depth update (full reload or partial)
+      payload:
+        $ref: '#/components/schemas/DepthUpdate'
+      examples:
+        - name: depthFullReload
+          summary: Full order book reload
+          payload:
+            id: null
+            method: depth_update
+            params:
+              - true
+              - timestamp: 1689600180.5164471
+                asks:
+                  - - "0.020846"
+                    - "29.369"
+                bids:
+                  - - "0.02083"
+                    - "9.598"
+                update_id: 214403
+                event_time: 1749026542.817343
+              - ETH_BTC
+        - name: depthPartialUpdate
+          summary: Partial order book update
+          payload:
+            id: null
+            method: depth_update
+            params:
+              - false
+              - timestamp: 1689600180.5164471
+                update_id: 214403
+                past_update_id: 214399
+                asks:
+                  - - "0.020861"
+                    - "0"
+                  - - "0.020900"
+                    - "2.5"
+                bids:
+                  - - "0.020844"
+                    - "5.949"
+                  - - "0.020800"
+                    - "0"
+                event_time: 1749026542.817343
+              - ETH_BTC
+
+    depthUnsubscribe:
+      name: DepthUnsubscribe
+      title: Unsubscribe from Depth
+      summary: Stop receiving order book depth updates
+      payload:
+        $ref: '#/components/schemas/UnsubscribeRequest'
+
+  schemas:
+    DepthLevel:
+      type: array
+      minItems: 2
+      maxItems: 2
+      items:
+        - type: string
+          description: Price
+        - type: string
+          description: Amount
+
+    OrderBook:
+      type: object
+      required:
+        - timestamp
+        - asks
+        - bids
+      properties:
+        timestamp:
+          type: number
+          description: Timestamp from matchengine
+        asks:
+          type: array
+          description: Asks sorted ascending
+          items:
+            $ref: '#/components/schemas/DepthLevel'
+        bids:
+          type: array
+          description: Bids sorted descending
+          items:
+            $ref: '#/components/schemas/DepthLevel'
+
+    DepthUpdateData:
+      type: object
+      required:
+        - timestamp
+        - asks
+        - bids
+        - event_time
+      properties:
+        timestamp:
+          type: number
+          description: Timestamp from matchengine
+        update_id:
+          type: integer
+          description: Update ID
+        past_update_id:
+          type: integer
+          description: Previous update ID (not in first event)
+        asks:
+          type: array
+          items:
+            $ref: '#/components/schemas/DepthLevel'
+        bids:
+          type: array
+          items:
+            $ref: '#/components/schemas/DepthLevel'
+        event_time:
+          type: number
+          description: Event time
+
+    DepthRequest:
+      type: object
+      required:
+        - id
+        - method
+        - params
+      properties:
+        id:
+          type: integer
+          description: Unique request identifier
+        method:
+          const: depth_request
+        params:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items:
+            - type: string
+              description: Market name
+            - type: integer
+              description: Limit (max 100)
+            - type: string
+              description: Price interval units ("0" for no interval)
+
+    DepthResponse:
+      type: object
+      required:
+        - id
+        - result
+        - error
+      properties:
+        id:
+          type: integer
+        result:
+          $ref: '#/components/schemas/OrderBook'
+        error:
+          type: "null"
+
+    DepthSubscribe:
+      type: object
+      required:
+        - id
+        - method
+        - params
+      properties:
+        id:
+          type: integer
+        method:
+          const: depth_subscribe
+        params:
+          type: array
+          minItems: 4
+          maxItems: 4
+          items:
+            - type: string
+              description: Market name
+            - type: integer
+              enum: [1, 5, 10, 20, 30, 50, 100]
+              description: Limit
+            - type: string
+              description: Price interval units
+            - type: boolean
+              description: Multiple subscription flag (true=add, false=unsubscribe from all)
+
+    SubscriptionResponse:
+      type: object
+      required:
+        - id
+        - result
+        - error
+      properties:
+        id:
+          type: integer
+        result:
+          type: object
+          required:
+            - status
+          properties:
+            status:
+              type: string
+              enum: [success]
+        error:
+          type: "null"
+
+    DepthUpdate:
+      type: object
+      required:
+        - id
+        - method
+        - params
+      properties:
+        id:
+          type: "null"
+        method:
+          const: depth_update
+        params:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items:
+            - type: boolean
+              description: Full reload flag (true=full reload, false=partial update)
+            - $ref: '#/components/schemas/DepthUpdateData'
+            - type: string
+              description: Market pair
+
+    UnsubscribeRequest:
+      type: object
+      required:
+        - id
+        - method
+        - params
+      properties:
+        id:
+          type: integer
+        method:
+          type: string
+          enum: [depth_unsubscribe]
+        params:
+          type: array
+          maxItems: 0

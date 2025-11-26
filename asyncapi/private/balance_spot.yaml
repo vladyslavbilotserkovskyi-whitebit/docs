@@ -1,0 +1,212 @@
+asyncapi: 3.0.0
+info:
+  title: WhiteBit Spot Balance
+  version: 1.0.0
+  description: Get and subscribe to spot wallet balance updates
+
+servers:
+  production:
+    host: api.whitebit.com
+    protocol: wss
+    description: Production WebSocket server
+
+channels:
+  /ws:
+    address: /ws
+    description: Spot balance operations
+    messages:
+      balanceSpotRequest:
+        $ref: '#/components/messages/balanceSpotRequest'
+      balanceSpotResponse:
+        $ref: '#/components/messages/balanceSpotResponse'
+      balanceSpotSubscribe:
+        $ref: '#/components/messages/balanceSpotSubscribe'
+      balanceSpotSubscribeResponse:
+        $ref: '#/components/messages/balanceSpotSubscribeResponse'
+      balanceSpotUpdate:
+        $ref: '#/components/messages/balanceSpotUpdate'
+      balanceSpotUnsubscribe:
+        $ref: '#/components/messages/balanceSpotUnsubscribe'
+
+operations:
+  sendBalanceSpotRequest:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/balanceSpotRequest'
+
+  receiveBalanceSpotResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/balanceSpotResponse'
+
+  sendBalanceSpotSubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/balanceSpotSubscribe'
+
+  receiveBalanceSpotSubscribeResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/balanceSpotSubscribeResponse'
+
+  receiveBalanceSpotUpdates:
+    action: send
+    description: Receive real-time spot balance updates
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/balanceSpotUpdate'
+
+  sendBalanceSpotUnsubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/balanceSpotUnsubscribe'
+
+components:
+  messages:
+    balanceSpotRequest:
+      name: BalanceSpotRequest
+      title: Balance Spot Query
+      summary: Get current spot wallet balance
+      payload:
+        $ref: '#/components/schemas/BalanceSpotRequest'
+
+    balanceSpotResponse:
+      name: BalanceSpotResponse
+      title: Balance Spot Response
+      summary: Current spot wallet balances
+      payload:
+        $ref: '#/components/schemas/BalanceSpotResponse'
+
+    balanceSpotSubscribe:
+      name: BalanceSpotSubscribe
+      title: Subscribe to Spot Balance
+      summary: Subscribe to spot balance updates
+      payload:
+        $ref: '#/components/schemas/BalanceSpotSubscribe'
+
+    balanceSpotSubscribeResponse:
+      name: BalanceSpotSubscribeResponse
+      title: Subscribe Response
+      summary: Subscription confirmation
+      payload:
+        $ref: '#/components/schemas/SubscriptionResponse'
+
+    balanceSpotUpdate:
+      name: BalanceSpotUpdate
+      title: Balance Spot Update
+      summary: Real-time spot balance update
+      payload:
+        $ref: '#/components/schemas/BalanceSpotUpdate'
+
+    balanceSpotUnsubscribe:
+      name: BalanceSpotUnsubscribe
+      title: Unsubscribe from Balance Spot
+      summary: Stop receiving balance updates
+      payload:
+        $ref: '#/components/schemas/UnsubscribeRequest'
+
+  schemas:
+    BalanceSpotRequest:
+      type: object
+      required:
+        - id
+        - method
+        - params
+      properties:
+        id:
+          type: integer
+        method:
+          const: balanceSpot_request
+        params:
+          type: array
+          maxItems: 0
+
+    BalanceSpotResponse:
+      type: object
+      required:
+        - id
+        - result
+        - error
+      properties:
+        id:
+          type: integer
+        result:
+          type: object
+          description: Wallet balances by currency
+        error:
+          type: "null"
+
+    BalanceSpotSubscribe:
+      type: object
+      required:
+        - id
+        - method
+        - params
+      properties:
+        id:
+          type: integer
+        method:
+          const: balanceSpot_subscribe
+        params:
+          type: array
+          maxItems: 0
+
+    SubscriptionResponse:
+      type: object
+      required:
+        - id
+        - result
+        - error
+      properties:
+        id:
+          type: integer
+        result:
+          type: object
+          required:
+            - status
+          properties:
+            status:
+              type: string
+              enum: [success]
+        error:
+          type: "null"
+
+    BalanceSpotUpdate:
+      type: object
+      required:
+        - id
+        - method
+        - params
+      properties:
+        id:
+          type: "null"
+        method:
+          const: balanceSpot_update
+        params:
+          type: array
+
+    UnsubscribeRequest:
+      type: object
+      required:
+        - id
+        - method
+        - params
+      properties:
+        id:
+          type: integer
+        method:
+          type: string
+        params:
+          type: array
+          maxItems: 0

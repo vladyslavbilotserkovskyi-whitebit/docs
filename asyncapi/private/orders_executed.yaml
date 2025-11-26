@@ -1,0 +1,117 @@
+asyncapi: 3.0.0
+info:
+  title: WhiteBit Orders Executed
+  version: 1.0.0
+  description: Get and subscribe to executed orders updates
+
+servers:
+  production:
+    host: api.whitebit.com
+    protocol: wss
+    description: Production WebSocket server
+
+channels:
+  /ws:
+    address: /ws
+    description: Executed orders operations
+    messages:
+      ordersExecutedRequest:
+        $ref: '#/components/messages/ordersExecutedRequest'
+      ordersExecutedResponse:
+        $ref: '#/components/messages/ordersExecutedResponse'
+      ordersExecutedSubscribe:
+        $ref: '#/components/messages/ordersExecutedSubscribe'
+      ordersExecutedSubscribeResponse:
+        $ref: '#/components/messages/ordersExecutedSubscribeResponse'
+      ordersExecutedUpdate:
+        $ref: '#/components/messages/ordersExecutedUpdate'
+      ordersExecutedUnsubscribe:
+        $ref: '#/components/messages/ordersExecutedUnsubscribe'
+
+operations:
+  sendOrdersExecutedRequest:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/ordersExecutedRequest'
+
+  receiveOrdersExecutedResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/ordersExecutedResponse'
+
+  sendOrdersExecutedSubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/ordersExecutedSubscribe'
+
+  receiveOrdersExecutedSubscribeResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/ordersExecutedSubscribeResponse'
+
+  receiveOrdersExecutedUpdates:
+    action: send
+    description: Receive real-time executed orders updates
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/ordersExecutedUpdate'
+
+  sendOrdersExecutedUnsubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/ordersExecutedUnsubscribe'
+
+components:
+  messages:
+    ordersExecutedRequest:
+      name: OrdersExecutedRequest
+      title: Orders Executed Query
+      summary: Get executed orders
+      payload:
+        type: object
+
+    ordersExecutedResponse:
+      name: OrdersExecutedResponse
+      title: Orders Executed Response
+      summary: List of executed orders
+      payload:
+        type: object
+
+    ordersExecutedSubscribe:
+      name: OrdersExecutedSubscribe
+      title: Subscribe to Executed Orders
+      summary: Subscribe to executed orders updates
+      payload:
+        type: object
+
+    ordersExecutedSubscribeResponse:
+      name: OrdersExecutedSubscribeResponse
+      title: Subscribe Response
+      summary: Subscription confirmation
+      payload:
+        type: object
+
+    ordersExecutedUpdate:
+      name: OrdersExecutedUpdate
+      title: Orders Executed Update
+      summary: Real-time executed orders update
+      payload:
+        type: object
+
+    ordersExecutedUnsubscribe:
+      name: OrdersExecutedUnsubscribe
+      title: Unsubscribe from Executed Orders
+      summary: Stop receiving executed orders updates
+      payload:
+        type: object

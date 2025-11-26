@@ -1,0 +1,109 @@
+asyncapi: 3.0.0
+info:
+  title: WhiteBit Private API Authorization
+  version: 1.0.0
+  description: Authorize WebSocket connection using authentication token
+
+servers:
+  production:
+    host: api.whitebit.com
+    protocol: wss
+    description: Production WebSocket server
+
+channels:
+  /ws:
+    address: /ws
+    description: Private API authorization channel
+    messages:
+      authorizeRequest:
+        $ref: '#/components/messages/authorizeRequest'
+      authorizeResponse:
+        $ref: '#/components/messages/authorizeResponse'
+
+operations:
+  sendAuthorizeRequest:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/authorizeRequest'
+
+  receiveAuthorizeResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/authorizeResponse'
+
+components:
+  messages:
+    authorizeRequest:
+      name: AuthorizeRequest
+      title: Authorize Request
+      summary: Authorize WebSocket connection with token
+      payload:
+        $ref: '#/components/schemas/AuthorizeRequest'
+      examples:
+        - name: authorizeRequest
+          summary: Authorization request
+          payload:
+            id: 1
+            method: authorize
+            params:
+              - "token_string"
+
+    authorizeResponse:
+      name: AuthorizeResponse
+      title: Authorize Response
+      summary: Authorization confirmation
+      payload:
+        $ref: '#/components/schemas/AuthorizeResponse'
+      examples:
+        - name: authorizeSuccess
+          summary: Authorization successful
+          payload:
+            id: 1
+            result:
+              status: success
+            error: null
+
+  schemas:
+    AuthorizeRequest:
+      type: object
+      required:
+        - id
+        - method
+        - params
+      properties:
+        id:
+          type: integer
+          description: Unique request identifier
+        method:
+          const: authorize
+        params:
+          type: array
+          minItems: 1
+          maxItems: 1
+          items:
+            type: string
+            description: WebSocket authentication token
+
+    AuthorizeResponse:
+      type: object
+      required:
+        - id
+        - result
+        - error
+      properties:
+        id:
+          type: integer
+        result:
+          type: object
+          required:
+            - status
+          properties:
+            status:
+              type: string
+              enum: [success]
+        error:
+          type: "null"

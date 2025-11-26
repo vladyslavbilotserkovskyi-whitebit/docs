@@ -1,0 +1,117 @@
+asyncapi: 3.0.0
+info:
+  title: WhiteBit Borrows
+  version: 1.0.0
+  description: Get and subscribe to borrows updates
+
+servers:
+  production:
+    host: api.whitebit.com
+    protocol: wss
+    description: Production WebSocket server
+
+channels:
+  /ws:
+    address: /ws
+    description: Borrows operations
+    messages:
+      borrowsRequest:
+        $ref: '#/components/messages/borrowsRequest'
+      borrowsResponse:
+        $ref: '#/components/messages/borrowsResponse'
+      borrowsSubscribe:
+        $ref: '#/components/messages/borrowsSubscribe'
+      borrowsSubscribeResponse:
+        $ref: '#/components/messages/borrowsSubscribeResponse'
+      borrowsUpdate:
+        $ref: '#/components/messages/borrowsUpdate'
+      borrowsUnsubscribe:
+        $ref: '#/components/messages/borrowsUnsubscribe'
+
+operations:
+  sendBorrowsRequest:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/borrowsRequest'
+
+  receiveBorrowsResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/borrowsResponse'
+
+  sendBorrowsSubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/borrowsSubscribe'
+
+  receiveBorrowsSubscribeResponse:
+    action: send
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/borrowsSubscribeResponse'
+
+  receiveBorrowsUpdates:
+    action: send
+    description: Receive real-time borrows updates
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/borrowsUpdate'
+
+  sendBorrowsUnsubscribe:
+    action: receive
+    channel:
+      $ref: '#/channels/~1ws'
+    messages:
+      - $ref: '#/channels/~1ws/messages/borrowsUnsubscribe'
+
+components:
+  messages:
+    borrowsRequest:
+      name: BorrowsRequest
+      title: Borrows Query
+      summary: Get current borrows
+      payload:
+        type: object
+
+    borrowsResponse:
+      name: BorrowsResponse
+      title: Borrows Response
+      summary: List of borrows
+      payload:
+        type: object
+
+    borrowsSubscribe:
+      name: BorrowsSubscribe
+      title: Subscribe to Borrows
+      summary: Subscribe to borrows updates
+      payload:
+        type: object
+
+    borrowsSubscribeResponse:
+      name: BorrowsSubscribeResponse
+      title: Subscribe Response
+      summary: Subscription confirmation
+      payload:
+        type: object
+
+    borrowsUpdate:
+      name: BorrowsUpdate
+      title: Borrows Update
+      summary: Real-time borrows update
+      payload:
+        type: object
+
+    borrowsUnsubscribe:
+      name: BorrowsUnsubscribe
+      title: Unsubscribe from Borrows
+      summary: Stop receiving borrows updates
+      payload:
+        type: object
