@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+// Mintlify provides React globally
+const { useState, useEffect, useRef } = React;
 
 export const ApiMonitorTable = () => {
   const [logs, setLogs] = useState(() => {
@@ -198,9 +199,8 @@ export const ApiMonitorTable = () => {
                   }}
                 >
                   <span
-                    className={`font-semibold ${
-                      log.code === 200 ? "text-green-400" : "text-red-400"
-                    }`}
+                    className={`font-semibold ${log.code === 200 ? "text-green-400" : "text-red-400"
+                      }`}
                   >
                     {log.code}
                   </span>
@@ -227,9 +227,8 @@ export const ApiMonitorTable = () => {
                   }}
                 >
                   <span
-                    className={`font-bold uppercase text-xs ${
-                      log.action === "BUY" ? "text-green-400" : "text-red-400"
-                    }`}
+                    className={`font-bold uppercase text-xs ${log.action === "BUY" ? "text-green-400" : "text-red-400"
+                      }`}
                   >
                     {log.action}
                   </span>

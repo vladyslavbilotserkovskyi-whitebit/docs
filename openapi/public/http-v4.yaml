@@ -16,6 +16,8 @@ info:
 servers:
   - url: https://whitebit.com
     description: WhiteBIT Production Server
+  - url: https://whitebit.eu
+    description: WhiteBIT EU Server
 
 paths:
   /api/v4/public/platform/status:

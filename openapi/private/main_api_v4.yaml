@@ -17,38 +17,9 @@ info:
 
 servers:
   - url: https://whitebit.com
-    description: Production server
-
-security:
-  - ApiKeyAuth: []
-
-tags:
-  - name: Main Account
-    description: Main account balance and operations
-  - name: Deposit
-    description: Cryptocurrency and fiat deposit operations
-  - name: Withdraw
-    description: Cryptocurrency and fiat withdrawal operations
-  - name: Transfer
-    description: Balance transfer operations
-  - name: Codes
-    description: WhiteBIT codes operations
-  - name: Crypto Lending - Fixed
-    description: Fixed crypto lending plans
-  - name: Crypto Lending - Flex
-    description: Flexible crypto lending plans
-  - name: Fees
-    description: Fee information
-  - name: Sub-Account
-    description: Sub-account management
-  - name: Sub-Account API Keys
-    description: Sub-account API key management
-  - name: Mining Pool
-    description: Mining pool operations
-  - name: Credit Line
-    description: Credit line information
-  - name: JWT
-    description: JWT token management
+    description: WhiteBIT Production Server
+  - url: https://whitebit.eu
+    description: WhiteBIT EU Server
 
 paths:
   /api/v4/main-account/balance:

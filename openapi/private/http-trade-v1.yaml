@@ -15,10 +15,9 @@ info:
     </Warning>
 servers:
   - url: https://whitebit.com
-    description: WhiteBIT API Server
-
-security:
-  - ApiKeyAuth: []
+    description: WhiteBIT Production Server
+  - url: https://whitebit.eu
+    description: WhiteBIT EU Server
 
 paths:
   /api/v1/account/balance:
@@ -419,6 +418,7 @@ paths:
                         type: string
                   result:
                     type: array
+                    items: {}
                     example: []
 
   /api/v1/account/executed_history:
@@ -508,6 +508,7 @@ paths:
                         type: string
                   result:
                     type: array
+                    items: {}
                     example: []
 
   /api/v1/account/executed_history/all:
@@ -592,6 +593,7 @@ paths:
                         type: string
                   result:
                     type: array
+                    items: {}
                     example: []
 
   /api/v1/account/order:
@@ -726,6 +728,7 @@ paths:
                         type: string
                   result:
                     type: array
+                    items: {}
                     example: []
 
 components:

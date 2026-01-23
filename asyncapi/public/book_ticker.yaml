@@ -8,7 +8,11 @@ servers:
   production:
     host: api.whitebit.com
     protocol: wss
-    description: Production WebSocket server
+    description: WhiteBIT Production Server
+  eu:
+    host: api.whitebit.eu
+    protocol: wss
+    description: WhiteBIT EU Server
 
 channels:
   /ws:
@@ -229,4 +233,5 @@ components:
           enum: [bookTicker_unsubscribe]
         params:
           type: array
+          items: {}
           maxItems: 0
