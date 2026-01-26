@@ -8,7 +8,7 @@ servers:
   production:
     host: api.whitebit.com
     protocol: wss
-    description: WhiteBIT Production Server
+    description: WhiteBIT Global Server
   eu:
     host: api.whitebit.eu
     protocol: wss

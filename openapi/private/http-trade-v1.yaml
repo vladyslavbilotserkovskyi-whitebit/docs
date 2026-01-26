@@ -15,7 +15,7 @@ info:
     </Warning>
 servers:
   - url: https://whitebit.com
-    description: WhiteBIT Production Server
+    description: WhiteBIT Global Server
   - url: https://whitebit.eu
     description: WhiteBIT EU Server
 
