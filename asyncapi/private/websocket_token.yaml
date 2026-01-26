@@ -8,7 +8,11 @@ servers:
   production:
     host: api.whitebit.com
     protocol: wss
-    description: Production WebSocket server
+    description: WhiteBIT Global Server
+  eu:
+    host: api.whitebit.eu
+    protocol: wss
+    description: WhiteBIT EU Server
 
 channels:
   /ws:
@@ -81,6 +85,7 @@ components:
           const: websocket_token
         params:
           type: array
+          items: {}
           maxItems: 0
 
     WebsocketTokenResponse:

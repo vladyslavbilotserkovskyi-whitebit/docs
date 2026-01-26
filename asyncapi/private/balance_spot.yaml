@@ -8,7 +8,11 @@ servers:
   production:
     host: api.whitebit.com
     protocol: wss
-    description: Production WebSocket server
+    description: WhiteBIT Global Server
+  eu:
+    host: api.whitebit.eu
+    protocol: wss
+    description: WhiteBIT EU Server
 
 channels:
   /ws:
@@ -130,6 +134,7 @@ components:
           const: balanceSpot_request
         params:
           type: array
+          items: {}
           maxItems: 0
 
     BalanceSpotResponse:
@@ -160,6 +165,7 @@ components:
           const: balanceSpot_subscribe
         params:
           type: array
+          items: {}
           maxItems: 0
 
     SubscriptionResponse:
@@ -195,6 +201,7 @@ components:
           const: balanceSpot_update
         params:
           type: array
+          items: {}
 
     UnsubscribeRequest:
       type: object
@@ -209,4 +216,5 @@ components:
           type: string
         params:
           type: array
+          items: {}
           maxItems: 0

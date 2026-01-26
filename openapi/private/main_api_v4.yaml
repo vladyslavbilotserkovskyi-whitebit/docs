@@ -17,7 +17,9 @@ info:
 
 servers:
   - url: https://whitebit.com
-    description: Production server
+    description: WhiteBIT Global Server
+  - url: https://whitebit.eu
+    description: WhiteBIT EU Server
 
 security:
   - ApiKeyAuth: []
