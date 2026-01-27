@@ -47,6 +47,7 @@
                       {
                         "group": "Usage",
                         "pages": [
+                          "platform/oauth/usage/overview",
                           "platform/oauth/usage/oauth",
                           "platform/oauth/usage/get-access-token",
                           "platform/oauth/usage/refresh-token",
