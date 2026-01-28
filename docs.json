@@ -97,6 +97,7 @@
                   {
                     "group": "API v4",
                     "pages": [
+                      "public/http-v4/overview",
                       "public/http-v4/maintenance-status",
                       "public/http-v4/market-info",
                       "public/http-v4/market-activity",
