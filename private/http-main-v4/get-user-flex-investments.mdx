@@ -6,3 +6,85 @@ openapi: /openapi/private/main_api_v4.yaml POST /api/v4/main-account/smart-flex/
 <Note>
 These endpoints are available only for B2B partner services, you need to fill the form https://whitebit.com/institutional-services/b2b in order to get permissions to use these endpoints.
 </Note>
+
+### Get User Flex Investments
+
+<ApiEndpoint method="POST" path="/api/v4/main-account/smart-flex/investments" />
+
+Retrieve user's investment portfolio with optional filtering.
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name             | Type    | Mandatory | Description                                       |
+|------------------|---------|-----------|---------------------------------------------------|
+| limit            | Integer | **No**    | Pagination limit. Default: 100.                   |
+| offset           | Integer | **No**    | Pagination offset. Default: 0.                    |
+| ticker           | String  | **No**    | Filter by currency ticker. Example: USDT.         |
+| plan             | String  | **No**    | Filter by plan ID (UUID).                         |
+| investment       | String  | **No**    | Filter by investment ID.                          |
+| investmentStatus | Integer | **No**    | Filter by status (1=ACTIVE, 0=CLOSED).            |
+
+**Request BODY raw:**
+
+```json
+{
+  "limit": 100,
+  "offset": 0,
+  "ticker": "USDT",
+  "plan": "8f2e9d3c-1a4b-4c2d-9e5f-6a7b8c9d0e1f",
+  "investment": "invest_id_123",
+  "investmentStatus": 1,
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 200`
+
+```json
+{
+  "data": [
+    {
+      "id": "inv_7e2d9c3b-1a4b-4c2d-9e5f-6a7b8c9d0e1f",
+      "planId": "8f2e9d3c-1a4b-4c2d-9e5f-6a7b8c9d0e1f",
+      "currency": "USDT",
+      "invested": "1500.75",
+      "withAutoReinvest": true,
+      "status": 1,
+      "createdAt": 1640995200,
+      "updatedAt": 1641081600
+    }
+  ],
+  "limit": 100,
+  "offset": 0
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "ticker": ["The selected ticker is invalid."],
+    "plan": ["The selected plan is invalid."],
+    "investment": ["The selected investment is invalid."],
+    "investmentStatus": ["The selected investment status is invalid."]
+  }
+}
+```
+
+</details>
+
+---

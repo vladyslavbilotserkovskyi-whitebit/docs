@@ -2,3 +2,31 @@
 title: "Query Market Fee"
 openapi: "/openapi/private/http-trade-v4.yaml POST /api/v4/market/fee"
 ---
+
+### Query Market Fee
+
+<ApiEndpoint method="POST" path="/api/v4/market/fee?market=BTC_USDT" />
+
+This endpoint retrieves the maker and taker fees for a specific market. The `taker` and `maker` fields represent spot trading fees, while `futures_taker` and `futures_maker` represent futures trading fees. Futures fees return either the default values or custom values if set by the user.
+
+**Parameters:**
+
+| Name   | Type   | Mandatory | Description                         |
+| ------ | ------ | --------- | ----------------------------------- |
+| market | String | **Yes**   | Available market. Example: BTC_USDT |
+
+**Response:**
+Available statuses:
+
+- `Status 200`
+- `Status 422 if validation failed`
+
+```json
+{
+  "error": null,
+  "taker": "0.1",           // Spot taker fee
+  "maker": "0.1",           // Spot maker fee
+  "futures_taker": "0.05",  // Futures taker fee (default or custom)
+  "futures_maker": "0.03"  // Futures maker fee (default or custom)
+}
+```

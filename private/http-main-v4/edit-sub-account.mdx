@@ -3,3 +3,66 @@ title: "Edit Sub-Account"
 openapi: /openapi/private/main_api_v4.yaml POST /api/v4/sub-account/edit
 ---
 
+### Edit Sub-Account
+
+<ApiEndpoint method="POST" path="/api/v4/sub-account/edit" />
+
+This endpoint edit sub-account
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name                          | Type   | Mandatory | Description               |
+|-------------------------------|--------|-----------|---------------------------|
+| id                            | string | **yes**   | Sub-account id            |
+| alias                         | String | **Yes**   | Name for sub-account      |
+| permissions                   | object | **Yes**   | Sub-account permissions   |
+| permissions.spotEnabled       | bool   | **Yes**   | Enable transfers to trade balance       |
+| permissions.collateralEnabled | bool   | **Yes**   | Enable transfers to collateral balance |
+
+**Request BODY raw:**
+
+```json
+{
+  "id": true,
+  "alias": "training",
+  "permissions" : {
+    "spotEnabled": true,
+    "collateralEnabled": false
+  }
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 200`
+- `Status 400 if request validation failed`
+
+```json
+{
+//empty response
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "alias": ["Alias already exists."]
+  }
+}
+```
+
+</details>
+
+---

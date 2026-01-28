@@ -2,3 +2,41 @@
 title: "Market Info"
 openapi: "/openapi/public/http-v1.yaml GET /api/v1/public/markets"
 ---
+
+### Market Info
+
+<ApiEndpoint method="GET" path="/api/v1/public/markets" />
+
+This endpoint retrieves all information about available markets.
+
+**Response is cached for:**
+_1 second_
+
+**Parameters:**
+NONE
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "result": [
+    {
+      "name": "BTC_USDT",   // Name of market pair
+      "stock": "BTC",       // Ticker of stock currency
+      "money": "USDT",      // Ticker of money currency
+      "stockPrec": "6",     // Precision of stock currency
+      "moneyPrec": "2",     // Precision of money currency
+      "feePrec": "4",       // Precision of fee
+      "makerFee": "0.001",  // Default maker fee ratio
+      "takerFee": "0.001",  // Default taker fee ratio
+      "minAmount": "0.0001" // Minimal amount of stock to trade
+    },
+  ]
+}
+```
+
+---

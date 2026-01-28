@@ -2,3 +2,47 @@
 title: "Recent Trades"
 openapi: "/openapi/public/http-v4.yaml GET /api/v4/public/trades/{market}"
 ---
+
+### Recent Trades
+
+<ApiEndpoint method="GET" path="/api/v4/public/trades/{market}?type=sell" />
+
+This endpoint retrieves the [trades](./../glossary.md#deal-trade) that have been executed recently on the requested [market](./../glossary.md#market).
+
+**Response is cached for:**
+_1 second_
+
+❗ Rate limit 2000 requests/10 sec.
+
+**Parameters:**
+
+| Name | Type   | Mandatory | Description        |
+| ---- | ------ | --------- | ------------------ |
+| type | String | **No**    | Can be buy or sell |
+
+**Response:**
+
+```json
+[
+  {
+    "tradeID": 158056419,          // A unique ID associated with the trade for the currency pair transaction Note: Unix timestamp does not qualify as trade_id.
+    "price": "9186.13",            // Transaction price in quote pair volume.
+    "quote_volume": "0.0021",      // Transaction amount in quote pair volume.
+    "base_volume": "9186.13",      // Transaction amount in base pair volume.
+    "trade_timestamp": 1594391747, // Unix timestamp in milliseconds, identifies when the transaction occurred.
+    "type": "sell",                // Used to determine whether or not the transaction originated as a buy or sell. Buy – Identifies an ask that was removed from the order book. Sell – Identifies a bid that was removed from the order book.
+    "rpi": true                    // Indicates whether the trade involved a Retail Price Improvement (RPI) order
+  },
+  {
+    "tradeID": 158056416,
+    "price": "9186.13",
+    "base_volume": "9186.13",
+    "quote_volume": "0.002751",
+    "trade_timestamp": 1594391746,
+    "type": "sell",
+    "rpi": false
+  }
+]
+```
+
+---

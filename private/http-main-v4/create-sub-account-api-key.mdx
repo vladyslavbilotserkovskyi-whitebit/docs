@@ -3,3 +3,58 @@ title: "Create Sub-Account API Key"
 openapi: /openapi/private/main_api_v4.yaml POST /api/v4/sub-account/api-key/create
 ---
 
+### Create Sub-Account API Key
+
+<ApiEndpoint method="POST" path="/api/v4/sub-account/api-key/create" />
+
+This endpoint creates a new API key for a sub-account
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name         | Type   | Mandatory | Description                                                |
+|-------------|--------|------------|------------------------------------------------------------|
+| type        | Int | **Yes**      | Type of API key. 1 - info and trading; 2 - info, trading, deposits, withdraws                                           |
+| subAccountId| String | **Yes**   | ID of the sub-account to create the API key for           |
+| title       | String | **No**    | Custom title/name for the API key                         |
+
+**Request BODY raw:**
+
+```json
+{
+  "type": "trade",
+  "subAccountId": "8e667b4a-0b71-4988-8af5-9474dbfaeb51",
+  "title": "Trading Bot Key"
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 201`
+- `Status 400 if request validation failed`
+
+```json
+{
+  "subAccountId": "8e667b4a-0b71-4988-8af5-9474dbfaeb51",  // Sub-account ID
+  "id": "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6",           // API key ID
+  "title": "Trading Bot Key",                               // API key title/name
+  "isEnabled": true,                                        // Whether the API key is enabled
+  "apiKey": "your-api-key",                                // API key
+  "apiSecret": "your-api-secret",                          // API secret
+  "type": 2,                                               // API key type (1 - info and trading, 2 - info, trading, deposit and withdraw)
+  "lastActivity": 1646825196,                              // Last activity timestamp
+  "restrictAccess": true,                                  // Whether access is restricted
+  "accessEndpoints": [                                     // List of allowed endpoints
+    {
+      "name": "endpoint-name",                             // Endpoint name
+      "title": "Endpoint Title"                            // Endpoint title
+    }
+  ]
+}
+```

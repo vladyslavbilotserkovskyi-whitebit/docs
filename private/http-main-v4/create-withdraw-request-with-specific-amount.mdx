@@ -7,3 +7,21 @@ Example:
 
 - When you create base withdraw and set amount = 100 USD, receiver will recieve 100 USD - fee amount, and your balance will decrease by 100 USD.
 - When you use this endpoint and set amount = 100 USD, receiver will recieve 100 USD, and your balance will decrease by 100 USD + [fee](/glossary/#fee) amount.
+
+### Create withdraw request with the specific withdraw amount (fee is not included)
+
+<ApiEndpoint method="POST" path="/api/v4/main-account/withdraw-pay" />
+
+This endpoint has the similar logic as [/main-account/withdraw](#create-withdraw-request), but with the only difference: amount that is specified will not include [fee](./../glossary.md#fee) (it will be calculated to make target withdraw amount equal to the specified amount).
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+Example:
+
+- When you create base withdraw and set amount = 100 USD, receiver will recieve 100 USD - fee amount, and your balance will decrease by 100 USD.
+- When you use this endpoint and set amount = 100 USD, receiver will recieve 100 USD, and your balance will decrease by 100 USD + [fee](./../glossary.md#fee) amount.
+
+---

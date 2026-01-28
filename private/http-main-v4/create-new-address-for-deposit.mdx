@@ -3,3 +3,134 @@ title: "Create new address for deposit"
 openapi: /openapi/private/main_api_v4.yaml POST /api/v4/main-account/create-new-address
 ---
 
+### Create new address for deposit
+
+<ApiEndpoint method="POST" path="/api/v4/main-account/create-new-address" />
+
+This endpoint creates a new address even when the last created address is not used. This endpoint is not available by default, you need to contact support@whitebit.com in order to get permissions to use this endpoint.
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name    | Type   | Mandatory | Description                                                                                                                                                  |
+| ------- | ------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| ticker  | String | **Yes**   | Currency's [ticker](./../glossary.md#ticker). Example: BTC                                                                                                   |
+| network | String | **No**    | Currency's network if it is [multinetwork](./../glossary.md#multinetwork) currency. Example: OMNI or TRC20 or ERC20. For USDT default network is ERC20(ETH). |
+| type    | String | **No**    | Address type, available for specific currencies list (see address types table below)                                                                         |
+
+**Address types:**
+
+| Currency | Types               | Default |
+| -------- | ------------------- | ------- |
+| BTC      | p2sh-segwit, bech32 | bech32  |
+| LTC      | p2sh-segwit, bech32 | bech32  |
+
+**Request BODY raw:**
+
+```json
+{
+  "ticker": "XLM",
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Request BODY (for multinetwork currency) raw:**
+
+```json
+{
+  "ticker": "USDT",
+  "network": "ERC20",
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Request BODY (for BTC with specific address type):**
+
+```json
+{
+  "ticker": "BTC",
+  "type": "bech32",
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+Available statuses:
+
+- `Status 201 if all validations succeeded and creating transaction is started`
+- `Status 400 if request validation failed`
+- `Status 422 if inner validation failed`
+
+```json
+{
+  "account": {
+    "address": "GDTSOI56XNVAKJNJBLJGRNZIVOCIZJRBIDKTWSCYEYNFAZEMBLN75RMN", // deposit address
+    "memo": "48565488244493"                                               // memo if currency requires memo
+  },
+  "required": {
+    "maxAmount": "0", // max amount of deposit that can be accepted by exchange - if you deposit more than that number, it won't be accepted by exchange
+    "minAmount": "1", // min amount of deposit that accepted by exchange - if you deposit less than that number, it won't be accepted by exchange
+    "fixedFee": "0",  // fixed deposit fee
+    "flexFee": {      // flexible fee - is fee that use percent rate
+      "maxFee": "0",  // maximum fixed fee that you will pay
+      "minFee": "0",  // minimum fixed fee that you will pay
+      "percent": "0"  // percent of deposit that you will pay
+    }
+  }
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "ticker": ["The ticker field is required."]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "ticker": ["The selected ticker is invalid."]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "network": ["Unsupported network"]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "network": ["The network must be a string."],
+    "ticker": ["The ticker must be a string."]
+  }
+}
+```
+
+</details>
+
+---

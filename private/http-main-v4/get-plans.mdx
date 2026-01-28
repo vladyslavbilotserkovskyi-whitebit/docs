@@ -6,3 +6,79 @@ openapi: /openapi/private/main_api_v4.yaml POST /api/v4/main-account/smart/plans
 <Note>
 These endpoints are available only for B2B partner services, you need to fill the form https://whitebit.com/institutional-services/b2b in order to get permissions to use these endpoints.
 </Note>
+
+### Get plans
+
+<ApiEndpoint method="POST" path="/api/v4/main-account/smart/plans" />
+
+This endpoint retrieves all active [plans](./../glossary.md#crypto-lending)
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name   | Type   | Mandatory | Description                                                                                                                   |
+| ------ | ------ | --------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| ticker | String | **No**    | [Invest plan](./../glossary.md#crypto-lending) source currency's [ticker](./../glossary.md#ticker). Example: BTC |
+
+**Request BODY raw:**
+
+```json
+{
+  "ticker": "USDT",
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 200`
+- `Status 400 if request validation failed`
+
+```json
+[
+  {
+    "id": "8e667b4a-0b71-4988-8af5-9474dbfaeb51", // Invest plan identifier
+    "ticker": "USDT",                             // Source currency ticker
+    "status": 1,                                  // Status (1 - active, 2 - no coins left, 3 - inactive, 4 - pause)
+    "percent": "10",                              // Interest percent
+    "duration": 14400,                            // Investment duration (in minutes)
+    "interestTicker": "USDT",                     // Target currency ticker
+    "interestRatio": "1",                         // Target currency to source currency ratio, see note
+    "minInvestment": "100",                       // Min investment amount
+    "maxInvestment": "10000",                     // Max investment amount
+    "maxPossibleInvestment": "3000"               // Max investment amount due to current invest plan state
+  }
+]
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "ticker": ["The selected ticker is invalid."]
+  }
+}
+```
+
+</details>
+
+_Note_: when target currency is different from source currency, interest amount in target currency will be calculated using `interestRatio` value.
+
+Examples:
+
+- When source currency = USDT, target currency = BTC and interest ratio = 40000,
+  it means that you will receive interest in BTC that equals interest amount in USDT divided by interest ratio (in this case 0.000025 BTC per each 1 USDT of interest amount).
+- When source currency equals target currency, interest ratio equals 1.
+
+---

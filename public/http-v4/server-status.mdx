@@ -2,3 +2,20 @@
 title: "Server Status"
 openapi: "/openapi/public/http-v4.yaml GET /api/v4/public/ping"
 ---
+
+### Server Status
+
+<ApiEndpoint method="GET" path="/api/v4/public/ping" />
+
+This endpoint retrieves the current API life-state.
+
+❗ Rate limit 2000 requests/10 sec.
+
+**Response is cached for:**
+_1 second_
+
+**Response:**
+
+```json
+["pong"]
+```

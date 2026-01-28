@@ -2,3 +2,83 @@
 title: "Fee"
 openapi: "/openapi/public/http-v4.yaml GET /api/v4/public/fee"
 ---
+
+### Fee
+
+<ApiEndpoint method="GET" path="/api/v4/public/fee" />
+
+This endpoint retrieves the list of [fees](./../glossary.md#fee) and min/max amount for deposits and withdraws
+
+**Response is cached for:**
+_1 second_
+
+❗ Rate limit 2000 requests/10 sec.
+
+---
+
+**Response:**
+
+```json
+{
+  "USDT (ERC20)": {
+    "ticker": "USDT",                             // currency ticker
+    "name": "Tether US",                          // currency ticker
+    "providers": [],
+    "deposit": {                                  // deposit fees
+      "min_amount": "0.0005",                     // min deposit amount. 0 if there is no limitation
+      "max_amount": "0.1",                        // max deposit amount. 0 if there is no limitation
+      "fixed": "0.0005",                          // fixed fee amount which applies for all transaction
+      "flex": {                                   // flex fee only applies for all transactions but according to min/max fee. Nullable if there is no flex fee
+        "min_fee": "100",                         // min fee amount
+        "max_fee": "1000",                        // max fee amount
+        "percent": "10"
+      }
+    },
+    "withdraw": {
+      "min_amount": "0.001",
+      "max_amount": "0",
+      "fixed": null,
+      "flex": null
+    },
+    "is_depositable": true,                       // true if currency can be depositable
+    "is_withdrawal": true,                        // true if currency can be withdrawable
+    "is_api_withdrawal": true,                    // true if currency can be withdrawable by api
+    "is_api_depositable": true                    // true if currency can be depositable by api
+  },
+  "USD": {
+    "ticker": "USD",                              // currency ticker
+    "name": "United States Dollar",               // currency ticker
+    "providers": [                                // the list of providers. It is uses for fiat currencies. Provider is a payment system with own fees, which process payment operation
+      "USD_ADVCASH",
+      "USD_CAPITALIST",
+      "USD_EPAY_COM",
+      "USD_PERFECT_MONEY",
+      "USD_VISAMASTER_INTERKASSA"
+    ],
+    "deposit": {                                  // for currencies with payment providers fee and amounts shows for each provider directly
+      "USD_VISAMASTER_INTERKASSA": {
+        "min_amount": "10",
+        "max_amount": "1500",
+        "fixed": null,
+        "flex": null,
+        "is_depositable": false,
+        "is_api_depositable": true,
+        "name": "USD Visa/MasterCard Interkassa", // provider name
+        "ticker": "USD_VISAMASTER_INTERKASSA"     // provider ticker
+      }
+    },
+    "withdraw": {
+      "USD_VISAMASTER_INTERKASSA": {
+        "min_amount": "20",
+        "max_amount": "1500",
+        "fixed": null,
+        "flex": null,
+        "is_withdrawal": false,
+        "is_api_withdrawal": true,
+        "name": "USD Visa/MasterCard Interkassa",
+        "ticker": "USD_VISAMASTER_INTERKASSA"
+      }
+    }
+  }
+}
+```

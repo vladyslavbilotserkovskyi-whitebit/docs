@@ -2,3 +2,48 @@
 title: "Change Collateral Account Leverage"
 openapi: "/openapi/private/http-trade-v4.yaml POST /api/v4/collateral-account/leverage"
 ---
+
+### Change Collateral Account Leverage
+
+<ApiEndpoint method="POST" path="/api/v4/collateral-account/leverage" />
+
+This endpoint changes the current leverage of account.
+
+**Please note**: Leverages of 50x and 100x are applicable only for futures trading. When applied to margin trading, the maximum leverage applied will be 20x. The leverage value is applied to the entire account, so if you choose a new leverage value below 50x, it will be applied to both margin and futures trading.
+Additionally, we would like to draw your attention to the fact that calculations for futures positions with 50x and 100x leverage are done considering brackets (see endpoint [futures](./../public/http-v4.md#available-futures-markets-list)). You can familiarize yourself with the bracket mechanics for 50x and 100x leverage on the Trading Rules page.
+
+❗ Rate limit 12000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name     | Type | Mandatory | Description                                                                                                          |
+| -------- | ---- | --------- | -------------------------------------------------------------------------------------------------------------------- |
+| leverage | Int  | **Yes**   | New [collateral](./../glossary.md#collateral) account leverage value. Acceptable values: 1, 2, 3, 5, 10, 20, 50, 100 |
+
+**Request BODY raw:**
+
+```json
+{
+  "leverage": 5,
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+Available statuses:
+
+- `Status 200`
+- `Status 422 if inner validation failed`
+- `Status 503 if service temporary unavailable`
+
+```json
+{
+  "leverage": 5 // current collateral balance leverage
+}
+```
+
+---

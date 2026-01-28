@@ -2,3 +2,142 @@
 title: "Query executed order history"
 openapi: "/openapi/private/http-trade-v4.yaml POST /api/v4/trade-account/executed-history"
 ---
+
+### Query executed order history
+
+<ApiEndpoint method="POST" path="/api/v4/trade-account/executed-history" />
+
+This endpoint retrieves all deals for all markets. Can be filtered by single market if needed.
+
+❗ Rate limit 12000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name          | Type       | Mandatory | Description                                                                                                                                                           |
+| ------------- | ---------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| market        | String     | **No**    | Requested market. Example: BTC_USDT                                                                                                                                   |
+| clientOrderId | String     | **No**    | Requested clientOrderId. Example: customId11    
+| startDate     | Int        | **No**    | Start date in Unix-time format                                                                                                                    |
+| endDate       | Int        | **No**    | End date in Unix-time format                                                                                                                         |
+| limit         | String/Int | **No**    | LIMIT is a special clause used to limit records a particular query can return. Default: 50, Min: 1, Max: 100                                                          |
+| offset        | String/Int | **No**    | If you want the request to return entries starting from a particular line, you can use OFFSET clause to tell it where it should start. Default: 0, Min: 0 |
+
+<Alert
+  type="warning"
+  header="Important Limitations"
+  message="This method can retrieve data not older than 6 months from current month. If you need older data - you can use Report on the History page in your account."
+/>
+
+**Request BODY raw:**
+
+```json
+{
+  "clientOrderId": "customId11", // custom order id; (optional)
+  "offset": 0,
+  "limit": 100,
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 200`
+- `Status 422 if request validation failed`
+- `Status 400 if inner validation failed`
+- `Status 503 if service temporary unavailable`
+
+```json
+{
+  "BTC_USDT": [
+    {
+      "id": 8846967538, // deal ID
+      "clientOrderId": "customId11", // custom order id; "clientOrderId": "" - if not specified.
+      "time": 1739310711.387599, // Timestamp of the executed deal
+      "side": "buy", // Deal side "sell" / "buy"
+      "role": 2, // Role - 1 - maker, 2 - taker
+      "amount": "2.717", // amount in stock
+      "price": "3.3419", // price
+      "deal": "9.0799423", // amount in money
+      "fee": "0.002717", // paid fee
+      "orderId": 1164603916051, // order ID
+      "feeAsset": "SUI" // fee asset
+    }
+  ]
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 30,
+  "message": "Validation failed",
+  "errors": {
+    "limit": ["Limit field should be an integer."],
+    "offset": ["Offset field should be an integer."]
+  }
+}
+```
+
+```json
+{
+  "code": 31,
+  "message": "Validation failed",
+  "errors": {
+    "market": ["Market field format is invalid."]
+  }
+}
+```
+
+```json
+{
+  "code": 31,
+  "message": "Validation failed",
+  "errors": {
+    "market": ["Market field should be a string."]
+  }
+}
+```
+
+```json
+{
+  "code": 30,
+  "message": "Validation failed",
+  "errors": {
+    "limit": ["Limit should not be greater than 100."],
+    "offset": ["Offset should not be greater than 10000."]
+  }
+}
+```
+
+```json
+{
+  "code": 30,
+  "message": "Validation failed",
+  "errors": {
+    "limit": ["Limit should be at least 1."],
+    "offset": ["Offset should be at least 0."]
+  }
+}
+```
+
+```json
+{
+  "code": 1,
+  "message": "Inner validation failed",
+  "errors": {
+    "amount": ["Invalid argument."]
+  }
+}
+```
+
+</details>
+
+---

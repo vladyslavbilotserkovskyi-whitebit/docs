@@ -2,3 +2,33 @@
 title: "Symbols"
 openapi: "/openapi/public/http-v1.yaml GET /api/v1/public/symbols"
 ---
+
+### Symbols
+
+<ApiEndpoint method="GET" path="/api/v1/public/symbols" />
+
+This endpoint retrieves information about all available markets for trading.
+
+**Response is cached for:**
+_1 second_
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Parameters:**
+NONE
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "result": [
+    "BTC_USDT", // Name of market pair
+    "ETH_BTC",  // Name of market pair
+    "ETH_USDT", // Name of market pair
+  ]
+}
+```
+
+---

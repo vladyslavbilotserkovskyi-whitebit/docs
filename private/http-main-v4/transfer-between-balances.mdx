@@ -3,3 +3,159 @@ title: "Transfer between balances"
 openapi: /openapi/private/main_api_v4.yaml POST /api/v4/main-account/transfer
 ---
 
+### Transfer between balances
+
+<ApiEndpoint method="POST" path="/api/v4/main-account/transfer" />
+
+This endpoint transfers the specified amount between [main](./../glossary.md#balance-main), [trade](./../glossary.md#balance-spotbalance-trade) and [collateral](./../glossary.md#balance-collateral) balances
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name   | Type           | Mandatory                             | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------ | -------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| method | String         | **No** if **from** and **to** are set | Method We highly recommend to use **from** and **to** fields, which provides more flexibility. This way will be deprecated in future. Example: **deposit** if you need to transfer from main to trade / **withdraw** if you need to transfer from [trade](./../glossary.md#balance-spotbalance-trade) balance to [main](./../glossary.md#balance-main). For [collateral balances](./../glossary.md#balance-collateral) you can use **collateral-deposit** to transfer from main to collateral balance and **collateral-withdraw** to transfer from collateral balance to main |
+| from   | String         | **No** if **method** is set           | Balance FROM which funds will move to. Acceptable values: [**main**](./../glossary.md#balance-main), [**spot**](./../glossary.md#balance-spotbalance-trade), [**collateral**](./../glossary.md#balance-collateral)                                                                                                                                                                                                                                                                                                                                                            |
+| to     | String         | **No** if **method** is set           | Balance TO which funds will move to. Acceptable values: [**main**](./../glossary.md#balance-main), [**spot**](./../glossary.md#balance-spotbalance-trade), [**collateral**](./../glossary.md#balance-collateral)                                                                                                                                                                                                                                                                                                                                                              |
+| ticker | String         | **Yes**                               | Currency's [ticker](./../glossary.md#ticker). Example: BTC                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| amount | Numeric string | **Yes**                               | Amount to transfer. Max [precision](./../glossary.md#precision) = 8, value should be greater than zero and less or equal your available balance.                                                                                                                                                                                                                                                                                                                                                                                                                              |
+
+**Request BODY raw:**
+
+```json
+{
+  "ticker": "XLM",
+  "amount": "0.9",
+  "method": "deposit",
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+Available statuses:
+
+- `Status 201 if all validations succeeded and creating transaction is started`
+- `Status 400 if request validation failed`
+- `Status 422 if inner validation failed`
+
+Response error codes:
+
+- 1 - transfers from [trade](./../glossary.md#balance-spotbalance-trade) to [main](./../glossary.md#balance-main) are disabled
+- 2 - transfers from main to trade are disabled
+- 3 - not enough balance
+
+```json
+[
+  // empty array - has success status
+]
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "amount": ["The amount field is required."],
+    "method": ["The method field is required."],
+    "ticker": ["The ticker field is required."]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "ticker": ["The selected ticker is invalid."]
+  }
+}
+```
+
+Errors for unconfirmed users (without KYC):
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "amount": [
+      "This currency has no active pairs or it may have been delisted. Its rate cannot be calculated at the moment.",
+      "Current limit exceeded"
+    ]
+  }
+}
+```
+
+Also, fiat currencies can't be withdrawn without KYC:
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "amount": ["Your account must be verified"]
+  }
+}
+```
+
+```json
+{
+  "code": 3,
+  "message": "Inner validation failed",
+  "errors": {
+    "amount": [
+      "You don't have such amount for transfer (available 34.68, in amount: 1000000)"
+    ]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "method": ["The selected method is invalid."]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "amount": ["The amount must be at least 0.00000001."]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "amount": ["The amount must be a number.", "Invalid number"]
+  }
+}
+```
+
+```json
+{
+  "message": "Too Many Attempts.", // In case of throttling
+  "code": 0
+}
+```
+
+</details>
+
+---

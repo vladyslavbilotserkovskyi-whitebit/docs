@@ -2,3 +2,42 @@
 title: "Orderbook"
 openapi: "/openapi/public/http-v4.yaml GET /api/v4/public/orderbook/{market}"
 ---
+
+### Orderbook
+
+<ApiEndpoint method="GET" path="/api/v4/public/orderbook/{market}?limit=100&level=2" />
+
+This endpoint retrieves the current [order book](./../glossary.md#order-book) as two arrays ([bids](./../glossary.md#bid) / [asks](./../glossary.md#ask)) with additional parameters.
+
+**Response is cached for:**
+_100 ms_
+
+❗ Rate limit 600 requests/10 sec.
+
+**Parameters:**
+
+| Name  | Type | Mandatory | Description                                                                                                                                                                                                                                                              |
+| ----- | ---- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| limit | int  | **No**    | Orders depth quantity: 0 - 100. Not defined or 0 will return 100 entries.                                                                                                                                                                                                |
+| level | int  | **No**    | Optional parameter that allows API user to see different level of aggregation. Level 0 – default level, no aggregation. Starting from level 1 (lowest possible aggregation) and up to level 5 - different levels of aggregated [orderbook](./../glossary.md#order-book). |
+
+**Response:**
+
+```json
+{
+  "ticker_id": "BTC_PERP", // Market Name
+  "timestamp": 1594391413, // Current timestamp
+  "asks": [                // Array of ask orders
+    [
+      "9184.41",           // Price of lowest ask
+      "0.773162"           // Amount of lowest ask
+    ],
+  ],
+  "bids": [                // Array of bid orders
+    [
+      "9181.19",           // Price of highest bid
+      "0.010873"           // Amount of highest bid
+    ],
+  ]
+}
+```

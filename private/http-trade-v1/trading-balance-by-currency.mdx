@@ -2,3 +2,63 @@
 title: "Trading balance by currency"
 openapi: "/openapi/private/http-trade-v1.yaml POST /api/v1/account/balance"
 ---
+
+### Trading balance by currency
+
+#### This endpoint is deprecated. Use [V4 endpoint](./http-trade-v4#trading-balance) instead
+
+<ApiEndpoint method="POST" path="/api/v1/account/balance" />
+
+This endpoint retrieves the [trade balance](./../glossary.md#balance-spotbalance-trade) by currency [ticker](./../glossary.md#ticker).
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name     | Type   | Mandatory | Description                                                |
+| -------- | ------ | --------- | ---------------------------------------------------------- |
+| currency | String | **Yes**   | Currency's [ticker](./../glossary.md#ticker). Example: BTC |
+
+**Request BODY raw:**
+
+```json
+{
+  "currency": "BTC",
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+
+```json
+{
+  "available": "0.2", // Available balance of currency for trading
+  "freeze": "1.02" // Balance of currency on orders
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "message": "Currency not found"
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "ticker": ["The ticker must be a string."]
+  }
+}
+```
+
+</details>
+___

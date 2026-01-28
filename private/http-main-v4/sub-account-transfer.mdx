@@ -3,3 +3,65 @@ title: "Sub-Account Transfer"
 openapi: /openapi/private/main_api_v4.yaml POST /api/v4/sub-account/transfer
 ---
 
+### Sub-Account Transfer
+
+<ApiEndpoint method="POST" path="/api/v4/sub-account/transfer" />
+
+This endpoint creates transfer from main account to sub-account or vice versa
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name      | Type           | Mandatory | Description                                                 |
+|-----------|----------------|-----------|-------------------------------------------------------------|
+| id        | String         | **Yes**   | Sub-account id                                              |
+| direction | String         | **Yes**   | Transfer direction. Values: "main_to_sub" or "sub_to_main". |
+| amount    | Numeric String | **Yes**   | Transfer amount. Min '0.00000001'                           |
+| ticker    | String         | **Yes**   | Currencies [ticker](./../glossary.md#ticker).               |
+
+**Request BODY raw:**
+
+```json
+{
+  "id": "8e667b4a-0b71-4988-8af5-9474dbfaeb51",
+  "direction": "main_to_sub",
+  "amount": "42.0",
+  "ticker": "USDC"
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 200`
+- `Status 400 if request validation failed`
+
+```json
+{
+  // empty response
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "amount": ["Amount is invalid"],
+    "ticker": ["Ticker do not exists"],
+    "id": ["Sub-account do not exists"],
+  }
+}
+```
+
+</details>
+
+---

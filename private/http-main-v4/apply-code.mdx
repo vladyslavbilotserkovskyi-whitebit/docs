@@ -3,3 +3,74 @@ title: "Apply code"
 openapi: /openapi/private/main_api_v4.yaml POST /api/v4/main-account/codes/apply
 ---
 
+### Apply code
+
+<ApiEndpoint method="POST" path="/api/v4/main-account/codes/apply" />
+
+This endpoint applies [WhiteBIT code](./../glossary.md#whitebit-codes).
+
+❗ Rate limit 60 requests/1 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name       | Type   | Mandatory | Description                                                                                                         |
+| ---------- | ------ | --------- | ------------------------------------------------------------------------------------------------------------------- |
+| code       | String | **Yes**   | [Code](./../glossary.md#whitebit-codes) that will be applied.                                                  |
+| passphrase | String | **No**    | Should be provided if the [code](./../glossary.md#whitebit-codes) was created with passphrase Max: 25 symbols. |
+
+**Request BODY raw:**
+
+```json
+{
+  "code": "WBe11f4fce-2a53-4edc-b195-66b693bd77e3ETH",
+  "passphrase": "some passphrase",
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+Available statuses:
+
+- `Status 201 if all validations succeeded and creating transaction is started`
+- `Status 400 if request validation failed`
+- `Status 422 if inner validation failed`
+
+```json
+{
+  "message": "Code was successfully applied",
+  "ticker": "ETH",
+  "amount": "0.002",
+  "external_id": "be08a482-5faf-11ed-9b6a-0242ac120002"
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "code": ["The code field is required."]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "code": ["Incorrect code or passphrase"]
+  }
+}
+```
+
+</details>
+
+---

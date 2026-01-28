@@ -3,3 +3,49 @@ title: "Get fees"
 openapi: /openapi/private/main_api_v4.yaml POST /api/v4/main-account/fee
 ---
 
+### Get fees
+
+<ApiEndpoint method="POST" path="/api/v4/main-account/fee" />
+
+Returns an array of objects containing deposit/withdrawal settings for the corresponding currencies.
+Zero value in amount fields means that the setting is disabled.
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Response:**
+
+Available statuses:
+
+- `Status 200`
+
+```json
+[
+  {
+    "ticker": "BTC",         // Ticker
+    "name": "Bitcoin",       // Currency name
+    "can_deposit": "0",      // Status currency
+    "can_withdraw": "0",     // Status currency
+    "deposit": {             // Deposit fees/limits
+      "minFlex": "0",        // Min fee amount when flex fee is enabled
+      "maxFlex": "0",        // Max fee amount when flex fee is enabled
+      "percentFlex": "0",    // Flex fee percent
+      "fixed": "0",          // Fixed fee
+      "minAmount": "0.0005", // Min deposit amount
+      "maxAmount": "0"       // Max deposit amount
+    },
+    "withdraw": {            // Withdrawal fees/limits
+      "minFlex": "0",        // Min fee amount when flex fee is enabled
+      "maxFlex": "0",        // Max fee amount when flex fee is enabled
+      "percentFlex": "0",    // Flex fee percent
+      "fixed": "0.0004",     // Fixed fee
+      "minAmount": "0.001",  // Min withdrawal amount
+      "maxAmount": "0"       // Max withdrawal amount
+    }
+  }
+]
+```
+
+---

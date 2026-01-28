@@ -2,3 +2,50 @@
 title: "Order depth"
 openapi: "/openapi/public/http-v1.yaml GET /api/v1/public/depth/result"
 ---
+
+### Order depth
+
+<ApiEndpoint method="GET" path="/api/v1/public/depth/result?market=BTC_USDT" />
+
+This endpoint retrieves the current [order book](./../glossary.md#order-book) as two arrays ([bids](./../glossary.md#bid) / [asks](./../glossary.md#ask))
+
+**Response is cached for:**
+_100 ms_
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Parameters:**
+
+| Name   | Type   | Mandatory | Description                                          |
+| ------ | ------ | --------- | ---------------------------------------------------- |
+| market | String | **Yes**   | Available market. Example: BTC_USDT                  |
+| limit  | int    | **No**    | Limit of results. Default: 100 Max: 100 Example: 100 |
+
+**Response:**
+
+```json
+{
+  "asks": [
+    [
+      "9431.9",  // Price of lowest ask
+      "0.705088" // Amount of lowest ask
+    ],
+    [
+      "9433.67", // Price of next ask
+      "0.324509" // Amount of next ask
+    ],
+  ],
+  "bids": [
+    [
+      "9427.65", // Price of highest bid
+      "0.547909" // Amount of highest bid
+    ],
+    [
+      "9427.3",  // Price of next bid
+      "0.669249" // Amount of next bid
+    ],
+  ]
+}
+```
+
+---

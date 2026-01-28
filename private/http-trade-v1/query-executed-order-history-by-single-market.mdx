@@ -2,3 +2,113 @@
 title: "Query executed order history by single market"
 openapi: "/openapi/private/http-trade-v1.yaml POST /api/v1/account/executed_history"
 ---
+
+### Query executed order history by single market
+
+#### This endpoint is deprecated. Use [V4 endpoint](./http-trade-v4#query-executed-order-history) instead
+
+<ApiEndpoint method="POST" path="/api/v1/account/executed_history" />
+
+This endpoint retrieves [deals](./../glossary.md#deal-trade) history sorted by single market
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name   | Type   | Mandatory | Description                                                                                                                                                           |
+| ------ | ------ | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| market | String | **Yes**   | Requested available market. Example: BTC_USDT                                                                                                                         |
+| limit  | Int    | **No**    | LIMIT is a special clause used to limit records that a particular query can return. Default: 50, Min: 1, Max: 100                                                     |
+| offset | Int    | **No**    | If you want the request to return entries starting from a particular line, you can use OFFSET clause to tell it where it should start. Default: 0, Min: 0, Max: 10000 |
+
+<Alert
+  type="warning"
+  header="Important Limitations"
+  message="This method can retrieve data not older than 6 months from current month. If you need older data - you can use Report on the History page in your account."
+/>
+
+**Request BODY raw:**
+
+```json
+{
+  "market": "BTC_USDT",
+  "offset": 0,
+  "limit": 100,
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "",
+  "result": [
+    {
+      "id": 160305483, // order id
+      "clientOrderId": "order1987111", // custom client order id; "clientOrderId": "" - if not specified.
+      "time": 1594667731.724403, // timestamp of order creation
+      "side": "sell", // Order side "sell" / "buy"
+      "role": 2, // Role - 1 - maker, 2 - taker
+      "amount": "0.000076", // amount in stock
+      "price": "9264.21", // price
+      "deal": "0.70407996", // amount in money
+      "fee": "0.00070407996" // fee that you pay
+    }
+  ]
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "success": false,
+  "message": {
+    "market": ["The market must be a string.", "The market format is invalid."]
+  },
+  "result": []
+}
+```
+
+```json
+{
+  "success": false,
+  "message": {
+    "market": ["The market field is required."]
+  },
+  "result": []
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "limit": ["The limit may not be greater than 100."],
+    "offset": ["The offset may not be greater than 10000."]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "limit": ["The limit must be at least 1."],
+    "offset": ["The offset must be at least 0."]
+  }
+}
+```
+
+</details>
+
+---

@@ -2,3 +2,42 @@
 title: "Single market activity"
 openapi: "/openapi/public/http-v1.yaml GET /api/v1/public/ticker"
 ---
+
+### Single market activity
+
+<ApiEndpoint method="GET" path="/api/v1/public/ticker?market=ETH_BTC" />
+
+This endpoint retrieves information about recent trading activity on the requested market.
+
+**Response is cached for:**
+_1 second_
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Parameters:**
+
+| Name   | Type   | Mandatory | Description                         |
+| ------ | ------ | --------- | ----------------------------------- |
+| market | String | **Yes**   | Available market. Example: BTC_USDT |
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "result": {
+    "open": "9267.98",            // Open price for day
+    "bid": "9417.4",              // The highest bid currently available
+    "ask": "9421.64",             // The lowest ask currently available
+    "low": "9203.13",             // Lowest price for day
+    "high": "9469.99",            // Highest price for day
+    "last": "9419.55",            // Latest deal price
+    "volume": "27303.824558",     // Volume in stock
+    "deal": "254399191.68843464", // Volume in money
+    "change": "1.63"              // Change between open and close price in percentage
+  }
+}
+```
+
+---

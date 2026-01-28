@@ -3,3 +3,96 @@ title: "Get my codes"
 openapi: /openapi/private/main_api_v4.yaml POST /api/v4/main-account/codes/my
 ---
 
+### Get my codes
+
+<ApiEndpoint method="POST" path="/api/v4/main-account/codes/my" />
+
+This endpoint retrieves the list of [WhiteBIT codes](./../glossary.md#whitebit-codes) created by my account.
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name   | Type | Mandatory | Description                                                                                                                                                           |
+| ------ | ---- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| limit  | Int  | **No**    | LIMIT is a special clause used to limit records a particular query can return. Default: 30, Min: 1, Max: 100                                                          |
+| offset | Int  | **No**    | If you want the request to return entries starting from a particular line, you can use OFFSET clause to tell it where it should start. Default: 0, Min: 0, Max: 10000 |
+
+**Request BODY raw:**
+
+```json
+{
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+Available statuses:
+
+- `Status 201 if all validations succeeded and creating transaction is started`
+- `Status 400 if request validation failed`
+- `Status 422 if inner validation failed`
+
+```json
+{
+    "total": 15,
+    "data": [
+        {
+            "amount": "0.002",                                    // code amount
+            "code": "WBe11f4fce-2a53-4edc-b195-66b693bd77e3ETH",  // code
+            "date": 1598296332,                                   // code creation timestamp
+            "status": "Activated",                                // code status
+            "ticker": "ETH",                                      // code ticker
+            "external_id": "cf7c3ff8-5eb0-11ed-9b6a-0242ac120002" // code external id
+        },
+    ],
+    "limit": 30,
+    "offset": 0
+}
+
+
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "limit": ["The limit may not be greater than 100."],
+    "offset": ["The offset may not be greater than 10000."]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "limit": ["The limit must be at least 1."],
+    "offset": ["The offset must be at least 0."]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "limit": ["The limit must be an integer."],
+    "offset": ["The offset must be an integer."]
+  }
+}
+```
+
+</details>
+
+---

@@ -2,3 +2,36 @@
 title: "Collateral Markets List"
 openapi: "/openapi/public/http-v4.yaml GET /api/v4/public/collateral/markets"
 ---
+
+### Collateral Markets List
+
+<ApiEndpoint method="GET" path="/api/v4/public/collateral/markets" />
+
+This endpoint returns the list of [markets](./../glossary.md#market) that available for [collateral](./../glossary.md#collateral) trading
+
+❗ Rate limit 2000 requests/10 sec.
+
+**Response is cached for:**
+_1 second_
+
+**Response:**
+
+```json
+[
+  "ADA_USDT",
+  "BCH_USDT",
+  "BTC_USDT",
+  "DOGE_USDT",
+  "EOS_USDT",
+  "ETH_BTC",
+  "ETH_USDT",
+  "LINK_USDT",
+  "LTC_USDT",
+  "SHIB_USDT",
+  "SOL_USDT",
+  "TRX_USDT",
+  "USDC_USDT",
+  "XLM_USDT",
+  "XRP_USDT"
+]
+```

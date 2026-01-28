@@ -2,3 +2,383 @@
 title: "Collateral Stop-Limit Order"
 openapi: "/openapi/private/http-trade-v4.yaml POST /api/v4/order/collateral/stop-limit"
 ---
+
+### Collateral Stop-Limit Order
+
+<ApiEndpoint method="POST" path="/api/v4/order/collateral/stop-limit" />
+
+This endpoint creates collateral [stop-limit trading order](./../glossary.md#stop-limit-order)
+
+❗ Rate limit 10000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name             | Type          | Mandatory                        | Description                                                                                                                                                                                                                                                                                       |
+| ---------------- | ------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| market           | String        | **Yes**                          | Available [market](./../glossary.md#market). Example: BTC_USDT                                                                                                                                                                                                                                    |
+| side             | String        | **Yes**                          | Order type. Variables: 'buy' / 'sell' Example: 'buy'                                                                                                                                                                                                                                              |
+| amount           | String/Number | **Yes**                          | Amount of [stock](./../glossary.md#stock) currency to buy or sell. Example: '0.001' or 0.001                                                                                                                                                                                                      |
+| price            | String/Number | **Yes**                          | Price in [money](./../glossary.md#money) currency. Example: '9800' or 9800                                                                                                                                                                                                                        |
+| activation_price | String/Number | **Yes**                          | Activation price in [money](./../glossary.md#money) currency. Example: '10000' or 10000                                                                                                                                                                                                           |
+| clientOrderId    | String        | **No**                           | Identifier should be unique and contain letters, dashes, numbers, dots or underscores. The identifier must be unique.                                                                                                                                                                             |
+| stopLoss         | String/Number | **No**                           | Stop loss price, if exist create [OTO](./../glossary.md#OTO) with stop loss                                                                                                                                                                                                                       |
+| takeProfit       | String/Number | **No**                           | Take profit price, if exist create [OTO](./../glossary.md#OTO) with take profit                                                                                                                                                                                                                   |
+| bboRole          | Integer       | **No**                           | When you activate the [BBO](./../glossary.md#bbo) option when placing Limit orders, the system automatically selects the best market prices for executing these orders in one of two ways. Variables: 1 - Queue Method / 2 - Counterparty Method.                                                 |
+| stp              | String        | **No**                           | Self trade prevention mode. Variables: 'no / 'cancel_both' / 'cancel_new' /'cancel_old'. Example: 'no'.                                                                                                                                                                                           |
+| positionSide     | String        | **Yes, when hedge mode enabled** | Defines the position direction. Variables: 'LONG / 'SHORT' / 'BOTH'. Example: 'BOTH'. See [positionSide](./../glossary.md#position-side)                                                                                                                                                          |
+
+**Request BODY raw:**
+
+```json
+{
+  "market": "BTC_USDT",
+  "side": "buy",
+  "amount": "0.001",
+  "price": "40000",
+  "activation_price": "40000",
+  "stopLoss": "30000",
+  "takeProfit": "50000",
+  "clientOrderId": "order1987111",
+  "positionSide": "LONG",
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+Available statuses:
+
+- `Status 200`
+- `Status 400 if inner validation failed`
+- `Status 422 if request validation failed`
+- `Status 503 if service temporary unavailable`
+
+```json
+{
+  "orderId": 4180284841, // order id
+  "clientOrderId": "order1987111", // custom client order id; "clientOrderId": "" - if not specified.
+  "market": "BTC_USDT", // deal market
+  "side": "buy", // order side
+  "type": "stop limit", // order type
+  "timestamp": 1595792396.165973, // timestamp of order creation
+  "dealMoney": "0", // if order finished - amount in money currency that finished
+  "dealStock": "0", // if order finished - amount in stock currency that finished
+  "amount": "0.001", // amount
+  "left": "0.001", // if order not finished - rest of amount that must be finished
+  "dealFee": "0", // fee in money that you pay if order is finished
+  "price": "40000", // price
+  "activation_price": "40000", // activation price
+  "status": "FILLED", // order status
+  "stp": "no", // self trade prevention mode
+  "oto": {
+    // OTO order data - if stopLoss or takeProfit is specified
+    "otoId": 29457221, // ID of the OTO
+    "stopLoss": "30000", // stop loss order price - if stopLoss is specified
+    "takeProfit": "50000" // take profit order price - if takeProfit is specified
+  },
+  "positionSide": "LONG" // position side - LONG or SHORT or BOTH
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+Error codes:
+
+- `30` - default validation error code
+- `31` - market validation failed
+- `32` - amount validation failed
+- `33` - price validation failed
+- `36` - clientOrderId validation failed
+
+```json
+{
+  "code": 30,
+  "message": "Validation failed",
+  "errors": {
+    "activation_price": ["Activation price field is required."],
+    "amount": ["Amount field is required."],
+    "market": ["Market field is required."],
+    "price": ["Price field is required."],
+    "side": ["Side field is required."]
+  }
+}
+```
+
+```json
+{
+  "code": 30,
+  "message": "Validation failed",
+  "errors": {
+    "side": ["Side field should contain only 'buy' or 'sell' values."]
+  }
+}
+```
+
+```json
+{
+  "code": 32,
+  "message": "Validation failed",
+  "errors": {
+    "amount": ["Amount field should be numeric string or number."]
+  }
+}
+```
+
+```json
+{
+  "code": 33,
+  "message": "Validation failed",
+  "errors": {
+    "price": ["Price field should be numeric string or number."]
+  }
+}
+```
+
+```json
+{
+  "code": 31,
+  "message": "Validation failed",
+  "errors": {
+    "market": ["Market is not available."]
+  }
+}
+```
+
+```json
+{
+  "code": 31,
+  "message": "Validation failed",
+  "errors": {
+    "market": ["Market field should not be empty string."]
+  }
+}
+```
+
+```json
+{
+  "code": 32,
+  "message": "Validation failed",
+  "errors": {
+    "amount": ["Not enough balance."]
+  }
+}
+```
+
+```json
+{
+  "code": 32,
+  "message": "Validation failed",
+  "errors": {
+    "amount": [
+      "Given amount is less than min amount 0.001",
+      "Min amount step = 0.000001"
+    ]
+  }
+}
+```
+
+```json
+{
+  "code": 30,
+  "message": "Validation failed",
+  "errors": {
+    "total": ["Total(amount * price) is less than 5.05"]
+  }
+}
+```
+
+```json
+{
+  "code": 36,
+  "message": "Validation failed",
+  "errors": {
+    "clientOrderId": ["ClientOrderId field should be a string."]
+  }
+}
+```
+
+```json
+{
+  "code": 36,
+  "message": "Validation failed",
+  "errors": {
+    "clientOrderId": [
+      "ClientOrderId field field should contain only latin letters, numbers and dashes."
+    ]
+  }
+}
+```
+
+```json
+{
+  "code": 36,
+  "message": "Validation failed",
+  "errors": {
+    "clientOrderId": [
+      "This client order id is already used by the current account."
+    ]
+  }
+}
+```
+
+```json
+{
+  "code": 32,
+  "message": "Validation failed",
+  "errors": {
+    "amount": ["Amount should be greater than 0."]
+  }
+}
+```
+
+```json
+{
+  "code": 33,
+  "message": "Validation failed",
+  "errors": {
+    "price": ["Price field should be at least 10", "Min price step = 0.000001"]
+  }
+}
+```
+
+```json
+{
+  "code": 33,
+  "message": "Validation failed",
+  "errors": {
+    "price": ["Price should be greater than 0."]
+  }
+}
+```
+
+```json
+{
+  "code": 35,
+  "message": "Validation failed",
+  "errors": {
+    "maker_fee": ["Incorrect maker fee"]
+  }
+}
+```
+
+```json
+{
+  "code": 30,
+  "message": "Validation failed",
+  "errors": {
+    "activationPrice": [
+      "Activation price should not be equal to the last price"
+    ]
+  }
+}
+```
+
+```json
+{
+  "code": 30,
+  "message": "Validation failed",
+  "errors": {
+    "activation_price": ["Activation price should be numeric string."]
+  }
+}
+```
+
+```json
+{
+  "code": 30,
+  "message": "Validation failed",
+  "errors": {
+    "activationPrice": ["Activation price should be greater than 0."]
+  }
+}
+```
+
+```json
+{
+  "code": 30,
+  "message": "Validation failed",
+  "errors": {
+    "activationPrice": ["Empty history"]
+  }
+}
+```
+
+```json
+{
+  "code": 30,
+  "message": "Validation failed",
+  "errors": {
+    "activationPrice": ["Min activation price = 10"]
+  }
+}
+```
+
+```json
+{
+  "code": 30,
+  "message": "Validation failed",
+  "errors": {
+    "activationPrice": ["Min activation price step = 0.00001"]
+  }
+}
+```
+
+```json
+{
+  "code": 30,
+  "message": "Validation failed",
+  "errors": {
+    "activationPrice": [
+      "Activation price should not be equal to the last price"
+    ]
+  }
+}
+```
+
+```json
+{
+  "code": 30,
+  "message": "Validation failed",
+  "errors": {
+    "lastPrice": ["internal error"]
+  }
+}
+```
+
+```json
+{
+  "code": 10,
+  "message": "Inner validation failed",
+  "errors": {
+    "amount": ["Not enough balance."]
+  }
+}
+```
+
+```json
+{
+  "code": 1,
+  "message": "Inner validation failed",
+  "errors": {
+    "amount": ["Invalid argument."]
+  }
+}
+```
+
+```json
+{
+  "code": 11,
+  "message": "Inner validation failed",
+  "errors": {
+    "amount": ["Amount too small."]
+  }
+}
+```
+
+</details>
+
+---

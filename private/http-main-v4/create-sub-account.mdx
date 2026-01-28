@@ -8,3 +8,97 @@ The `email` field requirement depends on the `shareKyc` parameter:
 - When `shareKyc` is `false` or not provided: `email` is **required**
 - When `shareKyc` is `true`: `email` is **optional**
 </Note>
+
+### Create Sub-Account
+
+<ApiEndpoint method="POST" path="/api/v4/sub-account/create" />
+
+This endpoint creates new sub-account
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Note:** The `email` field requirement depends on the `shareKyc` parameter:
+- When `shareKyc` is `false` or not provided: `email` is **required**
+- When `shareKyc` is `true`: `email` is **optional**
+
+**Parameters:**
+
+| Name                          | Type   | Mandatory | Description                                                                                                                                        |
+|-------------------------------|--------|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------|
+| alias                         | String | **Yes**   | Name for sub-account                                                                                                                               |
+| email                         | String | **Conditional** | Sub-account email. Required when `shareKyc` is `false`. If this field is provided, an invitation link will be sent to this email address. If not provided (only when `shareKyc` is `true`), a new user without email will be created |
+| shareKyc                      | bool   | **No**    | If KYC shared with main account                                                                                                                    |
+| permissions                   | object | **Yes**   | Sub-account permissions                                                                                                                            |
+| permissions.spotEnabled       | bool   | **Yes**   | Enable transfers to trade balance                                                                                                                                |
+| permissions.collateralEnabled | bool   | **Yes**   | Enable transfers to collateral balance                                                                                                                      |
+
+**Request BODY raw:**
+
+```json
+{
+  "alias": "training",
+  "email": "email@google.com",
+  "shareKyc": true,
+  "permissions" : {
+    "spotEnabled": true,
+    "collateralEnabled": false
+  }
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 201`
+- `Status 400 if request validation failed`
+
+```json
+{
+  "id": "8e667b4a-0b71-4988-8af5-9474dbfaeb51",     // subaccount id
+  "alias": "training",
+  "userId": "0d7b66ff-1909-4938-ab7a-d16d9a64dcd5", // user accociated with account
+  "email": "e***@g***m",
+  "status": "active",
+  "color": "#FF0000",
+  "kyc" : {
+    "shareKyc": true,
+    "kycStatus": "shared"
+  },
+  "permissions": {
+    "spotEnabled": true,
+    "collateralEnabled": false,
+  }
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "alias": ["Alias already exists."],
+    "email": ["Email is invalid."],
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "email": ["The email field is required."]
+  }
+}
+```
+
+</details>
+
+---

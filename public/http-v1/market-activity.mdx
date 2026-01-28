@@ -2,3 +2,43 @@
 title: "Market Activity"
 openapi: "/openapi/public/http-v1.yaml GET /api/v1/public/tickers"
 ---
+
+### Market Activity
+
+<ApiEndpoint method="GET" path="/api/v1/public/tickers" />
+
+This endpoint retrieves information about recent trading activity on all markets.
+
+**Response is cached for:**
+_1 second_
+
+**Parameters:**
+NONE
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "result": {
+    "BTC_USDT": {                     // Name of market pair
+      "ticker": {
+        "bid": "9412.1",              // Highest bid
+        "ask": "9416.33",             // Lowest ask
+        "low": "9203.13",             // Lowest price for 24h
+        "high": "9469.99",            // Highest price for 24h
+        "last": "9414.4",             // Last deal price
+        "vol": "27324.819448",        // Volume in stock currency
+        "deal": "254587570.43407191", // Volume in money currency
+        "change": "1.53"              // Change in percent between open and last prices
+      },
+      "at": 159423219                 // Timestamp in seconds
+    },
+  }
+}
+```
+
+---

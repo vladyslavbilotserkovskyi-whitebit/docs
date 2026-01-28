@@ -3,3 +3,57 @@ title: "Delete Sub-Account"
 openapi: /openapi/private/main_api_v4.yaml POST /api/v4/sub-account/delete
 ---
 
+### Delete Sub-Account
+
+<ApiEndpoint method="POST" path="/api/v4/sub-account/delete" />
+
+This endpoint deletes sub-account
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name              | Type   | Mandatory | Description                                                                            |
+|-------------------|--------|-----------|----------------------------------------------------------------------------------------|
+| id                | String | **Yes**   | Sub-account id                                                                          |
+
+**Request BODY raw:**
+
+```json
+{
+  "id": "8e667b4a-0b71-4988-8af5-9474dbfaeb51"
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 200`
+- `Status 400 if request validation failed`
+
+```json
+{
+  // empty response
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "id": ["Sub-account do not exists"],
+  }
+}
+```
+
+</details>
+
+---

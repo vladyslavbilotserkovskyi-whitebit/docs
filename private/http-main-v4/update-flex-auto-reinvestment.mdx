@@ -3,3 +3,72 @@ title: "Update Flex Auto-Reinvestment"
 openapi: /openapi/private/main_api_v4.yaml POST /api/v4/main-account/smart-flex/investments/auto-invest
 ---
 
+### Update Flex Auto-Reinvestment
+
+<ApiEndpoint method="POST" path="/api/v4/main-account/smart-flex/investments/auto-invest" />
+
+Enable/disable automatic reinvestment for user's investment.
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name    | Type    | Mandatory | Description                               |
+|---------|---------|-----------|-------------------------------------------|
+| plan    | String  | **Yes**   | Plan external ID (UUID).                  |
+| enabled | Boolean | **No**    | Enable/disable auto-reinvestment (default: false). |
+
+**Request BODY raw:**
+
+```json
+{
+  "plan": "8f2e9d3c-1a4b-4c2d-9e5f-6a7b8c9d0e1f",
+  "enabled": true,
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 200`
+
+```json
+{
+  "data": []
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+**Validation Error (400):**
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "plan": ["validation.required"],
+    "enabled": ["validation.boolean"]
+  }
+}
+```
+
+**Business Logic Error (422):**
+```json
+{
+  "code": 2,
+  "message": "Inner validation failed",
+  "errors": {
+    "investment": ["User must have active investment in specified plan"]
+  }
+}
+```
+</details>
+
+---

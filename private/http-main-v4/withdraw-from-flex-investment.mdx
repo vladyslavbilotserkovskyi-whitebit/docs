@@ -3,3 +3,79 @@ title: "Withdraw from Flex Investment"
 openapi: /openapi/private/main_api_v4.yaml POST /api/v4/main-account/smart-flex/investments/withdraw
 ---
 
+### Withdraw from Flex Investment
+
+<ApiEndpoint method="POST" path="/api/v4/main-account/smart-flex/investments/withdraw" />
+
+Withdraw specified amount from user's investment.
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name   | Type    | Mandatory | Description              |
+|--------|---------|-----------|--------------------------|
+| plan   | String  | **Yes**   | Plan external ID (UUID). |
+| amount | Numeric | **Yes**   | Withdrawal amount.       |
+
+- Plan must be active and accessible to user
+
+**Request BODY raw:**
+
+```json
+{
+  "plan": "8f2e9d3c-1a4b-4c2d-9e5f-6a7b8c9d0e1f",
+  "amount": "500.250000",
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 201`
+
+*Same as invest endpoint.*
+```json
+{
+  "data": {
+    "transactionId": "tx_9f3e0d4c-2b5c-4d3e-8f6g-7a8b9c0d1e2f"
+  }
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+**Validation Error (400):**
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "plan": ["validation.required"],
+    "amount": ["validation.required", "validation.numeric"]
+  }
+}
+```
+
+**Business Logic Error (422):**
+```json
+{
+  "code": 2,
+  "message": "Inner validation failed",
+  "errors": {
+    "amount": ["Withdrawal amount must not exceed invested amount"],
+    "plan": ["User must have active investment in specified plan"]
+  }
+}
+```
+
+</details>
+
+---

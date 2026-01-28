@@ -6,3 +6,206 @@ openapi: /openapi/private/main_api_v4.yaml POST /api/v4/main-account/smart/inves
 <Note>
 These endpoints are available only for B2B partner services, you need to fill the form https://whitebit.com/institutional-services/b2b in order to get permissions to use these endpoints.
 </Note>
+
+### Invest
+
+<ApiEndpoint method="POST" path="/api/v4/main-account/smart/investment" />
+
+This endpoint creates a new investment to the specified [invest plan](./../glossary.md#crypto-lending)
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name   | Type           | Mandatory | Description                                                            |
+| ------ | -------------- | --------- | ---------------------------------------------------------------------- |
+| planId | String         | **Yes**   | [Invest plan](./../glossary.md#crypto-lending) identifier |
+| amount | Numeric String | **Yes**   | Investment amount                                                      |
+
+**Request BODY raw:**
+
+```json
+{
+  "planId": "8e667b4a-0b71-4988-8af5-9474dbfaeb51",
+  "amount": "100",
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 201`
+- `Status 400 if request validation failed`
+- `Status 422 if inner validation failed`
+
+```json
+{
+  "id": "0d7b66ff-1909-4938-ab7a-d16d9a64dcd5" // Investment identifier
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+Request validation exceptions
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "planId": ["The selected planId is invalid."],
+    "amount": ["The amount must be a number.", "Invalid number"]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "amount": ["The amount must be at least 0.000001."]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "amount": [
+      "The amount you are trying to invest is bigger than the amount left in this SMART plan. Please try investing a smaller amount."
+    ]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "planId": ["Plan is disabled"]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "planId": ["Plan is inactive"]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "planId": ["There are no coins left in the plan"]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "planId": ["There are no coins left in the plan"]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "planId": ["Plan is paused"]
+  }
+}
+```
+
+Inner validation exceptions
+
+When investment already exists, and you don't have permissions to create multiple investments by plan
+
+```json
+{
+  "code": 1,
+  "message": "Inner validation failed",
+  "errors": {
+    "planId": ["The investment in this investment plan already exists"]
+  }
+}
+```
+
+When amount is less than min investment amount
+
+```json
+{
+  "code": 2,
+  "message": "Inner validation failed",
+  "errors": {
+    "amount": [
+      "The amount you're trying to invest is lower than the minimum amount in this investment plan."
+    ]
+  }
+}
+```
+
+When amount is greater than max investment amount
+
+```json
+{
+  "code": 3,
+  "message": "Inner validation failed",
+  "errors": {
+    "amount": [
+      "The amount you're trying to invest exceeds the maximum amount in this investment plan."
+    ]
+  }
+}
+```
+
+When there is not enough balance to create investment
+
+```json
+{
+  "code": 4,
+  "message": "Inner validation failed",
+  "errors": {
+    "amount": [
+      "Insufficient coins on your balance. 9 available, you're trying to invest 10"
+    ]
+  }
+}
+```
+
+When there are no funds in plan to cover target interest amount
+
+```json
+{
+  "code": 5,
+  "message": "Inner validation failed",
+  "errors": {
+    "amount": ["Insufficient funds for the payment."]
+  }
+}
+```
+
+</details>
+
+---

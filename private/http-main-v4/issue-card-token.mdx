@@ -3,3 +3,72 @@ title: "Issue card token"
 openapi: /openapi/private/main_api_v4.yaml POST /api/card-token
 ---
 
+### Issue card token
+
+<ApiEndpoint method="POST" path="https://fgw.whitebit.com/api/card-token" />
+
+This endpoint issues a card token for the specified card number.
+
+**Request Headers:**
+
+| Header | Value | Required | Notes |
+|--------|-------|----------|-------|
+| `Authorization` | `YOUR_JWT_TOKEN` | **Yes** | JWT token from the [Issue JWT token](#issue-jwt-token) response field `data.token`. |
+| `Content-Type` | `application/json` | **Yes** | JSON request body. |
+
+Use the `data.token` value returned by [Issue JWT token](#issue-jwt-token) as the `Authorization` header when calling this Fiat Gateway endpoint.
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name                  | Type           | Mandatory                                                                                                           | Description                              |
+|-----------------------| -------------- |---------------------------------------------------------------------------------------------------------------------|------------------------------------------|
+| cardNumber            | String         | **Yes**                                                                                                             | Target card number.                      |
+
+**Request BODY raw:**
+<a href="#get-cart-token-body"></a>
+
+```json
+{
+  "cardNumber": "4111111111111111"
+}
+```
+
+**Response:**
+Available statuses:
+
+- `Status 201 if validation succeeded and card token is returned`
+- `Status 401 if request authorization failed`
+- `Status 422 if inner validation failed`
+
+Response error codes:
+
+- 1 - specified card number is invalid
+
+<details>
+    <summary><b>Errors:</b></summary>
+
+    ```json
+    {
+        "code": 1,
+        "message": "Validation failed",
+        "errors": {
+        "cardNumber": ["The cardNumber field is invalid."]
+    }
+    }
+    ```
+
+    ```json
+    {
+        "message": "Too Many Attempts.", // In case of throttling
+        "code": 0
+    }
+    ```
+
+</details>
+
+---

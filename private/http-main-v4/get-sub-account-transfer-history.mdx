@@ -3,3 +3,79 @@ title: "Get Sub-Account Transfer History"
 openapi: /openapi/private/main_api_v4.yaml POST /api/v4/sub-account/transfer/history
 ---
 
+### Get Sub-Account Transfer History
+
+<ApiEndpoint method="POST" path="/api/v4/sub-account/transfer/history" />
+
+This endpoint returns history of transfers between main account and sub-account
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name      | Type    | Mandatory | Description                                                                                                                                                                                         |
+|-----------|---------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| id        | String  | **Yes**   | Sub-account id                                                                                                                                                                                       |
+| direction | String  | **No**    | Transfer direction. Values: "main_to_sub" or "sub_to_main". If provided, returns transactions in selected direction. If not provided, returns all transactions between main account and sub-account |
+| limit     | Int     | **No**    | LIMIT is a special clause used to limit records a particular query can return. Default: 30, Min: 1, Max: 100                                                                                        |
+| offset    | Int     | **No**    | If you want the request to return entries starting from a particular line, you can use OFFSET clause to tell it where it should start. Default: 0, Min: 0, Max: 10000                               |
+
+
+**Request BODY raw:**
+
+```json
+{
+  "id": "8e667b4a-0b71-4988-8af5-9474dbfaeb51",
+  "direction": "main_to_sub"
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 200`
+- `Status 422 if request validation failed`
+
+```json
+{
+  "offset": 0,
+  "limit": 30,
+  "data": [
+    {
+      "id": "0d7b66ff-1909-4938-ab7a-d16d9a64dcd5", // transaction id
+      "direction": "main_to_sub",
+      "currency": "USDT",
+      "amount": "3.14",
+      "createdAt": 1715339355
+    }
+  ]
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "id": ["The id field is required."]
+  }
+}
+```
+
+```json
+{
+  "code": 422,
+  "message": "Account is not confirmed"
+}
+```
+
+</details>
+
+---

@@ -1,4 +1,98 @@
 ---
+title: "Last Price"
 asyncapi: "/asyncapi/public/lastprice.yaml /ws"
-title: Last Price
+---
+
+### Last price
+
+#### Query
+
+##### ⤴️ Request
+
+```json
+{
+  "id": 5,
+  "method": "lastprice_request",
+  "params": [
+    "ETH_BTC" // market
+  ]
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 5,
+  "result": "0.020553",
+  "error": null
+}
+```
+
+#### Subscribe
+
+Update interval: 1 sec
+
+##### ⤴️ Request
+
+```json
+{
+    "id": 6,
+    "method": "lastprice_subscribe",
+    "params": [
+        "ETH_BTC", // markets
+        "BTC_USDT",
+    ]
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 6,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
+##### 🔄 Update events
+
+```json
+{
+  "id": null,
+  "method": "lastprice_update",
+  "params": [
+    "ETH_BTC", // market
+    "0.020683" // price
+  ]
+}
+```
+
+#### Unsubscribe
+
+##### ⤴️ Request
+
+```json
+{
+  "id": 7,
+  "method": "lastprice_unsubscribe",
+  "params": []
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 7,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
 ---

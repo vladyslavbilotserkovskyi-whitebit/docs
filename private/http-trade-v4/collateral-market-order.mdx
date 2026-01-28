@@ -2,3 +2,104 @@
 title: "Collateral Market Order"
 openapi: "/openapi/private/http-trade-v4.yaml POST /api/v4/order/collateral/market"
 ---
+
+### Collateral Market Order
+
+<ApiEndpoint method="POST" path="/api/v4/order/collateral/market" />
+
+This endpoint creates [market trading order](./../glossary.md#market-order).
+
+❗ Rate limit 10000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name          | Type   | Mandatory                        | Description                                                                                                                                                                                                                                        |
+| ------------- | ------ | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| market        | String | **Yes**                          | Available margin market. Example: BTC_USDT                                                                                                                                                                                                         |
+| side          | String | **Yes**                          | Order type. Variables: 'buy' / 'sell' Example: 'buy'. For open long position you have to use **buy**, for short **sell**. Also to close current position you have to place opposite [order](./../glossary.md#orders) with current position amount. |
+| amount        | String | **Yes**                          | ⚠️️Amount of [**`stock`**](./../glossary.md#stock) currency to **buy** or **sell**.                                                                                                                                                                |
+| clientOrderId | String | **No**                           | Identifier should be unique and contain letters, dashes, numbers, dots or underscores. The identifier must be unique.                                                                                                                              |
+| stopLoss      | String | **No**                           | Stop loss price, if exist create [OTO](./../glossary.md#OTO) with stop loss                                                                                                                                                                        |
+| takeProfit    | String | **No**                           | Take profit price, if exist create [OTO](./../glossary.md#OTO) with take profit                                                                                                                                                                    |
+| stp           | String | **No**                           | Self trade prevention mode. Variables: 'no / 'cancel_both' / 'cancel_new' /'cancel_old'. Example: 'no'.                                                                                                                                            |
+| positionSide  | String | **Yes, when hedge mode enabled** | Defines the position direction. Variables: 'LONG / 'SHORT' / 'BOTH'. Example: 'BOTH'. See [positionSide](./../glossary.md#position-side)                                                                                                           |
+
+**Request BODY raw:**
+
+```json
+{
+  "market": "BTC_USDT",
+  "side": "buy",
+  "amount": "0.01", // I want to buy 0.01 BTC
+  "clientOrderId": "order1987111",
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+```json
+{
+  "market": "BTC_PERP",
+  "side": "sell",
+  "amount": "0.01", // I want to sell 0.01 BTC
+  "clientOrderId": "order1987111",
+  "stopLoss": "50000",
+  "takeProfit": "40000",
+  "positionSide": "LONG",
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+Available statuses:
+
+- `Status 200`
+- `Status 422 if internal validation failed`
+- `Status 503 if service is temporary unavailable`
+
+```json
+{
+  "orderId": 4180284841, // order id
+  "clientOrderId": "order1987111", // custom client order id; "clientOrderId": "" - if not specified.
+  "market": "BTC_USDT", // deal market
+  "side": "sell", // order side
+  "type": "market", // order type
+  "timestamp": 1595792396.165973, // timestamp of order creation
+  "dealMoney": "0", // amount in money currency that finished
+  "dealStock": "0", // amount in stock currency that finished
+  "amount": "0.001", // amount
+  "left": "0.001", // rest of amount that must be finished
+  "dealFee": "0", // fee in money that you pay if order is finished
+  "status": "FILLED", // order status
+  "stp": "no", // self trade prevention mode
+  "oto": {
+    // OTO order data - if stopLoss or takeProfit is specified
+    "otoId": 29457221, // ID of the OTO
+    "stopLoss": "50000", // stop loss order price - if stopLoss is specified
+    "takeProfit": "40000" // take profit order price - if takeProfit is specified
+  },
+  "positionSide": "LONG" // position side - LONG or SHORT or BOTH
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+Error codes:
+
+- `31` - market is disabled for trading
+- `32` - incorrect amount (it is less than or equals zero or its precision is too big)
+- `33` - incorrect price (it is less than or equals zero or its precision is too big)
+- `36` - incorrect clientOrderId (invalid string or not unique id)
+
+</details>
+
+Detailed information about errors response you can find in [Create market order](#create-market-order)
+
+---
+
+---

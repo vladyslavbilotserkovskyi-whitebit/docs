@@ -1,4 +1,113 @@
 ---
-asyncapi: "/asyncapi/private/balance_spot.yaml /ws"
-title: Balance Spot
+title: "Balance Spot"
+asyncapi: "/asyncapi/private/balance_spot.yaml /ws
+---
+
+### Balance Spot
+
+#### Query
+
+##### ⤴️ Request:
+
+```json
+{
+    "id": 2,
+    "method": "balanceSpot_request",
+    "params": [
+        "ETH",  // asset
+        "BTC",  // asset
+    ]
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+  "id": 2,
+  "result": {
+    "ETH": {
+      "available": "0", // Amount available for trade
+      "freeze": "0"     // Amount in active orders
+    },
+    "BTC": {
+      "available": "0", // Amount available for trade
+      "freeze": "0"     // Amount in active orders
+    }
+  },
+  "error": null
+}
+```
+
+#### Subscribe
+
+Subscribe to receive updates in [spot balances](./../glossary.md#balance-spotbalance-trade).
+Update interval: 1 sec
+
+##### ⤴️ Request:
+
+```json
+{
+    "id": 3,
+    "method": "balanceSpot_subscribe",
+    "params": [
+        "USDT", // asset
+        "ETH",  // asset
+    ]
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+  "id": 3,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
+##### 🔄 Update events:
+
+```json
+{
+    "id": null,
+    "method": "balanceSpot_update",
+    "params": [
+        {
+            "USDT": {
+                "available": "100.1885", // Amount available for trade
+                "freeze": "0"            // Amount in active orders
+            }
+        },
+    ]
+}
+```
+
+#### Unsubscribe
+
+##### ⤴️ Request:
+
+```json
+{
+  "id": 4,
+  "method": "balanceSpot_unsubscribe",
+  "params": []
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+  "id": 4,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
 ---

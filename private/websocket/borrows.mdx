@@ -1,4 +1,78 @@
 ---
-asyncapi: "/asyncapi/private/borrows.yaml /ws"
-title: Borrows
+title: "Borrows"
+asyncapi: "/asyncapi/private/borrows.yaml /ws
 ---
+
+### Borrows
+
+#### Subscribe
+
+Update interval: 1.5 sec
+
+##### ⤴️ Request:
+
+```json
+{
+  "id": 18,
+  "method": "borrowsMargin_subscribe",
+  "params": []
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+  "id": 18,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
+##### 🔄 Update events:
+
+```json
+{
+    "method": "borrowsMargin_update",
+    "params": {
+        "total": 1,                                 // borrows count
+        "records": [
+            {
+                "asset": "BTC",                     // borrowed asset
+                "ctime": 1704067200,                // borrow created date
+                "mtime": 1704067200,                // last update time
+                "amount": "-0.81",                  // borrow amount
+                "unrealized_funding": "0.00005042", // funding that will be paid on next borrow stage change
+                "liq_price": "70000"                // borrow liquidation price
+            }
+        ]
+    },
+    "id": null
+}
+```
+
+#### Unsubscribe
+
+##### ⤴️ Request:
+
+```json
+{
+  "id": 19,
+  "method": "borrowsMargin_unsubscribe",
+  "params": []
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+  "id": 19,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```

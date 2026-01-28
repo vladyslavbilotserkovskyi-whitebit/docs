@@ -2,3 +2,22 @@
 title: "Server Time"
 openapi: "/openapi/public/http-v4.yaml GET /api/v4/public/time"
 ---
+
+### Server Time
+
+<ApiEndpoint method="GET" path="/api/v4/public/time" />
+
+This endpoint retrieves the current server time.
+
+**Response is cached for:**
+_1 second_
+
+❗ Rate limit 2000 requests/10 sec.
+
+**Response:**
+
+```json
+{
+  "time": 1631451591
+}
+```

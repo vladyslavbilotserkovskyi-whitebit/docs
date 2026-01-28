@@ -2,3 +2,117 @@
 title: "Cancel order"
 openapi: "/openapi/private/http-trade-v1.yaml POST /api/v1/order/cancel"
 ---
+
+### Cancel order
+
+#### This endpoint is deprecated. Use [V4 endpoint](./http-trade-v4#cancel-order) instead
+
+<ApiEndpoint method="POST" path="/api/v1/order/cancel" />
+
+This endpoint cancels the existing [order](./../glossary.md#orders).
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name    | Type   | Mandatory | Description                         |
+| ------- | ------ | --------- | ----------------------------------- |
+| market  | String | **Yes**   | Available market. Example: BTC_USDT |
+| orderId | Int    | **Yes**   | Order Id. Example: 4180284841       |
+
+**Request BODY raw:**
+
+```json
+{
+  "market": "BTC_USDT",
+  "orderId": 4180284841,
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+
+```json
+{
+  "amount": "0.001", // amount
+  "dealFee": "0", // fee in money that you pay if order is finished
+  "dealMoney": "0", // if order finished - amount in money currency that finished
+  "dealStock": "0", // if order finished - amount in stock currency that finished
+  "left": "0.001", // if order not finished - rest of amount that must be finished
+  "makerFee": "0.001", // maker fee ratio. If the number less than 0.0001 - its rounded to zero
+  "market": "BTC_USDT", // deal market
+  "orderId": 4180284841, // order id
+  "clientOrderId": "order1987111", // custom client order id; "clientOrderId": "" - if not specified.
+  "price": "9800", // price
+  "side": "buy", // order side
+  "takerFee": "0.001", // maker fee ratio. If the number less than 0.0001 - its rounded to zero
+  "timestamp": 1595792396.165973, // timestamp of order creation
+  "type": "limit" // order type
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "market": ["The market field is required."],
+    "orderId": ["The order id field is required."]
+  }
+}
+```
+
+```json
+{
+  "code": 2,
+  "message": "Inner validation failed",
+  "errors": {
+    "order_id": ["Unexecuted order was not found."]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "market": ["Market is not available"]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "orderId": ["The order id must be an integer."]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "market": [
+      "The market must be a string.",
+      "The market format is invalid.",
+      "Market is not available"
+    ]
+  }
+}
+```
+
+</details>
+
+---

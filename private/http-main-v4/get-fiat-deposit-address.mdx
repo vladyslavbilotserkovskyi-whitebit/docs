@@ -3,3 +3,189 @@ title: "Get fiat deposit address"
 openapi: /openapi/private/main_api_v4.yaml POST /api/v4/main-account/fiat-deposit-url
 ---
 
+### Get fiat deposit address
+
+<ApiEndpoint method="POST" path="/api/v4/main-account/fiat-deposit-url" />
+
+This endpoint retrieves a deposit url of the [fiat](./../glossary.md#fiat) invoice. Please, pay attention that this endpoint works on demand. It means that you need to contact WhiteBIT support and provide your API key to get access to this functionality.
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name                         | Type           | Mandatory                                                                              | Description                                                                                                                                                                                                                                                 |
+|------------------------------| -------------- |----------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ticker                       | String         | **Yes**                                                                                | Currencies [ticker](./../glossary.md#ticker). Example: UAH ⚠️ Currencies ticker should be: [fiat](./../glossary.md#fiat) and has "can_deposit" status must be "true". Use this <RegionalUrl type={URL_TYPE_API} path="/api/v4/public/assets">url</RegionalUrl> to know more about currency. |
+| provider                     | String         | **Yes**                                                                                | [Fiat](./../glossary.md#fiat) currency provider. Example: VISAMASTER ⚠️ Currency [provider](./../glossary.md#provider) should be taken from <RegionalUrl type={URL_TYPE_API} path="/api/v4/public/assets">/api/v4/public/assets</RegionalUrl> response.                                                              |
+| amount                       | Numeric String | **Yes**                                                                                | Deposit amount.                                                                                                                                                                                                                                             |
+| uniqueId                     | String         | **Yes**                                                                                | Unique transaction identifier on client's side.                                                                                                                                                                                                             |
+| customer.firstName           | String         | **Yes, if currency USD or EUR with VISAMASTER [provider](./../glossary.md#provider)**  | Customer billing first name                                                                                                                                                                                                                                 |
+| customer.lastName            | String         | **Yes, if currency USD or EUR with VISAMASTER [provider](./../glossary.md#provider)**  | Customer billing last name                                                                                                                                                                                                                                  |
+| customer.email               | String         | **Yes, if currency USD or EUR with VISAMASTER [provider](./../glossary.md#provider)**  | Customer billing email                                                                                                                                                                                                                                      |
+| customer.birthDate           | String         | **Yes, if currency USD or EUR with VISAMASTER [provider](./../glossary.md#provider)**  | Customer birth date (Format: YYYY-MM-DD)                                                                                                                                                                                                                                   |
+| customer.address.line1       | String         | **Yes, if currency USD or EUR with VISAMASTER [provider](./../glossary.md#provider)**  | Customer address line1                                                                                                                                                                                                                                      |
+| customer.address.line2       | String         | **No**                                                                                 | Customer address line2                                                                                                                                                                                                                                      |
+| customer.address.city        | String         | **Yes, if currency USD or EUR with VISAMASTER [provider](./../glossary.md#provider)**  | Customer city                                                                                                                                                                                                                                               |
+| customer.address.zipCode     | String         | **Yes, if currency USD or EUR with VISAMASTER [provider](./../glossary.md#provider)**  | Customer zip-code                                                                                                                                                                                                                                           |
+| customer.address.countryCode | String         | **Yes, if currency USD or EUR with VISAMASTER [provider](./../glossary.md#provider)**  | Customer country code                                                                                                                                                                                                                                       |
+| successLink                  | String         | **No**                                                                                 | Customer will be redirected to this URL by acquiring [provider](./../glossary.md#provider) after success deposit. To activate this feature, please contact support                                                                                          |
+| failureLink                  | String         | **No**                                                                                 | Customer will be redirected to this URL in case of fail or rejection on acquiring [provider](./../glossary.md#provider) side. To activate this feature, please contact support                                                                              |
+| returnLink                   | String         | **No**                                                                                 | Customer will be redirected to the URL defined if selects 'back' option after from the payment success or failure page. To activate this feature, define desired link. If not populated, option 'back' won't be displayed                                   |
+
+**Request BODY raw:**
+
+```json
+{
+  "ticker": "UAH",
+  "provider": "VISAMASTER",
+  "amount": "100",
+  "uniqueId": "{{generateID}}",
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Request BODY with customer fields raw:**
+
+```json
+{
+  "ticker": "UAH",
+  "provider": "VISAMASTER",
+  "amount": "100",
+  "uniqueId": "{{generateID}}",
+  "customer": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john_doe@email.com",
+    "address": {
+      "line1":"Martinez Campos 37",
+      "city":"Madrid",
+      "zipCode":"28010",
+      "countryCode":"ES"
+    }
+  },
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+Available statuses:
+
+- `Status 200`
+- `Status 400 if request validation failed`
+- `Status 503 if service temporary unavailable`
+
+```json
+{
+  "url": "https://someaddress.com" // address for deposit
+}
+```
+
+**⚠️ If you have used VISAMASTER as [provider](./../glossary.md#provider), you must pass [referer header](https://developer.mozilla.org/ru/docs/Web/HTTP/Headers/Referer) when you go to the invoice link (for example, pass `referer` header when you go to `https://someaddress.com`). Otherwise if there is no header (for example, you go to `https://someaddress.com` from Telegram message) you will be redirected to the WhiteBIT homepage**
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "amount": ["Amount is too little for deposit"]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "provider": ["Cannot find currency for specified provider"]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "uniqueId": ["The unique id has already been taken."]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "amount": ["The amount must be a number."],
+    "provider": ["The selected provider is invalid."],
+    "ticker": ["The selected ticker is invalid."]
+  }
+}
+```
+
+```json
+{
+  "code": 10,
+  "message": "Failed to generate deposit url"
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "amount": ["The amount field is required."],
+    "provider": ["The provider field is required."],
+    "ticker": ["The ticker field is required."],
+    "uniqueId": ["The unique id field is required."]
+  }
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "successLink": [
+      "Your domain is incorrect. Please contact support for more details"
+    ],
+    "failureLink": [
+      "Your domain is incorrect. Please contact support for more details"
+    ]
+  }
+}
+```
+
+```json
+{
+  "success": false,
+  "message": "You don't have permission to use this endpoint. Please contact support for more details",
+  "code": 0
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "successLink": ["Uri domain must have only https scheme"],
+    "failureLink": ["Uri domain must have only https scheme"]
+  }
+}
+```
+
+</details>
+
+---

@@ -1,4 +1,120 @@
 ---
-asyncapi: "/asyncapi/public/market.yaml /ws"
-title: Market Statistics
+title: "Market Statistics"
+asyncapi: "/asyncapi/public/market.yaml /ws
+---
+
+### Market statistics
+
+#### Query
+
+##### ⤴️ Request
+
+```json
+{
+  "id": 5,
+  "method": "market_request",
+  "params": [
+    "ETH_BTC", // market
+    86400 // period in seconds
+  ]
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 5,
+  "result": {
+    "period": 86400, // period in seconds
+    "last": "0.020981", // last price
+    "open": "0.02035", // open price that was at 'now - period' time
+    "close": "0.020981", // price that closes this period
+    "high": "0.020988", // highest price
+    "low": "0.020281", // lowest price
+    "volume": "135220.218", // volume in stock
+    "deal": "2776.587022649" // volume in money
+  },
+  "error": null
+}
+```
+
+#### Subscribe
+
+You can subscribe only for 86400s (24h from now).
+
+Update interval: 1 sec
+
+##### ⤴️ Request
+
+```json
+{
+    "id": 6,
+    "method": "market_subscribe",
+    "params": [
+        "ETH_BTC", // markets
+        "BTC_USDT",
+    ]
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 6,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
+##### 🔄 Update events
+
+```json
+{
+  "id": null,
+  "method": "market_update",
+  "params": [
+    "ETH_BTC", // market
+    {
+      // response same as 'market_request'
+      "period": 86400, // period in seconds
+      "last": "0.020964", // last price
+      "open": "0.020349", // open price that was at 'now - period' time
+      "close": "0.020964", // price that closes this period
+      "high": "0.020997", // highest price
+      "low": "0.020281", // lowest price
+      "volume": "135574.476", // volume in stock
+      "deal": "2784.413999488" // volume in money
+    }
+  ]
+}
+```
+
+#### Unsubscribe
+
+##### ⤴️ Request
+
+```json
+{
+  "id": 7,
+  "method": "market_unsubscribe",
+  "params": []
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 7,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
 ---

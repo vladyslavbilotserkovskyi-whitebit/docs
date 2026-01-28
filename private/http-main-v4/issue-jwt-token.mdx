@@ -2,3 +2,40 @@
 title: "Issue JWT token"
 openapi: /openapi/private/main_api_v4.yaml POST /api/v4/jwt
 ---
+
+### Issue JWT token
+
+<ApiEndpoint method="POST" path="/api/v4/jwt" />
+
+This endpoint issues a JWT token for the Fiat Gateway service. The token is used to authenticate requests to the Fiat Gateway API.
+
+**Request BODY raw:**
+```json
+{
+  "request": "{{request}}",
+  "nonceWindow": false,
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response is cached for:**
+NONE
+
+```json
+{
+  "data": {
+    "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "expires_at": 1622551200
+  }
+}
+```
+
+**Response:**
+Available statuses:
+
+- `Status 201 if validation succeeded and card token is returned`
+- `Status 400 if missing required fields or invalid data`
+- `Status 401 if invalid API key, signature, or nonce`
+- `Status 500 if server configuration issues`
+
+---

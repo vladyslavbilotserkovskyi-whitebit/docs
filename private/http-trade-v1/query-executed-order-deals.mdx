@@ -2,3 +2,113 @@
 title: "Query executed order deals"
 openapi: "/openapi/private/http-trade-v1.yaml POST /api/v1/account/order"
 ---
+
+### Query executed order deals
+
+#### This endpoint is deprecated. Use [V4 endpoint](./http-trade-v4#query-executed-order-deals) instead
+
+<ApiEndpoint method="POST" path="/api/v1/account/order" />
+
+This endpoint retrieves more details on [order](./../glossary.md#orders) deals history.
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name    | Type | Mandatory | Description                                                                                                                                                           |
+| ------- | ---- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| orderId | Int  | **Yes**   | Order ID. Example: 1234                                                                                                                                               |
+| limit   | Int  | **No**    | LIMIT is a special clause used to limit records a particular query can return. Default: 50, Min: 1, Max: 100                                                          |
+| offset  | Int  | **No**    | If you want the request to return entries starting from a particular line, you can use OFFSET clause to tell it where it should start. Default: 0, Min: 0, Max: 10000 |
+
+**Request BODY raw:**
+
+```json
+{
+  "orderId": 3135554375,
+  "offset": 0,
+  "limit": 100,
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+
+Empty response if order is not yours
+
+```json
+{
+  "success": true,
+  "message": "",
+  "result": {
+    "limit": 50,
+    "offset": 0,
+    "records": [
+      {
+        "id": 149156519, // deal id
+        "clientOrderId": "order1987111", // custom client order id; "clientOrderId": "" - if not specified.
+        "amount": "598", // amount in stock
+        "time": 1593342324.613711, // timestamp of order creation
+        "dealOrderId": 3134995325, // completed order ID
+        "role": 2, // Role - 1 - maker, 2 - taker
+        "deal": "0.00419198", // amount in money
+        "price": "0.00000701", // price
+        "fee": "0.00000419198" // paid fee
+      }
+    ]
+  }
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "success": false,
+  "message": {
+    "orderId": ["The order id field is required."]
+  },
+  "result": []
+}
+```
+
+```json
+{
+  "success": false,
+  "message": {
+    "orderId": ["The order id must be an integer."]
+  },
+  "result": []
+}
+```
+
+```json
+{
+  "success": false,
+  "message": {
+    "limit": ["The limit may not be greater than 100."],
+    "offset": ["The offset may not be greater than 10000."]
+  },
+  "result": []
+}
+```
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "limit": ["The limit must be at least 1."],
+    "offset": ["The offset must be at least 0."]
+  }
+}
+```
+
+</details>
+
+---

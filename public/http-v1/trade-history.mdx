@@ -2,3 +2,49 @@
 title: "Trade History"
 openapi: "/openapi/public/http-v1.yaml GET /api/v1/public/history"
 ---
+
+### Trade History
+
+<ApiEndpoint method="GET" path="/api/v1/public/history?market=BTC_USDT&lastId=1" />
+
+This endpoint retrieves [trades](./../glossary.md#trade) that have been executed for the requested [market](./../glossary.md#market).
+
+**Response is cached for:**
+_1 second_
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Parameters:**
+
+| Name   | Type   | Mandatory | Description                                                                                                            |
+| ------ | ------ | --------- | ---------------------------------------------------------------------------------------------------------------------- |
+| market | String | **Yes**   | Available market. Example: BTC_USDT                                                                                    |
+| lastId | int    | **Yes**   | Largest id of last returned result. Example: request [deals](./../glossary.md#deal-trade) starting from id equals to 6 |
+| limit  | int    | **No**    | Limit of results. Default: 50 Example: 100                                                                             |
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": null,
+  "result": [
+    {
+      "id": 156720314,           // Deal id
+      "time": 1594240477.849703, // Deal time in seconds
+      "price": "9429.66",        // Deal price
+      "amount": "0.002784",      // Deal amount
+      "type": "sell"             // Deal type (buy or sell)
+    },
+    {
+      "id": 156720309,
+      "time": 1594240476.832347,
+      "price": "9429.66",
+      "amount": "0.002455",
+      "type": "sell"
+    },
+  ]
+}
+```
+
+---

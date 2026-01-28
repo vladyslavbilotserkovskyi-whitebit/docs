@@ -2,3 +2,61 @@
 title: "Convert Confirm"
 openapi: "/openapi/private/http-trade-v4.yaml POST /api/v4/convert/confirm"
 ---
+
+### Convert Confirm
+
+<ApiEndpoint method="POST" path="/api/v4/convert/confirm" />
+
+This endpoint confirms an estimated quote.
+
+❗ Rate limit 10000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+| Name | Type | Mandatory | Description |
+|---------|--------|-----------|-------------|
+| quoteId | String | **Yes** | Quote ID |
+
+**Request BODY raw:**
+
+```json
+{
+  "quoteId": 4050,
+  "nonce": "{{nonce}}",
+  "request": "{{request}}"
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 200`
+- `Status 400 if inner validation failed`
+- `Status 422 if validation failed`
+
+```json
+{
+  "finalGive": "0.00002901",
+  "finalReceive": "1"
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "quoteId": ["Quote could not be found"]
+  }
+}
+```
+
+</details>
+
+---

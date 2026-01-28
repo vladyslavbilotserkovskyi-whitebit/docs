@@ -1,4 +1,134 @@
 ---
-asyncapi: "/asyncapi/public/trades.yaml /ws"
-title: Market Trades
+title: "Market Trades"
+asyncapi: "/asyncapi/public/trades.yaml /ws
+---
+
+### Market trades
+
+#### Query
+
+##### ⤴️ Request
+
+```json
+{
+  "id": 8,
+  "method": "trades_request",
+  "params": [
+    "ETH_BTC", // market
+    100, // limit
+    41358445 // largest id from which you want to request trades
+  ]
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+    "id": 8,
+    "result": [
+        {
+            "id": 41358530,           // trade id
+            "time": 1580905394.70332, // time in milliseconds
+            "price": "0.020857",      // trade price
+            "amount": "5.511",        // trade amount
+            "type": "sell"            // type of trade (buy/sell)
+        },
+    ],
+    "error": null
+}
+
+```
+
+#### Subscribe
+
+Update interval: real-time
+
+❗ For each websocket connection, you can subscribe to either one or several specific markets, or all markets. Every following subscription will replace the existing one.
+
+**Note:** To subscribe to all markets, send the request with an empty `params` array.
+
+##### ⤴️ Request
+
+**Subscribe to specific markets:**
+
+```json
+{
+    "id": 9,
+    "method": "trades_subscribe",
+    "params": [
+        "ETH_BTC", // markets
+        "BTC_USDT",
+    ]
+}
+```
+
+**Subscribe to all markets:**
+
+```json
+{
+    "id": 9,
+    "method": "trades_subscribe",
+    "params": []
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 9,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
+##### 🔄 Update events
+
+```json
+{
+    "id": null,
+    "method": "trades_update",
+    "params": [
+        "ETH_BTC",                         // market
+         [                                 // response same as 'market_request'
+             {
+                 "id": 41358530,           // trade id
+                 "time": 1580905394.70332, // time in milliseconds
+                 "price": "0.020857",      // trade price
+                 "amount": "5.511",        // trade amount
+                 "type": "sell",           // type of trade (buy/sell)
+                 "rpi": true               // Indicates whether the trade involved a Retail Price Improvement (RPI) order
+             }
+         ]
+    ]
+}
+```
+
+#### Unsubscribe
+
+##### ⤴️ Request
+
+```json
+{
+  "id": 10,
+  "method": "trades_unsubscribe",
+  "params": []
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 10,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
 ---

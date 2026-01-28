@@ -2,3 +2,85 @@
 title: "Trading balances"
 openapi: "/openapi/private/http-trade-v1.yaml POST /api/v1/account/balances"
 ---
+
+### Trading balances
+
+#### This endpoint is deprecated. Use [V4 endpoint](./http-trade-v4#trading-balance) instead
+
+<ApiEndpoint method="POST" path="/api/v1/account/balances" />
+
+This endpoint retrieves all available [balances for trading](./../glossary.md#balance-spotbalance-trade).
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+NONE
+
+**Request BODY raw:**
+
+```json
+{
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "message": "",
+  "result": {
+    "BAT": {
+      "available": "0",
+      "freeze": "0"
+    },
+    "BCH": {
+      "available": "0.00096586",
+      "freeze": "0"
+    },
+    "BNB": {
+      "available": "0",
+      "freeze": "0"
+    },
+    "BSV": {
+      "available": "0",
+      "freeze": "0"
+    },
+    "BTC": {
+      "available": "0.2",
+      "freeze": "1.02"
+    },
+    "BTG": {
+      "available": "0",
+      "freeze": "0"
+    },
+    "BTT": {
+      "available": "0",
+      "freeze": "0"
+    },
+    "DASH": {
+      "available": "0",
+      "freeze": "0"
+    },
+    "DBTC": {
+      "available": "0.47",
+      "freeze": "0"
+    },
+    "ETH": {
+      "available": "0.0000059",
+      "freeze": "0"
+    },
+    "EUR": {
+      "available": "0.00155901",
+      "freeze": "0"
+    }
+  }
+}
+```
+
+---

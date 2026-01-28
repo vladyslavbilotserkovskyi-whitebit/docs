@@ -2,3 +2,209 @@
 title: "Asset Status List"
 openapi: "/openapi/public/http-v4.yaml GET /api/v4/public/assets"
 ---
+
+### Asset status list
+
+<ApiEndpoint method="GET" path="/api/v4/public/assets" />
+
+This endpoint retrieves the assets status.
+
+**Response is cached for:**
+_1 second_
+
+**Parameters:**
+NONE
+
+❗ Rate limit 2000 requests/10 sec.
+
+**Response:**
+
+```json
+{
+  "BTC": {
+    "name": "Bitcoin",           // Full name of cryptocurrency.
+    "unified_cryptoasset_id": 1, // Unique ID of cryptocurrency assigned by Unified Cryptoasset ID, 0 if unknown
+    "can_withdraw": true,        // Identifies whether withdrawals are enabled or disabled.
+    "can_deposit": true,         // Identifies whether deposits are enabled or disabled.
+    "min_withdraw": "0.001",     // Identifies the single minimum withdrawal amount of a cryptocurrency.
+    "max_withdraw": "2",         // Identifies the single maximum withdrawal amount of a cryptocurrency.
+    "maker_fee": "0.1",          // Maker fee in percentage
+    "taker_fee": "0.1",          // Taker fee in percentage
+    "min_deposit": "0.0001",     // Min deposit amount
+    "max_deposit": "0",          // Max deposit amount, will not be returned if there is no limit, 0 if unlimited
+    "currency_precision": 18,    // Max number of digits to the right of the decimal point
+    "is_memo": false,            // Identifies if currency has memo address
+    "memo": {                    // Identifies if currency requires memo for deposits/withdraws
+      "deposit": false,
+      "withdraw": false
+    },
+    "networks": {                // Currency networks. It might be a list of networks for cryptocurrency networks or just a single item list for simple cryptocurrencies or tokens
+      "deposits": [              // Networks available for depositing
+        "BTC"
+      ],
+      "withdraws": [             // Networks available for withdrawing
+        "BTC"
+      ],
+      "default": "BTC"           // Default network for depositing / withdrawing if available
+    },
+    "limits": {                  // Currency limits by each network
+      "deposit": {               // Deposits limits
+        "BTC": {                 // Network
+          "min": "0.001"         // Min deposit amount
+        },
+      },
+      "withdraw": {              // Withdraws limits
+        "BTC": {                 // Network
+          "min": "0.002",        // Min withdraw amount
+        },
+      }
+    },
+    "confirmations": {           // Deposit confirmations count mapped by network
+      "BTC": 2
+    }
+  },
+  "ETH": {
+    "name": "Ethereum",
+    "unified_cryptoasset_id": 1027,
+    "can_withdraw": true,
+    "can_deposit": true,
+    "min_withdraw": "0.02",
+    "max_withdraw": "0",
+    "maker_fee": "0.1",
+    "taker_fee": "0.1",
+    "min_deposit": "0.1",
+    "max_deposit": "0",
+    "currency_precision": 18,
+    "is_memo": false,
+    "memo": {            // Identifies if currency requires memo for deposits/withdraws
+      "deposit": false,
+      "withdraw": false
+    },
+    "networks": {        // Currency networks. It might be a list of networks for cryptocurrency networks or just a single item list for simple cryptocurrencies or tokens
+      "deposits": [      // Networks available for depositing
+        "ETH"
+      ],
+      "withdraws": [     // Networks available for withdrawing
+        "ETH"
+      ],
+      "default": "ETH"   // Default network for depositing / withdrawing if available
+    },
+    "limits": {          // Currency limits by each network
+      "deposit": {       // Deposits limits
+        "ETH": {         // Network
+          "min": "0.001" // Max deposit amount
+        }
+      },
+      "withdraw": {      // Withdraws limits
+        "ETH": {         // Network
+          "min": "0.002" // Min withdraw amount
+        }
+      }
+    },
+    "confirmations": {
+      "ETH": 20
+    }
+  },
+  "USDT": {
+    "name": "Tether US",
+    "unified_cryptoasset_id": 825,
+    "can_withdraw": true,
+    "can_deposit": true,
+    "min_withdraw": "5",
+    "max_withdraw": "0",
+    "maker_fee": "0.1",
+    "taker_fee": "0.1",
+    "min_deposit": "0",
+    "max_deposit": "0",
+    "currency_precision": 6,
+    "is_memo": false,
+    "memo": {            // Identifies if currency requires memo for deposits/withdraws
+      "deposit": false,
+      "withdraw": false
+    },
+    "networks": {        // Currency networks. It might be a list of networks for cryptocurrency networks or just a single item list for simple cryptocurrencies or tokens
+      "deposits": [      // Networks available for depositing
+        "ERC20",
+        "TRC20",
+        "OMNI",
+        "BEP20"
+      ],
+      "withdraws": [     // Networks available for withdrawing
+        "ERC20",
+        "TRC20",
+        "OMNI",
+        "BEP20"
+      ],
+      "default": "ERC20" // Default network for depositing / withdrawing
+    },
+    "limits": {          // This object will be returned when currency has several networks/providers
+      "deposit": {       // Deposits limits
+        "ERC20": {       // Network
+          "min": "5",    // Min deposit amount
+          "max": "1000"  // Max deposit amount
+        },
+        "TRC20": {
+          "min": "5"     // If there is no max limit, it is not returned
+        },
+      },
+      "withdraw": {      // Withdraws limits
+        "ERC20": {       // Network
+          "min": "10",   // Min withdraw amount
+          "max": "1000"  // Max withdraw amount
+        },
+        "TRC20": {
+          "min": "10"    // If there is no max limit, it is not returned
+        },
+      }
+    },
+    "confirmations": {
+      "ERC20": 20,
+      "TRC20": 20
+    }
+  },
+  "UAH": {
+    "name": "Hryvnia",
+    "unified_cryptoasset_id": 0,
+    "can_withdraw": true,
+    "can_deposit": true,
+    "min_withdraw": "50",
+    "max_withdraw": "100000",
+    "maker_fee": "0.1",
+    "taker_fee": "0.1",
+    "min_deposit": "50",
+    "max_deposit": "100000",
+    "is_memo": false,
+    "memo": {             // Identifies if currency requires memo for deposits/withdraws
+      "deposit": false,
+      "withdraw": false
+    },
+    "providers": {        // Fiat currency providers
+      "deposits": [       // Providers available for depositing
+        "VISAMASTER",
+        "ADVCASH",
+        "GEOPAY"
+      ],
+      "withdraws": [      // Providers available for withdrawing
+        "VISAMASTER",
+        "GEOPAY"
+      ],
+    },
+    "limits": {           // This object will be returned when currency has several networks/providers
+      "deposit": {        // Deposits limits
+        "VISAMASTER": {   // Provider
+          "min": "50",    // Min deposit amount
+          "max": "50000"  // Max deposit amount
+        },
+      },
+      "withdraw": {      // Withdraws limits
+        "VISAMASTER": {  // Provider
+          "min": "50",   // Min withdraw amount
+          "max": "50000" // Max withdraw amount
+        },
+      }
+    }
+  },
+}
+```
+
+---

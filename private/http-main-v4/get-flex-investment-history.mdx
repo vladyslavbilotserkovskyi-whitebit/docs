@@ -6,3 +6,102 @@ openapi: /openapi/private/main_api_v4.yaml POST /api/v4/main-account/smart-flex/
 <Note>
 These endpoints are available only for B2B partner services, you need to fill the form https://whitebit.com/institutional-services/b2b in order to get permissions to use these endpoints.
 </Note>
+
+### Get Flex Investment History
+
+<ApiEndpoint method="POST" path="/api/v4/main-account/smart-flex/investments/history" />
+
+Retrieve complete investment operations history with advanced filtering.
+
+❗ Rate limit 1000 requests/10 sec.
+
+**Response is cached for:**
+NONE
+
+**Parameters:**
+
+| Name        | Type           | Mandatory | Description                                      |
+|-------------|----------------|-----------|--------------------------------------------------|
+| limit       | Integer        | **No**    | Pagination limit. Default: 50.                   |
+| offset      | Integer        | **No**    | Pagination offset. Default: 0.                   |
+| plan        | String         | **No**    | Filter by plan ID (UUID).                        |
+| investment  | String         | **No**    | Filter by investment ID.                         |
+| transaction | String         | **No**    | Filter by transaction ID.                        |
+| dateFrom    | Integer        | **No**    | Filter from date (timestamp).                    |
+| dateTo      | Integer        | **No**    | Filter to date (timestamp).                      |
+| actionTypes | Array[Integer] | **No**    | Array of operation type IDs. See table below.    |
+
+**Available Action Types:**
+
+| ID | Type                       | Description                  |
+|----|----------------------------|------------------------------|
+| 1  | INVEST                     | Investment creation          |
+| 2  | REINVEST                   | Automatic reinvestment       |
+| 3  | WITHDRAW_FROM_INVESTMENT   | Partial withdrawal           |
+| 4  | DAILY_EARNING              | Daily earnings               |
+| 5  | CLOSE_INVESTMENT           | Investment closure           |
+| 6  | OPEN_INVESTMENT            | Investment opening           |
+
+**Request BODY raw:**
+
+```json
+{
+  "limit": 50,
+  "offset": 0,
+  "plan": "8f2e9d3c-1a4b-4c2d-9e5f-6a7b8c9d0e1f",
+  "investment": "inv_123",
+  "transaction": "tx_456",
+  "dateFrom": 1640995200,
+  "dateTo": 1641081600,
+  "actionTypes": [1, 2, 4],
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 200`
+
+```json
+{
+  "data": [
+    {
+      "createdAt": 1640995200,
+      "planId": "8f2e9d3c-1a4b-4c2d-9e5f-6a7b8c9d0e1f",
+      "investmentId": "inv_7e2d9c3b-1a4b-4c2d-9e5f-6a7b8c9d0e1f",
+      "currency": "USDT",
+      "amount": "15.75",
+      "transactionId": "tx_9f3e0d4c-2b5c-4d3e-8f6g-7a8b9c0d1e2f",
+      "actionType": 1
+    }
+  ],
+  "limit": 50,
+  "offset": 0
+}
+```
+
+<details>
+<summary><b>Errors:</b></summary>
+
+```json
+{
+  "code": 0,
+  "message": "Validation failed",
+  "errors": {
+    "plan": ["The selected plan is invalid."],
+    "investment": ["The selected investment is invalid."],
+    "transaction": ["The selected transaction is invalid."],
+    "dateFrom": ["The date from is invalid."],
+    "dateTo": ["The date to is invalid."],
+    "actionTypes": ["The action types must be an array."],
+    "actionTypes.0": ["The selected action type is invalid."]
+  }
+}
+```
+
+</details>
+
+---

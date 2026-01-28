@@ -2,3 +2,19 @@
 title: "Maintenance status"
 openapi: "/openapi/public/http-v4.yaml GET /api/v4/public/platform/status"
 ---
+
+ ### Maintenance status
+
+<ApiEndpoint method="GET" path="/api/v4/public/platform/status" />
+
+This endpoint retrieves maintenance status
+
+**Response:**
+
+```json
+{
+  "status": "1"  // 1 - system operational, 0 - system maintenance
+}
+```
+
+---
