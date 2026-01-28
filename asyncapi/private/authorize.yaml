@@ -2,7 +2,13 @@ asyncapi: 3.0.0
 info:
   title: WhiteBit Private API Authorization
   version: 1.0.0
-  description: Authorize WebSocket connection using authentication token
+  description: |
+    Authorize WebSocket connection using authentication token.
+    
+    When you establish WS connection, you should authorize this ws connection via `authorize` method.
+    After successful authorization you will be able to send requests for balances, [orders](/glossary#orders) etc.
+    
+    It only needs to be done successfully once.
 
 servers:
   production:
@@ -49,12 +55,16 @@ components:
         $ref: '#/components/schemas/AuthorizeRequest'
       examples:
         - name: authorizeRequest
-          summary: Authorization request
+          summary: |
+            Authorize WebSocket connection with parameters:
+            - params[0]: WebSocket token (get via /api/v4/profile/websocket_token)
+            - params[1]: Constant string "public"
           payload:
-            id: 1
+            id: 0
             method: authorize
             params:
-              - "token_string"
+              - "<get_your_token_via_api>"
+              - "public"
 
     authorizeResponse:
       name: AuthorizeResponse
@@ -66,7 +76,7 @@ components:
         - name: authorizeSuccess
           summary: Authorization successful
           payload:
-            id: 1
+            id: 0
             result:
               status: success
             error: null
@@ -84,13 +94,18 @@ components:
           description: Unique request identifier
         method:
           const: authorize
+          description: Method name for authorization
         params:
           type: array
-          minItems: 1
-          maxItems: 1
+          minItems: 2
+          maxItems: 2
           items:
-            type: string
-            description: WebSocket authentication token
+            - type: string
+              description: WebSocket Token (get via `/api/v4/profile/websocket_token` endpoint)
+            - type: string
+              enum: ["public"]
+              description: Constant string, always should be "public"
+          description: Array with WebSocket token and constant "public" string
 
     AuthorizeResponse:
       type: object
@@ -101,6 +116,7 @@ components:
       properties:
         id:
           type: integer
+          description: Request identifier matching the request
         result:
           type: object
           required:
@@ -109,5 +125,7 @@ components:
             status:
               type: string
               enum: [success]
+              description: Authorization status
         error:
           type: "null"
+          description: Error object (null on success)

@@ -89,7 +89,9 @@ components:
         $ref: '#/components/schemas/LastpriceRequest'
       examples:
         - name: lastpriceQuery
-          summary: Get last price for ETH_BTC
+          summary: |
+            Query last price for a market:
+            - params[0]: Market name (ETH_BTC)
           payload:
             id: 5
             method: lastprice_request
@@ -118,7 +120,9 @@ components:
         $ref: '#/components/schemas/LastpriceSubscribe'
       examples:
         - name: subscribeLastprice
-          summary: Subscribe to multiple markets
+          summary: |
+            Subscribe to last price updates:
+            - params: Array of market names (ETH_BTC, BTC_USDT)
           payload:
             id: 6
             method: lastprice_subscribe
@@ -149,7 +153,10 @@ components:
         $ref: '#/components/schemas/LastpriceUpdate'
       examples:
         - name: priceUpdate
-          summary: Price update
+          summary: |
+            Last price update event with parameters:
+            - params[0]: Market name (ETH_BTC)
+            - params[1]: Last price (0.020683)
           payload:
             id: null
             method: lastprice_update
@@ -190,7 +197,7 @@ components:
           maxItems: 1
           items:
             - type: string
-              description: Market name (e.g., ETH_BTC)
+              description: "[Market](/glossary#market) name (e.g., ETH_BTC)"
 
     LastpriceResponse:
       type: object
@@ -223,7 +230,7 @@ components:
           type: array
           items:
             type: string
-            description: Market names
+            description: "[Market](/glossary#market) names"
 
     SubscriptionResponse:
       type: object
@@ -258,11 +265,15 @@ components:
           const: lastprice_update
         params:
           type: array
+          description: |
+            Update event parameters:
+            - [0] Market name
+            - [1] Last price
           minItems: 2
           maxItems: 2
           items:
             - type: string
-              description: Market name
+              description: "[Market](/glossary#market) name"
             - type: string
               description: Last price
 

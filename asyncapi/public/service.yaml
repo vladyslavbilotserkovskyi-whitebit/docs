@@ -17,7 +17,12 @@ servers:
 channels:
   /ws:
     address: /ws
-    description: Service operations for connection health checks and server time
+    description: |
+      Service operations for connection health checks and server time.
+      
+      <Note>
+      Use ping to maintain connection - server closes connection after 60 seconds of inactivity.
+      </Note>
     messages:
       pingRequest:
         $ref: '#/components/messages/pingRequest'

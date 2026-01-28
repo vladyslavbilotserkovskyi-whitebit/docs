@@ -23,11 +23,14 @@ channels:
       **Update Interval**: 0.5 seconds (for subscriptions)
 
       **Interval Constraints**:
-      - Less than 60: must be divisible into 60 without remainder
-      - Less than 3600 (1h): must be divisible by 60, and 3600 must be divisible by it
-      - Less than 86400 (1d): must be divisible by 3600, and 86400 must be divisible by it
-      - Less than 604800 (1w): must be divisible by 86400
-      - Equal to 604800 (1w) or 2592000 (30d)
+      
+      The requested interval must meet the following conditions:
+      - If the number is less than 60, then 60 must be divisible by the requested number without a remainder
+      - Less than 3600 (1 hour) - the number must be divisible by 60 without a remainder, and 3600 must be divisible by the requested number without a remainder
+      - Less than 86400 (day) - the number must be divisible by 3600 without a remainder, and 86400 must be divisible by the requested number without a remainder
+      - Less than 86400 * 7 (week) - the number must be divisible by 86400 without a remainder
+      - Equal to 86400 * 7 (week)
+      - Equal to 86400 * 30 (30 days)
     messages:
       candlesRequest:
         $ref: '#/components/messages/candlesRequest'
@@ -96,7 +99,12 @@ components:
         $ref: '#/components/schemas/CandlesRequest'
       examples:
         - name: candlesQuery
-          summary: Request candles for 1 hour interval
+          summary: |
+            Request historical candlestick data with parameters:
+            - params[0]: Market name (ETH_BTC)
+            - params[1]: Start time (1659569940 Unix timestamp)
+            - params[2]: End time (1660894800 Unix timestamp)
+            - params[3]: Interval in seconds (3600 = 1 hour)
           payload:
             id: 2
             method: candles_request
@@ -114,7 +122,16 @@ components:
         $ref: '#/components/schemas/CandlesResponse'
       examples:
         - name: candlesData
-          summary: Candlestick data
+          summary: |
+            Candlestick data array where each candle contains:
+            - [0]: Time (1580860800 Unix timestamp)
+            - [1]: Open price (0.020543)
+            - [2]: Close price (0.020553)
+            - [3]: High price (0.020614)
+            - [4]: Low price (0.02054)
+            - [5]: Volume in stock (7342.597)
+            - [6]: Volume in deal/money (151.095481849)
+            - [7]: Market pair (ETH_BTC)
           payload:
             id: 2
             result:
@@ -136,7 +153,10 @@ components:
         $ref: '#/components/schemas/CandlesSubscribe'
       examples:
         - name: subscribeCandles
-          summary: Subscribe to 15 minute candles
+          summary: |
+            Subscribe to candlestick updates with parameters:
+            - params[0]: Market name (BTC_USD)
+            - params[1]: Interval in seconds (900 = 15 minutes)
           payload:
             id: 3
             method: candles_subscribe
@@ -167,7 +187,16 @@ components:
         $ref: '#/components/schemas/CandlesUpdate'
       examples:
         - name: candleUpdate
-          summary: New candle update
+          summary: |
+            Real-time candle update containing:
+            - [0]: Time (1580895000 Unix timestamp)
+            - [1]: Open (0.020683)
+            - [2]: Close (0.020683)
+            - [3]: High (0.020683)
+            - [4]: Low (0.020666)
+            - [5]: Volume in stock (504.701)
+            - [6]: Volume in money/deal (10.433600491)
+            - [7]: Market (ETH_BTC)
           payload:
             id: null
             method: candles_update
@@ -198,6 +227,16 @@ components:
   schemas:
     Candle:
       type: array
+      description: |
+        Candlestick data tuple with 8 elements:
+        - [0] Time (Unix timestamp)
+        - [1] Open price
+        - [2] Close price
+        - [3] High price
+        - [4] Low price
+        - [5] Volume in stock currency
+        - [6] Volume in deal currency (money)
+        - [7] Market pair name
       minItems: 8
       maxItems: 8
       items:
@@ -212,11 +251,11 @@ components:
         - type: string
           description: Low price
         - type: string
-          description: Volume in stock
+          description: "Volume in [stock](/glossary#stock) currency"
         - type: string
-          description: Volume in deal (money)
+          description: "Volume in [deal](/glossary#deal-trade) currency (money)"
         - type: string
-          description: Market pair
+          description: "[Market](/glossary#market) pair"
 
     CandlesRequest:
       type: object
@@ -232,11 +271,17 @@ components:
           const: candles_request
         params:
           type: array
+          description: |
+            Query parameters:
+            - [0] Market name (e.g., ETH_BTC)
+            - [1] Start time (Unix timestamp)
+            - [2] End time (Unix timestamp)
+            - [3] Interval in seconds
           minItems: 4
           maxItems: 4
           items:
             - type: string
-              description: Market name (e.g., ETH_BTC)
+              description: "[Market](/glossary#market) name (e.g., ETH_BTC)"
             - type: integer
               description: Start time (Unix timestamp)
             - type: integer
@@ -275,11 +320,15 @@ components:
           const: candles_subscribe
         params:
           type: array
+          description: |
+            Subscription parameters:
+            - [0] Market name (e.g., BTC_USD)
+            - [1] Interval in seconds
           minItems: 2
           maxItems: 2
           items:
             - type: string
-              description: Market name (e.g., BTC_USD)
+              description: "[Market](/glossary#market) name (e.g., BTC_USD)"
             - type: integer
               description: Interval in seconds
 

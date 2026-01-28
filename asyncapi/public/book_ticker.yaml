@@ -73,7 +73,10 @@ components:
         $ref: '#/components/schemas/BookTickerSubscribe'
       examples:
         - name: subscribeSpecificMarket
-          summary: Subscribe to specific market
+          summary: |
+            Subscribe to best bid/ask updates for a specific market:
+            - params[0]: Market name (SHIB_PERP)
+            Optional: empty array subscribes to all markets
           payload:
             id: 1
             method: bookTicker_subscribe
@@ -109,7 +112,16 @@ components:
         $ref: '#/components/schemas/BookTickerUpdate'
       examples:
         - name: bookTickerSnapshot
-          summary: Book ticker snapshot
+          summary: |
+            Book ticker update with 8 elements:
+            - [0]: Transaction time (1751958383.5933869, Unix timestamp from matchengine)
+            - [1]: Message time (1751958383.5935569, Unix timestamp from websocket)
+            - [2]: Market (SHIB_PERP)
+            - [3]: Update ID (80670102)
+            - [4]: Best bid price (0.000011751)
+            - [5]: Best bid amount (12547000)
+            - [6]: Best ask price (0.000011776)
+            - [7]: Best ask amount (17424000)
           payload:
             id: null
             method: bookTicker_update
@@ -156,7 +168,7 @@ components:
           maxItems: 1
           items:
             type: string
-            description: Market name (optional - empty for all markets)
+            description: "[Market](/glossary#market) name (optional - empty for all markets)"
 
     SubscriptionResponse:
       type: object
@@ -180,23 +192,33 @@ components:
 
     BookTickerUpdateData:
       type: array
+      description: |
+        Book ticker update tuple with 8 elements:
+        - [0] Transaction time (Unix timestamp from matchengine)
+        - [1] Message time (Unix timestamp from websocket)
+        - [2] Market name
+        - [3] Update ID
+        - [4] Best bid price
+        - [5] Best bid amount
+        - [6] Best ask price
+        - [7] Best ask amount
       minItems: 8
       maxItems: 8
       items:
         - type: number
-          description: Transaction time (matchengine timestamp)
+          description: "Transaction time - timestamp of the update from matchengine"
         - type: number
-          description: Message time (websocket timestamp)
+          description: "Message time - timestamp of the message from websocket"
         - type: string
-          description: Market
+          description: "[Market](/glossary#market) name"
         - type: integer
           description: Update ID
         - type: string
-          description: Best bid price
+          description: "Best [bid](/glossary#bid) price"
         - type: string
           description: Best bid amount
         - type: string
-          description: Best ask price
+          description: "Best [ask](/glossary#ask) price"
         - type: string
           description: Best ask amount
 

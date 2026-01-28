@@ -22,7 +22,13 @@ channels:
 
       **Update Interval**: Real-time
 
-      **Subscription Note**: For each WebSocket connection, you can subscribe to either specific markets or all markets. Every new subscription replaces the existing one. Send empty params array to subscribe to all markets.
+      <Warning>
+      For each WebSocket connection, you can subscribe to either specific markets or all markets. **Every new subscription replaces the existing one.**
+      </Warning>
+
+      <Note>
+      To subscribe to all markets, send the request with an empty `params` array.
+      </Note>
     messages:
       tradesRequest:
         $ref: '#/components/messages/tradesRequest'
@@ -91,7 +97,11 @@ components:
         $ref: '#/components/schemas/TradesRequest'
       examples:
         - name: tradesQuery
-          summary: Get recent trades
+          summary: |
+            Query recent trades with parameters:
+            - params[0]: Market name (ETH_BTC)
+            - params[1]: Limit (100, number of trades to return)
+            - params[2]: Largest trade ID to request from (41358445)
           payload:
             id: 8
             method: trades_request
@@ -108,7 +118,13 @@ components:
         $ref: '#/components/schemas/TradesResponse'
       examples:
         - name: tradesData
-          summary: Recent trades
+          summary: |
+            Array of recent trades where each trade contains:
+            - id: Trade ID (41358530)
+            - time: Unix timestamp with milliseconds (1580905394.70332)
+            - price: Trade price (0.020857)
+            - amount: Trade amount (5.511)
+            - type: Trade type (buy/sell)
           payload:
             id: 8
             result:
@@ -127,7 +143,10 @@ components:
         $ref: '#/components/schemas/TradesSubscribe'
       examples:
         - name: subscribeSpecificMarkets
-          summary: Subscribe to specific markets
+          summary: |
+            Subscribe to specific markets:
+            - params: Array of market names (ETH_BTC, BTC_USDT)
+            Note: Every new subscription replaces the existing one
           payload:
             id: 9
             method: trades_subscribe
@@ -135,7 +154,9 @@ components:
               - ETH_BTC
               - BTC_USDT
         - name: subscribeAllMarkets
-          summary: Subscribe to all markets
+          summary: |
+            Subscribe to all markets:
+            - params: Empty array [] subscribes to all markets
           payload:
             id: 9
             method: trades_subscribe
@@ -156,7 +177,11 @@ components:
         $ref: '#/components/schemas/TradesUpdate'
       examples:
         - name: tradeUpdate
-          summary: New trade update
+          summary: |
+            Trade update event with parameters:
+            - params[0]: Market name (ETH_BTC)
+            - params[1]: Array of trade objects
+            Trade fields: id, time (Unix ms), price, amount, type (buy/sell), rpi (Retail Price Improvement flag)
           payload:
             id: null
             method: trades_update
@@ -200,7 +225,10 @@ components:
         type:
           type: string
           enum: [buy, sell]
-          description: Trade type
+          description: Trade type (buy/sell)
+        rpi:
+          type: boolean
+          description: "Indicates whether the trade involved a Retail Price Improvement (RPI) order"
 
     TradesRequest:
       type: object
@@ -216,11 +244,16 @@ components:
           const: trades_request
         params:
           type: array
+          description: |
+            Query parameters:
+            - [0] Market name
+            - [1] Limit (number of trades to return)
+            - [2] Largest trade ID to request from
           minItems: 3
           maxItems: 3
           items:
             - type: string
-              description: Market name
+              description: "[Market](/glossary#market) name"
             - type: integer
               description: Limit (number of trades to return)
             - type: integer
@@ -292,11 +325,15 @@ components:
           const: trades_update
         params:
           type: array
+          description: |
+            Update event parameters:
+            - [0] Market name
+            - [1] Array of Trade objects
           minItems: 2
           maxItems: 2
           items:
             - type: string
-              description: Market name
+              description: "[Market](/glossary#market) name"
             - type: array
               description: Array of trades
               items:
