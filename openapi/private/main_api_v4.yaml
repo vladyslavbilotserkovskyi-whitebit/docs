@@ -59,11 +59,15 @@ paths:
         - Main Account
       summary: Get main balance
       description: |
-        This endpoint retrieves the [main balance](/glossary/#balance-main) by currency [ticker](/glossary/#ticker) or all balances.
+        This endpoint retrieves the [main balance](/glossary#balance-main) by currency [ticker](/glossary#ticker) or all balances.
 
         <Warning>
           Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getMainBalance
       requestBody:
         required: true
@@ -124,9 +128,45 @@ paths:
       description: |
         This endpoint retrieves a deposit address of the cryptocurrency.
 
+        <Accordion title="Errors">
+        ```json
+        {
+          "code": 0,
+          "message": "Validation failed",
+          "errors": {
+            "ticker": ["The selected ticker is invalid."]
+          }
+        }
+        ```
+
+        ```json
+        {
+          "code": 0,
+          "message": "Validation failed",
+          "errors": {
+            "network": ["The selected network is invalid."]
+          }
+        }
+        ```
+
+        ```json
+        {
+          "code": 1,
+          "message": "Inner validation failed",
+          "errors": {
+            "ticker": ["Currency is not depositable"]
+          }
+        }
+        ```
+        </Accordion>
+
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
 
       operationId: getDepositAddress
       requestBody:
@@ -143,12 +183,12 @@ paths:
                 ticker:
                   type: string
                   description: |
-                    Currencies ticker. Example: BTC ⚠️ Currency [ticker](/glossary/#ticker) should not be [fiat](/glossary/#fiat) and it’s “can_deposit” status must be “true”. You can find this status in https://whitebit.com/api/v4/public/assets response.
+                    Currencies ticker. Example: BTC ⚠️ Currency [ticker](/glossary#ticker) should not be [fiat](/glossary#fiat) and it’s “can_deposit” status must be “true”. You can find this status in [Asset Status endpoint](/public/http-v4/asset-status-list) response.
                   example: BTC
                 network:
                   type: string
                   description: |
-                    Cryptocurrency network. ⚠️ If currency has multiple networks like USDT - you need to specify network to be used. You can find [ticker](/glossary/#ticker) networks list in “networks” field from response https://whitebit.com/api/v4/public/assets.
+                    Cryptocurrency network. ⚠️ If currency has multiple networks like USDT - you need to specify network to be used. You can find [ticker](/glossary#ticker) networks list in “networks” field from response [Asset Status endpoint](/public/http-v4/asset-status-list).
                   example: ERC20
                 request:
                   type: string
@@ -225,17 +265,44 @@ paths:
         - Deposit
       summary: Get fiat deposit address
       description: |
-        This endpoint retrieves a deposit url of the [fiat](/glossary/#fiat) invoice.
+        This endpoint retrieves a deposit url of the [fiat](/glossary#fiat) invoice.
 
         Please, pay attention that this endpoint works on demand. It means that you need to contact WhiteBIT support and provide your API key to get access to this functionality.
 
+        <Accordion title="Errors">
+        ```json
+        {
+          "code": 0,
+          "message": "Validation failed",
+          "errors": {
+            "ticker": ["The ticker field is required."],
+            "provider": ["The provider field is required."]
+          }
+        }
+        ```
+
+        ```json
+        {
+          "code": 0,
+          "message": "Validation failed",
+          "errors": {
+            "amount": ["Current limit exceeded"]
+          }
+        }
+        ```
+        </Accordion>
+
         <Warning>
-        If you have used VISAMASTER as [provider](/glossary/#provider), you must pass [referer header](https://developer.mozilla.org/ru/docs/Web/HTTP/Headers/Referer) when you go to the invoice link (for example, pass referer header when you go to https://someaddress.com). Otherwise if there is no header (for example, you go to https://someaddress.com from Telegram message) you will be redirected to the WhiteBIT homepage
+        If you have used VISAMASTER as [provider](/glossary#provider), you must pass [referer header](https://developer.mozilla.org/ru/docs/Web/HTTP/Headers/Referer) when you go to the invoice link (for example, pass referer header when you go to https://someaddress.com). Otherwise if there is no header (for example, you go to https://someaddress.com from Telegram message) you will be redirected to the WhiteBIT homepage
         </Warning>
         
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getFiatDepositUrl
       requestBody:
         required: true
@@ -253,11 +320,11 @@ paths:
               properties:
                 ticker:
                   type: string
-                  description: Currency's ticker (fiat). ⚠️ Currencies ticker should be fiat and has "can_deposit" status must be "true". Use https://whitebit.com/api/v4/public/assets to know more about currency.
+                  description: Currency's [ticker](/glossary#ticker) ([fiat](/glossary#fiat)). ⚠️ Currencies ticker should be fiat and has "can_deposit" status must be "true". Use [Asset Status endpoint](/public/http-v4/asset-status-list) to know more about currency.
                   example: UAH
                 provider:
                   type: string
-                  description: Fiat currency provider. ⚠️ Currency provider should be taken from https://whitebit.com/api/v4/public/assets response.
+                  description: "[Fiat](/glossary#fiat) currency [provider](/glossary#provider). ⚠️ Currency provider should be taken from [Asset Status endpoint](/public/http-v4/asset-status-list) response."
                   example: VISAMASTER
                 amount:
                   type: string
@@ -268,33 +335,33 @@ paths:
                   description: Unique transaction identifier on client's side
                 customer:
                   type: object
-                  description: Customer information (required for USD/EUR with VISAMASTER provider)
+                  description: Customer information (required for USD/EUR with VISAMASTER [provider](/glossary#provider))
                   properties:
                     firstName:
                       type: string
                       description: |
                         Customer billing first name.
 
-                        ⚠️ Required if currency USD or EUR with VISAMASTER provider.
+                        ⚠️ Required if currency USD or EUR with VISAMASTER [provider](/glossary#provider).
                     lastName:
                       type: string
                       description: |
                         Customer billing last name.
 
-                        ⚠️ Required if currency USD or EUR with VISAMASTER provider.
+                        ⚠️ Required if currency USD or EUR with VISAMASTER [provider](/glossary#provider).
                     email:
                       type: string
                       description: |
                         Customer billing email.
 
-                        ⚠️ Required if currency USD or EUR with VISAMASTER provider.
+                        ⚠️ Required if currency USD or EUR with VISAMASTER [provider](/glossary#provider).
                     birthDate:
                       type: string
                       format: date
                       description: |
                         Customer birth date (Format YYYY-MM-DD).
 
-                        ⚠️ Required if currency USD or EUR with VISAMASTER provider.
+                        ⚠️ Required if currency USD or EUR with VISAMASTER [provider](/glossary#provider).
                     address:
                       type: object
                       properties:
@@ -303,7 +370,7 @@ paths:
                           description: |
                             Customer address line1.
 
-                            ⚠️ Required if currency USD or EUR with VISAMASTER provider.
+                            ⚠️ Required if currency USD or EUR with VISAMASTER [provider](/glossary#provider).
                         line2:
                           type: string
                           description: Customer address line2
@@ -312,22 +379,22 @@ paths:
                           description: |
                             Customer city.
 
-                            ⚠️ Required if currency USD or EUR with VISAMASTER provider.
+                            ⚠️ Required if currency USD or EUR with VISAMASTER [provider](/glossary#provider).
                         zipCode:
                           type: string
                           description: |
                             Customer zip-code.
 
-                            ⚠️ Required if currency USD or EUR with VISAMASTER provider.
+                            ⚠️ Required if currency USD or EUR with VISAMASTER [provider](/glossary#provider).
                         countryCode:
                           type: string
                           description: |
                             Customer country code.
 
-                            ⚠️ Required if currency USD or EUR with VISAMASTER provider.
+                            ⚠️ Required if currency USD or EUR with VISAMASTER [provider](/glossary#provider).
                 successLink:
                   type: string
-                  description: Customer will be redirected to this URL by acquiring provider after success deposit. To activate this feature, please contact support
+                  description: Customer will be redirected to this URL by acquiring [provider](/glossary#provider) after success deposit. To activate this feature, please contact support
                 failureLink:
                   type: string
                   description: Customer will be redirected to this URL in case of fail or rejection on acquiring provider side. To activate this feature, please contact support
@@ -398,6 +465,10 @@ paths:
       description: |
         This endpoint issues a JWT token for the Fiat Gateway service.
         The token is used to authenticate requests to the Fiat Gateway API.
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: issueJwtToken
       requestBody:
         required: true
@@ -445,10 +516,91 @@ paths:
                   expires_at: 1622551200
         "400":
           description: Missing required fields or invalid data
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                missingFields:
+                  summary: Missing required fields
+                  value:
+                    code: 0
+                    message: "Validation failed"
+                    errors:
+                      request: ["The request field is required."]
+                      nonce: ["The nonce field is required."]
         "401":
           description: Invalid API key, signature, or nonce
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 0
+                message: "Invalid API key, signature, or nonce"
         "500":
           description: Server configuration issues
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                code: 0
+                message: "Server configuration issues"
+
+  /api/v4/profile/websocket_token:
+    post:
+      tags:
+        - JWT
+      summary: Get WebSocket Token
+      description: |
+        This V4 endpoint can be used to retrieve the WebSocket token for user.
+        The token is required to authorize WebSocket connections for private API access.
+        
+        <Warning>
+        Rate limit: 10 requests/60 sec.
+        </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
+      operationId: getWebSocketToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - request
+                - nonce
+              properties:
+                request:
+                  type: string
+                  description: Request signature
+                nonce:
+                  type: string
+                  description: Unique request identifier
+            example:
+              request: "{{request}}"
+              nonce: "{{nonce}}"
+      responses:
+        "200":
+          description: WebSocket token retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  websocket_token:
+                    type: string
+                    description: WebSocket authentication token
+              example:
+                websocket_token: "your_current_token"
+        "401":
+          description: Invalid API key, signature, or nonce
+        "422":
+          description: Validation failed
 
   /api/card-token:
     post:
@@ -456,12 +608,15 @@ paths:
         - Deposit
       summary: Issue card token
       description: |
-        This endpoint issues a card token for the specified card number.
-
+        This endpoint issues a [card token](/glossary#card-token) for the specified card number.
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: issueCardToken
       servers:
         - url: https://whitebit.com
@@ -517,10 +672,17 @@ paths:
       description: |
         This endpoint creates withdraw for the specified ticker.
 
-
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
+        
+        <Note>
+        Also, fiat currencies can't be withdrawn without KYC verification.
+        </Note>
       operationId: createWithdraw
       requestBody:
         required: true
@@ -539,23 +701,23 @@ paths:
                 ticker:
                   type: string
                   description: |
-                    Currency's ticker. Example: BTC
+                    Currency's [ticker](/glossary#ticker). Example: BTC
 
-                    ⚠️ Currencies ticker must have "can_deposit" status equal to "true". Use https://whitebit.com/api/v4/public/assets to know more about currency.
+                    ⚠️ Currencies ticker must have "can_deposit" status equal to "true". Use [Asset Status endpoint](/public/http-v4/asset-status-list) to know more about currency.
                   example: ETH
                 amount:
                   type: string
                   description: |
-                    Withdraw amount (including fee). If you want fee to be added to the specified amount, you need to use /main-account/withdraw-pay request.
+                    Withdraw amount (including [fee](/glossary#fee)). If you want fee to be added to the specified amount, you need to use /main-account/withdraw-pay request.
                   example: "0.9"
                 address:
                   type: string
-                  description: Target address (wallet address for cryptocurrencies, identifier/card token for fiat currencies)
+                  description: Target address (wallet address for cryptocurrencies, identifier/[card token](/glossary#card-token) for [fiat](/glossary#fiat) currencies)
                   example: "0x0964A6B8F794A4B8d61b62652dB27ddC9844FB4c"
                 memo:
                   type: string
                   description: |
-                    Memo.
+                    [Memo](/glossary#memodestination-tag).
 
                     ⚠️ Required if currency is memoable.
                 uniqueId:
@@ -568,38 +730,38 @@ paths:
                 provider:
                   type: string
                   description: |
-                    Fiat currency provider. Example: VISAMASTER
+                    [Fiat](/glossary#fiat) currency [provider](/glossary#provider). Example: VISAMASTER
 
-                    ⚠️ Required for fiat currencies. Currency provider should be taken from https://whitebit.com/api/v4/public/assets response.
+                    ⚠️ Required for fiat currencies. Currency provider should be taken from [Asset Status endpoint](/public/http-v4/asset-status-list) response.
                 network:
                   type: string
                   description: |
                     Cryptocurrency network. Available for multi network currencies. Example: OMNI
 
-                    ⚠️ Currency network should be taken from https://whitebit.com/api/v4/public/assets response. Default for USDT is ERC20
+                    ⚠️ Currency network should be taken from [Asset Status endpoint](/public/http-v4/asset-status-list) response. Default for USDT is ERC20
                   example: ERC20
                 partialEnable:
                   type: boolean
-                  description: Optional parameter for FIAT withdrawals with increased Maximum Limit if set as "true". In order to use this parameter your application should support "Partially successful" withdrawal status and latest updates in deposit/withdrawal history.
+                  description: Optional parameter for [FIAT](/glossary#fiat) withdrawals with increased Maximum Limit if set as "true". In order to use this parameter your application should support "Partially successful" withdrawal status and latest updates in deposit/withdrawal history.
                 beneficiary:
                   type: object
                   description: |
                     Beneficiary information data array.
 
-                    ⚠️ Required if currency ticker is one of: UAH_IBAN, USD_VISAMASTER, EUR_VISAMASTER, USD, EUR
+                    ⚠️ Required if currency [ticker](/glossary#ticker) is one of: UAH_IBAN, USD_VISAMASTER, EUR_VISAMASTER, USD, EUR
                   properties:
                     firstName:
                       type: string
                       description: |
                         Beneficiary first name. Max length: 40 symbols, latin letters and special characters.
 
-                        ⚠️ Required if currency ticker is one of: UAH_IBAN, USD_VISAMASTER, USD, EUR
+                        ⚠️ Required if currency [ticker](/glossary#ticker) is one of: UAH_IBAN, USD_VISAMASTER, USD, EUR
                     lastName:
                       type: string
                       description: |
                         Beneficiary last name. Max length: 40 symbols, latin letters and special characters.
 
-                        ⚠️ Required if currency ticker is one of: UAH_IBAN, USD_VISAMASTER, USD, EUR
+                        ⚠️ Required if currency [ticker](/glossary#ticker) is one of: UAH_IBAN, USD_VISAMASTER, USD, EUR
                     tin:
                       type: integer
                       description: |
@@ -611,26 +773,26 @@ paths:
                       description: |
                         Beneficiary phone number.
 
-                        ⚠️ Required if currency ticker is one of: USD_VISAMASTER, EUR_VISAMASTER
+                        ⚠️ Required if currency [ticker](/glossary#ticker) is one of: USD_VISAMASTER, EUR_VISAMASTER
                     email:
                       type: string
                       description: |
                         Beneficiary email.
 
-                        ⚠️ Required if currency ticker is one of: USD_VISAMASTER, EUR_VISAMASTER
+                        ⚠️ Required if currency [ticker](/glossary#ticker) is one of: USD_VISAMASTER, EUR_VISAMASTER
                     birthDate:
                       type: string
                       format: date
                       description: |
                         Beneficiary birth date. Format: YYYY-MM-DD.
 
-                        ⚠️ Required if currency ticker is one of: USD_VISAMASTER, EUR_VISAMASTER
+                        ⚠️ Required if currency [ticker](/glossary#ticker) is one of: USD_VISAMASTER, EUR_VISAMASTER
                 travelRule:
                   type: object
                   description: |
                     Travel Rule information data array.
 
-                    ⚠️ Required if currency is crypto and you are from EEA
+                    ⚠️ Required if currency is crypto and you are from [EEA](/glossary#eea)
                   properties:
                     type:
                       type: string
@@ -638,25 +800,25 @@ paths:
                       description: |
                         Travel rule receiver type. Values: "individual" or "entity"
 
-                        ⚠️ Required if currency is crypto and you are from EEA
+                        ⚠️ Required if currency is crypto and you are from [EEA](/glossary#eea)
                     vasp:
                       type: string
                       description: |
                         Travel rule destination platform (VASP) name.
 
-                        ⚠️ Required if currency is crypto and you are from EEA
+                        ⚠️ Required if currency is crypto and you are from [EEA](/glossary#eea)
                     name:
                       type: string
                       description: |
                         Travel rule. If individual - first_name ; if entity - entity_name
 
-                        ⚠️ Required if currency is crypto and you are from EEA
+                        ⚠️ Required if currency is crypto and you are from [EEA](/glossary#eea)
                     address:
                       type: string
                       description: |
                         Travel rule. If individual - last_name ; if entity - entity_address
 
-                        ⚠️ Required if currency is crypto and you are from EEA
+                        ⚠️ Required if currency is crypto and you are from [EEA](/glossary#eea)
                 paymentDescription:
                   type: string
                   description: |
@@ -786,9 +948,9 @@ paths:
             - 3 - amount is too small
             - 4 - amount is too small for the payment system
             - 5 - not enough balance
-            - 6 - amount is less than or equals fee
-            - 7 - amount should be integer (can happen for currencies with zero precision like Neo)
-            - 8 - target withdraw amount without fee equals zero
+            - 6 - amount is less than or equals [fee](/glossary#fee)
+            - 7 - amount should be integer (can happen for currencies with zero [precision](/glossary#precision) like Neo)
+            - 8 - target withdraw amount without [fee](/glossary#fee) equals zero
             - 9 - address is unavailable (occurs for withdraws to own address)
           content:
             application/json:
@@ -821,6 +983,46 @@ paths:
                       amount:
                         - "This currency has no active pairs or it may have been delisted. Its rate cannot be calculated at the moment."
                         - "Current limit exceeded"
+                accountVerification:
+                  summary: Account must be verified for fiat currencies
+                  value:
+                    code: 0
+                    message: "Validation failed"
+                    errors:
+                      amount: ["Your account must be verified"]
+                invalidTicker:
+                  summary: Invalid ticker
+                  value:
+                    code: 0
+                    message: "Validation failed"
+                    errors:
+                      ticker: ["The selected ticker is invalid."]
+                providerRequired:
+                  summary: Provider required for fiat currency
+                  value:
+                    code: 0
+                    message: "Validation failed"
+                    errors:
+                      provider: ["Provider is required for fiat currency"]
+                memoRequired:
+                  summary: Memo required for memoable currency
+                  value:
+                    code: 0
+                    message: "Validation failed"
+                    errors:
+                      memo: ["The memo field is required."]
+                invalidPartialEnable:
+                  summary: Invalid partialEnable value
+                  value:
+                    code: 0
+                    message: "Validation failed"
+                    errors:
+                      partialEnable: ["The partial enable field must be true or false."]
+                throttling:
+                  summary: Rate limiting/throttling
+                  value:
+                    message: "Too Many Attempts."
+                    code: 0
         "422":
           description: |
             Inner validation failed
@@ -831,14 +1033,29 @@ paths:
             - 3 - amount is too small
             - 4 - amount is too small for the payment system
             - 5 - not enough balance
-            - 6 - amount is less than or equals fee
-            - 7 - amount should be integer (can happen for currencies with zero precision like Neo)
-            - 8 - target withdraw amount without fee equals zero
+            - 6 - amount is less than or equals [fee](/glossary#fee)
+            - 7 - amount should be integer (can happen for currencies with zero [precision](/glossary#precision) like Neo)
+            - 8 - target withdraw amount without [fee](/glossary#fee) equals zero
             - 9 - address is unavailable (occurs for withdraws to own address)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorInner"
+              examples:
+                invalidAddress:
+                  summary: Invalid address
+                  value:
+                    code: 2
+                    message: "Inner validation failed"
+                    errors:
+                      address: ["The address is invalid"]
+                notEnoughBalance:
+                  summary: Not enough balance
+                  value:
+                    code: 5
+                    message: "Inner validation failed"
+                    errors:
+                      amount: ["Not enough money, Ethereum balance = 1"]
 
   /api/v4/main-account/withdraw-pay:
     post:
@@ -846,16 +1063,19 @@ paths:
         - Withdraw
       summary: Create withdraw request with specific withdraw amount (fee not included)
       description: |
-        This endpoint has the similar logic as /main-account/withdraw, but with the only difference: amount that is specified will not include fee (it will be calculated to make target withdraw amount equal to the specified amount).
+        This endpoint has the similar logic as /main-account/withdraw, but with the only difference: amount that is specified will not include [fee](/glossary#fee) (it will be calculated to make target withdraw amount equal to the specified amount).
 
         **Example:**
-        - When you create base withdraw and set amount = 100 USD, receiver will receive 100 USD - fee amount, and your balance will decrease by 100 USD.
-        - When you use this endpoint and set amount = 100 USD, receiver will receive 100 USD, and your balance will decrease by 100 USD + fee amount.
-
+        - When you create base withdraw and set amount = 100 USD, receiver will receive 100 USD - [fee](/glossary#fee) amount, and your balance will decrease by 100 USD.
+        - When you use this endpoint and set amount = 100 USD, receiver will receive 100 USD, and your balance will decrease by 100 USD + [fee](/glossary#fee) amount.
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: createWithdrawPay
       requestBody:
         required: true
@@ -883,9 +1103,9 @@ paths:
             - 3 - amount is too small
             - 4 - amount is too small for the payment system
             - 5 - not enough balance
-            - 6 - amount is less than or equals fee
-            - 7 - amount should be integer (can happen for currencies with zero precision like Neo)
-            - 8 - target withdraw amount without fee equals zero
+            - 6 - amount is less than or equals [fee](/glossary#fee)
+            - 7 - amount should be integer (can happen for currencies with zero [precision](/glossary#precision) like Neo)
+            - 8 - target withdraw amount without [fee](/glossary#fee) equals zero
             - 9 - address is unavailable (occurs for withdraws to own address)
           content:
             application/json:
@@ -928,9 +1148,9 @@ paths:
             - 3 - amount is too small
             - 4 - amount is too small for the payment system
             - 5 - not enough balance
-            - 6 - amount is less than or equals fee
-            - 7 - amount should be integer (can happen for currencies with zero precision like Neo)
-            - 8 - target withdraw amount without fee equals zero
+            - 6 - amount is less than or equals [fee](/glossary#fee)
+            - 7 - amount should be integer (can happen for currencies with zero [precision](/glossary#precision) like Neo)
+            - 8 - target withdraw amount without [fee](/glossary#fee) equals zero
             - 9 - address is unavailable (occurs for withdraws to own address)
           content:
             application/json:
@@ -943,12 +1163,19 @@ paths:
         - Transfer
       summary: Transfer between balances
       description: |
-        This endpoint transfers the specified amount between main, trade and collateral balances.
-
+        This endpoint transfers the specified amount between [main](/glossary#balance-main), [trade](/glossary#balance-spotbalance-trade) and [collateral](/glossary#balance-collateral) balances.
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
+        
+        <Note>
+        Also, fiat currencies can't be transferred without KYC verification.
+        </Note>
       operationId: transferBetweenBalances
       requestBody:
         required: true
@@ -969,7 +1196,7 @@ paths:
 
                     ⚠️ We highly recommend to use **from** and **to** fields, which provides more flexibility. This way will be deprecated in future.
 
-                    Example: **deposit** if you need to transfer from main to trade / **withdraw** if you need to transfer from trade balance to main. For collateral balances you can use **collateral-deposit** to transfer from main to collateral balance and **collateral-withdraw** to transfer from collateral balance to main
+                    Example: **deposit** if you need to transfer from [main](/glossary#balance-main) to [trade](/glossary#balance-spotbalance-trade) / **withdraw** if you need to transfer from [trade](/glossary#balance-spotbalance-trade) balance to [main](/glossary#balance-main). For [collateral balances](/glossary#balance-collateral) you can use **collateral-deposit** to transfer from main to collateral balance and **collateral-withdraw** to transfer from collateral balance to main
 
                     **Not required** if **from** and **to** are set.
                   enum:
@@ -977,24 +1204,24 @@ paths:
                 from:
                   type: string
                   description: |
-                    Balance FROM which funds will move to. Acceptable values: **main**, **spot**, **collateral**
+                    Balance FROM which funds will move to. Acceptable values: [**main**](/glossary#balance-main), [**spot**](/glossary#balance-spotbalance-trade), [**collateral**](/glossary#balance-collateral)
 
                     **Not required** if **method** is set.
                   enum: [main, spot, collateral]
                 to:
                   type: string
                   description: |
-                    Balance TO which funds will move to. Acceptable values: **main**, **spot**, **collateral**
+                    Balance TO which funds will move to. Acceptable values: [**main**](/glossary#balance-main), [**spot**](/glossary#balance-spotbalance-trade), [**collateral**](/glossary#balance-collateral)
 
                     **Not required** if **method** is set.
                   enum: [main, spot, collateral]
                 ticker:
                   type: string
-                  description: Currency's ticker.
+                  description: "Currency's [ticker](/glossary#ticker). Example: BTC"
                   example: XLM
                 amount:
                   type: string
-                  description: Amount to transfer. Max precision = 8, value should be greater than zero and less or equal your available balance.
+                  description: "Amount to transfer. Max [precision](/glossary#precision) = 8, value should be greater than zero and less or equal your available balance."
                   example: "0.9"
                 request:
                   type: string
@@ -1067,8 +1294,8 @@ paths:
             Inner validation failed
 
             Response error codes:
-            - 1 - transfers from trade to main are disabled
-            - 2 - transfers from main to trade are disabled
+            - 1 - transfers from [trade](/glossary#balance-spotbalance-trade) to [main](/glossary#balance-main) are disabled
+            - 2 - transfers from [main](/glossary#balance-main) to [trade](/glossary#balance-spotbalance-trade) are disabled
             - 3 - not enough balance
           content:
             application/json:
@@ -1095,7 +1322,7 @@ paths:
         - `Awaiting verification` - 27: The transaction has been frozen due to the lack of data required under the Travel Rule. The user is required to provide this data manually through the exchange interface.
         - `Confirmation in progress` - 28: The Travel Rule data provided by the user is currently being verified by WhiteBIT.
 
-        ⚠️ Due to regulatory requirements in Turkey and EU, every inbound crypto deposit must be put on hold (frozen) until transaction's origin being confirmed. Must be provided certain details if the transaction is from another Virtual Asset Service Provider (VASP) or verify the address if it is from a self-hosted wallet. Only after successful verification can the deposited funds be credited to account.
+        ⚠️ Due to regulatory requirements in Turkey and [EU](/glossary#eea), every inbound crypto deposit must be put on hold (frozen) until transaction's origin being confirmed. Must be provided certain details if the transaction is from another Virtual Asset Service Provider (VASP) or verify the address if it is from a self-hosted wallet. Only after successful verification can the deposited funds be credited to account.
 
         **Withdraw status codes:**
         - `Pending` - 1, 2, 6, 10, 11, 12, 13, 14, 15, 16, 17
@@ -1105,10 +1332,13 @@ paths:
         - `Frozen` - 21
         - `Partially successful` - 18
 
-
         <Warning>
         Rate limit: 200 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getDepositWithdrawHistory
       requestBody:
         required: true
@@ -1127,13 +1357,13 @@ paths:
                   enum: [1, 2]
                 ticker:
                   type: string
-                  description: Currency's ticker.
+                  description: "Currency's [ticker](/glossary#ticker). Example: BTC"
                 address:
                   type: string
                   description: Can be used for filtering transactions by specific address.
                 memo:
                   type: string
-                  description: Can be used for filtering transactions by specific memo
+                  description: "Can be used for filtering transactions by specific [memo](/glossary#memodestination-tag)"
                 addresses:
                   type: array
                   items:
@@ -1263,10 +1493,13 @@ paths:
         | BTC      | p2sh-segwit, bech32 | bech32  |
         | LTC      | p2sh-segwit, bech32 | bech32  |
 
-
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: createNewAddress
       requestBody:
         required: true
@@ -1400,11 +1633,15 @@ paths:
         - Codes
       summary: Create code
       description: |
-        This endpoint creates WhiteBIT code.
+        This endpoint creates [WhiteBIT code](/glossary#whitebit-codes).
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: createCode
       requestBody:
         required: true
@@ -1420,20 +1657,20 @@ paths:
               properties:
                 ticker:
                   type: string
-                  description: Currency's ticker.
+                  description: "Currency's [ticker](/glossary#ticker). Example: BTC"
                   example: ETH
                 amount:
                   type: string
-                  description: Amount to transfer. Max precision = 8, value should be greater than zero and your main balance.
+                  description: "Amount to transfer. Max [precision](/glossary#precision) = 8, value should be greater than zero and your [main balance](/glossary#balance-main)."
                   example: "0.002"
                 passphrase:
                   type: string
                   maxLength: 25
-                  description: Passphrase for applying WhiteBIT codes. Passphrase must contain only latin letters, numbers and symbols (like !@#$%^, no whitespaces).
+                  description: "Passphrase for applying [WhiteBIT codes](/glossary#whitebit-codes). Passphrase must contain only latin letters, numbers and symbols (like !@#$%^, no whitespaces). Max: 25 symbols."
                 description:
                   type: string
                   maxLength: 75
-                  description: Additional text description for WhiteBIT codes. Visible only for creator.
+                  description: "Additional text description for [code](/glossary#whitebit-codes). Visible only for creator. Max: 75 symbols."
                 request:
                   type: string
                   description: Request signature
@@ -1457,11 +1694,13 @@ paths:
                 properties:
                   code:
                     type: string
-                    description: Generated WhiteBIT code
+                    description: "Generated WhiteBIT code"
                   message:
                     type: string
+                    description: "Success message"
                   external_id:
                     type: string
+                    description: "External identifier"
               example:
                 code: "WBe11f4fce-2a53-4edc-b195-66b693bd77e3ETH"
                 message: "Code was successfully created"
@@ -1518,11 +1757,37 @@ paths:
             - 3 - amount is too small
             - 4 - amount is too small for the payment system
             - 5 - not enough balance
-            - 6 - amount is less than or equals fee
+            - 6 - amount is less than or equals [fee](/glossary#fee)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorInner"
+              examples:
+                unconfirmedUser:
+                  summary: Unconfirmed users (without KYC) - limit exceeded
+                  value:
+                    code: 0
+                    message: "Validation failed"
+                    errors:
+                      amount:
+                        [
+                          "This currency has no active pairs or it may have been delisted. Its rate cannot be calculated at the moment.",
+                          "Current limit exceeded"
+                        ]
+                kycRequired:
+                  summary: Fiat currencies require KYC verification
+                  value:
+                    code: 0
+                    message: "Validation failed"
+                    errors:
+                      amount: ["Your account must be verified"]
+                invalidPassphrase:
+                  summary: Invalid passphrase format
+                  value:
+                    code: 0
+                    message: "Validation failed"
+                    errors:
+                      passphrase: ["The passphrase format is invalid."]
 
   /api/v4/main-account/codes/apply:
     post:
@@ -1530,11 +1795,15 @@ paths:
         - Codes
       summary: Apply code
       description: |
-        This endpoint applies WhiteBIT code.
+        This endpoint applies [WhiteBIT code](/glossary#whitebit-codes).
 
         <Warning>
         Rate limit: 60 requests/1 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: applyCode
       requestBody:
         required: true
@@ -1549,11 +1818,11 @@ paths:
               properties:
                 code:
                   type: string
-                  description: Code that will be applied.
+                  description: "[Code](/glossary#whitebit-codes) that will be applied."
                 passphrase:
                   type: string
                   maxLength: 25
-                  description: Passphrase that will be used if WhiteBIT codes was created with passphrase.
+                  description: "Should be provided if the [code](/glossary#whitebit-codes) was created with passphrase. Max: 25 symbols."
                 request:
                   type: string
                   description: Request signature
@@ -1620,11 +1889,15 @@ paths:
         - Codes
       summary: Get my codes
       description: |
-        This endpoint retrieves the list of WhiteBIT codes created by my account.
+        This endpoint retrieves the list of [WhiteBIT codes](/glossary#whitebit-codes) created by my account.
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getMyCodes
       requestBody:
         required: true
@@ -1731,12 +2004,15 @@ paths:
         - Codes
       summary: Get codes history
       description: |
-        This endpoint retrieves the whole codes history on your account.
-
+        This endpoint retrieves the whole [codes](/glossary#whitebit-codes) history on your account.
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getCodesHistory
       requestBody:
         required: true
@@ -1849,7 +2125,11 @@ paths:
         - Crypto Lending - Fixed
       summary: Get plans
       description: |
-        This endpoint retrieves all active plans.
+        This endpoint retrieves all active [plans](/glossary#crypto-lending).
+        
+        <Note>
+        These endpoints are available only for B2B partner services. You need to fill the institutional services form in order to get permissions to use these endpoints.
+        </Note>
 
         **Note:** When target currency is different from source currency, interest amount in target currency will be calculated using `interestRatio` value.
 
@@ -1857,10 +2137,13 @@ paths:
         - When source currency = USDT, target currency = BTC and interest ratio = 40000, it means that you will receive interest in BTC that equals interest amount in USDT divided by interest ratio (in this case 0.000025 BTC per each 1 USDT of interest amount).
         - When source currency equals target currency, interest ratio equals 1.
 
-
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getFixedPlans
       requestBody:
         required: true
@@ -1874,7 +2157,7 @@ paths:
               properties:
                 ticker:
                   type: string
-                  description: Invest plan source currency's ticker.
+                  description: "[Invest plan](/glossary#crypto-lending) source currency's [ticker](/glossary#ticker). Example: BTC"
                 request:
                   type: string
                   description: Request signature
@@ -1926,11 +2209,15 @@ paths:
         - Crypto Lending - Fixed
       summary: Invest
       description: |
-        This endpoint creates a new investment to the specified invest plan.
+        This endpoint creates a new investment to the specified [invest plan](/glossary#crypto-lending).
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: createFixedInvestment
       requestBody:
         required: true
@@ -1946,7 +2233,7 @@ paths:
               properties:
                 planId:
                   type: string
-                  description: Invest plan identifier
+                  description: "[Invest plan](/glossary#crypto-lending) identifier"
                 amount:
                   type: string
                   description: Investment amount
@@ -2108,6 +2395,10 @@ paths:
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: closeFixedInvestment
       requestBody:
         required: true
@@ -2167,6 +2458,10 @@ paths:
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getFixedInvestmentsHistory
       requestBody:
         required: true
@@ -2183,7 +2478,7 @@ paths:
                   description: Investment identifier
                 ticker:
                   type: string
-                  description: Invest plan source currency's ticker
+                  description: "[Invest plan](/glossary#crypto-lending) source currency's [ticker](/glossary#ticker)"
                 status:
                   type: integer
                   description: Investment status (1 - active, 2 - closed)
@@ -2278,6 +2573,10 @@ paths:
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getInterestPaymentHistory
       requestBody:
         required: true
@@ -2291,10 +2590,10 @@ paths:
               properties:
                 planId:
                   type: string
-                  description: Invest plan identifier
+                  description: "[Invest plan](/glossary#crypto-lending) identifier"
                 ticker:
                   type: string
-                  description: Invest plan target currency's ticker
+                  description: "[Invest plan](/glossary#crypto-lending) target currency's [ticker](/glossary#ticker)"
                 limit:
                   type: integer
                   minimum: 1
@@ -2365,13 +2664,17 @@ paths:
         - Crypto Lending - Flex
       summary: Get Flex Plans
       description: |
-        Retrieve list of active Flex Plans.
+        Retrieve list of active [Flex Plans](/glossary#crypto-lending).
 
         Available after September 22, 2025.
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getFlexPlans
       requestBody:
         required: true
@@ -2395,7 +2698,7 @@ paths:
                   description: Pagination offset.
                 ticker:
                   type: string
-                  description: Filter by currency ticker.
+                  description: "Filter by currency [ticker](/glossary#ticker). Example: USDT"
                 request:
                   type: string
                   description: Request signature
@@ -2461,10 +2764,13 @@ paths:
       description: |
         Retrieve user's investment portfolio with optional filtering.
 
-
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getUserFlexInvestments
       requestBody:
         required: true
@@ -2486,7 +2792,7 @@ paths:
                   description: "Pagination offset. Default: 0."
                 ticker:
                   type: string
-                  description: "Filter by currency ticker. Example: USDT."
+                  description: "Filter by currency [ticker](/glossary#ticker). Example: USDT."
                 plan:
                   type: string
                   description: Filter by plan ID (UUID).
@@ -2567,7 +2873,6 @@ paths:
       description: |
         Retrieve complete investment operations history with advanced filtering.
 
-
         **Available Action Types:**
         - 1: INVEST - Investment creation
         - 2: REINVEST - Automatic reinvestment
@@ -2579,6 +2884,10 @@ paths:
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getFlexInvestmentHistory
       requestBody:
         required: true
@@ -2690,10 +2999,13 @@ paths:
 
         **Note:** This endpoint automatically filters to show ONLY DAILY_EARNING operations (type 4).
 
-
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getFlexPaymentHistory
       requestBody:
         required: true
@@ -2795,10 +3107,13 @@ paths:
       description: |
         Create new investment in a Flex plan.
 
-
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: createFlexInvestment
       requestBody:
         required: true
@@ -2891,10 +3206,13 @@ paths:
 
         **Note:** Plan must be active and accessible to user.
 
-
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: withdrawFromFlexInvestment
       requestBody:
         required: true
@@ -2979,10 +3297,13 @@ paths:
         - plan: required, string, UUID format, must exist
         - Investment must be ACTIVE
 
-
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: closeFlexInvestment
       requestBody:
         required: true
@@ -3060,10 +3381,13 @@ paths:
       description: |
         Enable/disable automatic reinvestment for user's investment.
 
-
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: updateFlexAutoReinvestment
       requestBody:
         required: true
@@ -3138,13 +3462,16 @@ paths:
         - Fees
       summary: Get fees
       description: |
-        Returns an array of objects containing deposit/withdrawal settings for the corresponding currencies.
+        Returns an array of objects containing deposit/withdrawal [fees](/glossary#fee) for the corresponding currencies.
         Zero value in amount fields means that the setting is disabled.
-
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getFees
       requestBody:
         required: true
@@ -3178,12 +3505,21 @@ paths:
         - Sub-Account
       summary: Create Sub-Account
       description: |
-        This endpoint creates new sub-account.
+        This endpoint creates new [sub-account](/glossary#sub-account).
 
+        <Note>
+        The `email` field requirement depends on the `shareKyc` parameter:
+        - When `shareKyc` is `false` or not provided: `email` is **required**
+        - When `shareKyc` is `true`: `email` is **optional**
+        </Note>
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: createSubAccount
       requestBody:
         required: true
@@ -3236,12 +3572,15 @@ paths:
         - Sub-Account
       summary: Delete Sub-Account
       description: |
-        This endpoint deletes sub-account.
-
+        This endpoint deletes [sub-account](/glossary#sub-account).
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: deleteSubAccount
       requestBody:
         required: true
@@ -3275,12 +3614,15 @@ paths:
         - Sub-Account
       summary: Edit Sub-Account
       description: |
-        This endpoint edits sub-account.
-
+        This endpoint edits [sub-account](/glossary#sub-account).
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: editSubAccount
       requestBody:
         required: true
@@ -3331,12 +3673,15 @@ paths:
         - Sub-Account
       summary: List of Sub-Accounts
       description: |
-        This endpoint returns list of current user sub-accounts.
-
+        This endpoint returns list of current user [sub-accounts](/glossary#sub-account).
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: listSubAccounts
       requestBody:
         required: true
@@ -3387,12 +3732,15 @@ paths:
         - Sub-Account
       summary: Sub-Account Transfer
       description: |
-        This endpoint creates transfer from main account to sub-account or vice versa.
-
+        This endpoint creates transfer from main account to [sub-account](/glossary#sub-account) or vice versa.
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: subAccountTransfer
       requestBody:
         required: true
@@ -3418,7 +3766,7 @@ paths:
                   description: Transfer amount (min 0.00000001)
                 ticker:
                   type: string
-                  description: Currency's ticker
+                  description: "Currency's [ticker](/glossary#ticker)"
       responses:
         "200":
           description: Transfer successful
@@ -3439,12 +3787,15 @@ paths:
         - Sub-Account
       summary: Block Sub-Account
       description: |
-        This endpoint blocks sub-account.
-
+        This endpoint blocks [sub-account](/glossary#sub-account).
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: blockSubAccount
       requestBody:
         required: true
@@ -3478,12 +3829,15 @@ paths:
         - Sub-Account
       summary: Unblock Sub-Account
       description: |
-        This endpoint unblocks sub-account.
-
+        This endpoint unblocks [sub-account](/glossary#sub-account).
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: unblockSubAccount
       requestBody:
         required: true
@@ -3517,12 +3871,15 @@ paths:
         - Sub-Account
       summary: Sub-Account Balances
       description: |
-        This endpoint returns sub-account balances.
-
+        This endpoint returns [sub-account](/glossary#sub-account) balances.
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getSubAccountBalances
       requestBody:
         required: true
@@ -3575,12 +3932,15 @@ paths:
         - Sub-Account
       summary: Get Sub-Account Transfer History
       description: |
-        This endpoint returns history of transfers between main account and sub-account.
-
+        This endpoint returns history of transfers between main account and [sub-account](/glossary#sub-account).
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getSubAccountTransferHistory
       requestBody:
         required: true
@@ -3633,12 +3993,15 @@ paths:
         - Sub-Account API Keys
       summary: Create Sub-Account API Key
       description: |
-        This endpoint creates a new API key for a sub-account.
-
+        This endpoint creates a new API key for a [sub-account](/glossary#sub-account).
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: createSubAccountApiKey
       requestBody:
         required: true
@@ -3680,12 +4043,15 @@ paths:
         - Sub-Account API Keys
       summary: Edit Sub-Account API Key
       description: |
-        This endpoint updates an existing sub-account API key.
-
+        This endpoint updates an existing [sub-account](/glossary#sub-account) API key.
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: editSubAccountApiKey
       requestBody:
         required: true
@@ -3734,12 +4100,15 @@ paths:
         - Sub-Account API Keys
       summary: Delete Sub-Account API Key
       description: |
-        This endpoint deletes a sub-account API key.
-
+        This endpoint deletes a [sub-account](/glossary#sub-account) API key.
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: deleteSubAccountApiKey
       requestBody:
         required: true
@@ -3773,13 +4142,16 @@ paths:
         - Sub-Account API Keys
       summary: List Sub-Account API Keys
       description: |
-        This endpoint retrieves a list of API keys for a sub-account.
+        This endpoint retrieves a list of API keys for a [sub-account](/glossary#sub-account).
         Note: For security reasons, the apiSecret field returns an empty string.
-
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: listSubAccountApiKeys
       requestBody:
         required: true
@@ -3830,12 +4202,15 @@ paths:
         - Sub-Account API Keys
       summary: Reset Sub-Account API Key
       description: |
-        This endpoint resets (regenerates) an existing sub-account API key.
-
+        This endpoint resets (regenerates) an existing [sub-account](/glossary#sub-account) API key.
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: resetSubAccountApiKey
       requestBody:
         required: true
@@ -3869,12 +4244,15 @@ paths:
         - Sub-Account API Keys
       summary: List Sub-Account API Key IP Addresses
       description: |
-        This endpoint retrieves the list of IP addresses allowed for a sub-account API key.
-
+        This endpoint retrieves the list of IP addresses allowed for a [sub-account](/glossary#sub-account) API key.
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: listSubAccountApiKeyIpAddresses
       requestBody:
         required: true
@@ -3913,12 +4291,15 @@ paths:
         - Sub-Account API Keys
       summary: Create Sub-Account API Key IP Address
       description: |
-        This endpoint adds a new IP address to the allowed list for a sub-account API key.
-
+        This endpoint adds a new IP address to the allowed list for a [sub-account](/glossary#sub-account) API key.
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: createSubAccountApiKeyIpAddress
       requestBody:
         required: true
@@ -3961,12 +4342,15 @@ paths:
         - Sub-Account API Keys
       summary: Delete Sub-Account API Key IP Address
       description: |
-        This endpoint removes an IP address from the allowed list for a sub-account API key.
-
+        This endpoint removes an IP address from the allowed list for a [sub-account](/glossary#sub-account) API key.
 
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: deleteSubAccountApiKeyIpAddress
       requestBody:
         required: true
@@ -4011,10 +4395,13 @@ paths:
       description: |
         This endpoint returns rewards received from mining.
 
-
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getMiningRewards
       requestBody:
         required: true
@@ -4069,10 +4456,13 @@ paths:
       description: |
         This endpoint returns hashrate of mining pool account.
 
-
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getMiningHashrate
       requestBody:
         required: true
@@ -4131,10 +4521,13 @@ paths:
         This endpoint returns an active loan.
         This endpoint works on demand - contact WhiteBIT support to get access.
 
-
         <Warning>
         Rate limit: 1000 requests/10 sec.
         </Warning>
+        
+        <Note>
+        Response is cached for: NONE
+        </Note>
       operationId: getCreditLineInfo
       requestBody:
         required: true
@@ -4218,28 +4611,40 @@ components:
       properties:
         ticker:
           type: string
+          description: "Currencies [ticker](/glossary#ticker). Example: BTC ⚠️ Currencies ticker must have \"can_deposit\" status equal to \"true\". Use [Asset Status endpoint](/public/http-v4/asset-status-list) to know more about currency."
         amount:
           type: string
+          description: "Withdraw amount (including [fee](/glossary#fee)). If you want fee to be added to the specified amount, you need to use /main-account/withdraw-pay request"
         address:
           type: string
+          description: "Target address (wallet address for cryptocurrencies, identifier/[card token](/glossary#card-token) for [fiat](/glossary#fiat) currencies)"
         memo:
           type: string
+          description: "Required if currency is memoable. See [memo](/glossary#memodestination-tag) for details."
         uniqueId:
           type: string
+          description: "Unique transaction identifier. ⚠️ Note that you should generate new unique id for each withdrawal request."
         provider:
           type: string
+          description: "[Fiat](/glossary#fiat) currency [provider](/glossary#provider). Example: VISAMASTER ⚠️ Currency provider should be taken from [Asset Status endpoint](/public/http-v4/asset-status-list) response. Required if currency is fiat."
         network:
           type: string
+          description: "Cryptocurrency network. Available for [multinetwork](/glossary#multinetwork) currencies. Example: OMNI ⚠️ Currency network should be taken from [Asset Status endpoint](/public/http-v4/asset-status-list) response. Default for USDT is ERC20"
         partialEnable:
           type: boolean
+          description: "Optional parameter for [FIAT](/glossary#fiat) withdrawals with increased Maximum Limit if set as \"true\". In order to use this parameter your application should support \"Partially successful\" withdrawal status and latest updates in deposit/withdrawal history."
         beneficiary:
           type: object
+          description: "Beneficiary information data. Required if currency [ticker](/glossary#ticker) is one of: UAH_IBAN, USD_VISAMASTER, EUR_VISAMASTER, USD, EUR"
         travelRule:
           type: object
+          description: "Travel Rule information data. Required if currency is crypto and you are from [EEA](/glossary#eea)"
         request:
           type: string
+          description: "Request signature"
         nonce:
           type: string
+          description: "Unique request identifier"
 
     TransactionHistory:
       type: object
@@ -4250,76 +4655,103 @@ components:
         uniqueId:
           type: string
           nullable: true
+          description: Unique Id of deposit/withdraw
         createdAt:
           type: integer
+          description: Timestamp of deposit/withdraw
         currency:
           type: string
+          description: Deposit/Withdraw currency full name
         ticker:
           type: string
+          description: "Deposit/Withdraw currency [ticker](/glossary#ticker)"
         method:
           type: integer
-          description: 1 - deposit, 2 - withdraw
+          description: "Called method: 1 - deposit, 2 - withdraw"
         amount:
           type: string
+          description: Amount of deposit/withdraw
         description:
           type: string
+          description: Deposit/Withdraw description
         memo:
           type: string
+          description: "[Memo](/glossary#memodestination-tag) for deposit/withdraw"
         fee:
           type: string
+          description: "[Fee](/glossary#fee) for deposit/withdraw"
         status:
           type: integer
+          description: Transaction status (see endpoint description for status codes)
         network:
           type: string
           nullable: true
+          description: Network if currency is multinetwork
         transactionHash:
           type: string
+          description: Deposit/Withdraw transaction hash
         transactionId:
           type: string
+          description: Transaction ID
         details:
           type: object
           nullable: true
+          description: Additional details for the transaction
         confirmations:
           type: object
           nullable: true
+          description: Confirmation details for crypto transactions
           properties:
             actual:
               type: integer
+              description: Actual number of confirmations
             required:
               type: integer
+              description: Required number of confirmations
 
     CodeInfo:
       type: object
       properties:
         amount:
           type: string
+          description: "Code amount"
         code:
           type: string
+          description: "WhiteBIT code"
         date:
           type: integer
+          description: "Code creation timestamp"
         status:
           type: string
+          description: "Code status"
         ticker:
           type: string
+          description: "Code [ticker](/glossary#ticker)"
         external_id:
           type: string
+          description: "Code external identifier"
 
     CodeHistory:
       type: object
       properties:
         amount:
           type: string
-          description: Code amount change (- is created, + is applied)
+          description: "Code amount change (- is created, + is applied)"
         code:
           type: string
+          description: "WhiteBIT code"
         date:
           type: integer
+          description: "Code activation timestamp (for applied) or code creation timestamp (for created)"
         status:
           type: string
+          description: "Current code status"
         ticker:
           type: string
+          description: "Code [ticker](/glossary#ticker)"
         external_id:
           type: string
+          description: "Code external identifier"
 
     FixedPlan:
       type: object
@@ -4347,215 +4779,296 @@ components:
           description: Target currency to source currency ratio
         minInvestment:
           type: string
+          description: "Minimum investment amount"
         maxInvestment:
           type: string
+          description: "Maximum investment amount"
         maxPossibleInvestment:
           type: string
+          description: "Maximum investment amount due to current invest plan state"
 
     Investment:
       type: object
       properties:
         id:
           type: string
+          description: "Investment identifier"
         plan:
           $ref: "#/components/schemas/FixedPlan"
+          description: "Investment plan (similar to Get plans response)"
         status:
           type: integer
-          description: Investment status (1 - active, 2 - closed)
+          description: "Investment status (1 - active, 2 - closed)"
         created:
           type: integer
+          description: "Timestamp of investment creation"
         updated:
           type: integer
+          description: "Timestamp of investment update"
         paymentTime:
           type: integer
+          description: "Timestamp of the payment time"
         amount:
           type: string
+          description: "Investment amount"
         interestPaid:
           type: string
+          description: "Interest paid amount"
 
     InterestPayment:
       type: object
       properties:
         planId:
           type: string
+          description: "Invest plan identifier"
         investmentId:
           type: string
+          description: "Investment identifier"
         amount:
           type: string
+          description: "Interest amount"
         ticker:
           type: string
+          description: "Interest currency [ticker](/glossary#ticker)"
         timestamp:
           type: integer
+          description: "Transaction timestamp"
 
     FlexPlan:
       type: object
       properties:
         id:
           type: string
+          description: "Flex plan identifier"
         ticker:
           type: string
+          description: "Currency [ticker](/glossary#ticker)"
         minInvestment:
           type: string
+          description: "Minimum investment amount"
         maxInvestment:
           type: string
+          description: "Maximum investment amount"
         maxRate:
           type: string
+          description: "Maximum interest rate"
 
     FlexInvestment:
       type: object
       properties:
         id:
           type: string
+          description: "Flex investment identifier"
         planId:
           type: string
+          description: "Flex plan identifier"
         currency:
           type: string
+          description: "Investment currency"
         invested:
           type: string
+          description: "Invested amount"
         withAutoReinvest:
           type: boolean
+          description: "Auto-reinvestment enabled"
         status:
           type: integer
+          description: "Investment status (1=ACTIVE, 0=CLOSED)"
         createdAt:
           type: integer
+          description: "Investment creation timestamp"
         updatedAt:
           type: integer
+          description: "Investment last update timestamp"
 
     FlexInvestmentHistory:
       type: object
       properties:
         createdAt:
           type: integer
+          description: "Transaction creation timestamp"
         planId:
           type: string
+          description: "Flex plan identifier"
         investmentId:
           type: string
+          description: "Flex investment identifier"
         currency:
           type: string
+          description: "Transaction currency"
         amount:
           type: string
+          description: "Transaction amount"
         transactionId:
           type: string
+          description: "Transaction identifier"
         actionType:
           type: integer
-          description: 1-INVEST, 2-REINVEST, 3-WITHDRAW_FROM_INVESTMENT, 4-DAILY_EARNING, 5-CLOSE_INVESTMENT, 6-OPEN_INVESTMENT
+          description: "Action type: 1-INVEST, 2-REINVEST, 3-WITHDRAW_FROM_INVESTMENT, 4-DAILY_EARNING, 5-CLOSE_INVESTMENT, 6-OPEN_INVESTMENT"
 
     FeeInfo:
       type: object
       properties:
         ticker:
           type: string
+          description: "Currency [ticker](/glossary#ticker)"
         name:
           type: string
+          description: "Currency name"
         can_deposit:
           type: string
+          description: "Deposit status (currency availability)"
         can_withdraw:
           type: string
+          description: "Withdrawal status (currency availability)"
         deposit:
           type: object
+          description: "Deposit fees and limits"
           properties:
             minFlex:
               type: string
+              description: "Minimum fee amount when flex fee is enabled"
             maxFlex:
               type: string
+              description: "Maximum fee amount when flex fee is enabled"
             percentFlex:
               type: string
+              description: "Flex fee percent"
             fixed:
               type: string
+              description: "Fixed fee"
             minAmount:
               type: string
+              description: "Minimum deposit amount"
             maxAmount:
               type: string
+              description: "Maximum deposit amount"
         withdraw:
           type: object
+          description: "Withdrawal fees and limits"
           properties:
             minFlex:
               type: string
+              description: "Minimum fee amount when flex fee is enabled"
             maxFlex:
               type: string
+              description: "Maximum fee amount when flex fee is enabled"
             percentFlex:
               type: string
+              description: "Flex fee percent"
             fixed:
               type: string
+              description: "Fixed fee"
             minAmount:
               type: string
+              description: "Minimum withdrawal amount"
             maxAmount:
               type: string
+              description: "Maximum withdrawal amount"
 
     SubAccount:
       type: object
       properties:
         id:
           type: string
+          description: "Sub-account identifier"
         alias:
           type: string
+          description: "Sub-account alias/name"
         userId:
           type: string
+          description: "User identifier associated with account"
         email:
           type: string
+          description: "Sub-account email (masked)"
         status:
           type: string
+          description: "Sub-account status"
         color:
           type: string
+          description: "Sub-account color"
         kyc:
           type: object
+          description: "KYC information"
           properties:
             shareKyc:
               type: boolean
+              description: "Whether KYC is shared with main account"
             kycStatus:
               type: string
+              description: "KYC status"
         permissions:
           type: object
+          description: "Sub-account permissions"
           properties:
             spotEnabled:
               type: boolean
+              description: "Spot trading enabled"
             collateralEnabled:
               type: boolean
+              description: "Collateral trading enabled"
 
     SubAccountTransfer:
       type: object
       properties:
         id:
           type: string
+          description: "Transfer identifier"
         direction:
           type: string
+          description: "Transfer direction (main_to_sub or sub_to_main)"
         currency:
           type: string
+          description: "Currency transferred"
         amount:
           type: string
+          description: "Transfer amount"
         createdAt:
           type: integer
+          description: "Transfer creation timestamp"
 
     SubAccountApiKey:
       type: object
       properties:
         subAccountId:
           type: string
+          description: "Sub-account identifier"
         id:
           type: string
+          description: "API key identifier"
         title:
           type: string
+          description: "API key title/name"
         isEnabled:
           type: boolean
+          description: "Whether the API key is enabled"
         apiKey:
           type: string
+          description: "API key"
         apiSecret:
           type: string
+          description: "API secret"
         type:
           type: integer
+          description: "API key type (1 - info and trading, 2 - info, trading, deposit and withdraw)"
         lastActivity:
           type: integer
+          description: "Last activity timestamp"
         restrictAccess:
           type: boolean
+          description: "Whether access is restricted"
         accessEndpoints:
           type: array
+          description: "List of allowed endpoints"
           items:
             type: object
             properties:
               name:
                 type: string
+                description: "Endpoint name"
               title:
                 type: string
+                description: "Endpoint title"
 
     SubAccountApiKeyList:
       type: object
@@ -4594,18 +5107,25 @@ components:
       properties:
         miningAccountName:
           type: string
+          description: "Mining account name"
         totalReward:
           type: string
+          description: "Total reward amount"
         reward:
           type: string
+          description: "Reward amount (without fee)"
         fee:
           type: string
+          description: "Fee amount"
         fppsRate:
           type: string
+          description: "FPPS rate"
         hashRate:
           type: string
+          description: "Hash rate"
         date:
           type: integer
+          description: "Reward date timestamp"
 
     CreditLine:
       type: object
