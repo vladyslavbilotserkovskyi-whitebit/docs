@@ -1,4 +1,74 @@
 ---
+title: "Borrows Events"
 asyncapi: "/asyncapi/private/borrows_events.yaml /ws"
-title: Borrows Events
 ---
+
+### Account borrows events
+
+#### Subscribe
+
+##### ⤴️ Request:
+
+```json
+{
+    "method": "borrowsAccountMargin_subscribe",
+    "params": [],
+    "id": 1
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+    "error": null,
+    "result": {
+        "status": "success"
+    },
+    "id": 1
+}
+```
+
+##### 🔄 Update events:
+
+```json
+{
+    "method": "borrowsAccountMargin_update",
+    "params": [
+        1,  // Possible Values 1,2 (1 - Margin call , 2 - liquidation)
+        {
+            "asset": "USDT",                    // borrowed asset
+            "ctime": 1737731478.6904421,        // borrow created date
+            "mtime": 1737731478.6904421,        // last update time
+            "amount": "-3895.7476176",          // borrow amount
+            "unrealized_funding": "0.00267248", // funding that will be paid on next borrow stage change
+            "liq_price": "NaN"                  // borrow liquidation price
+        }
+    ],
+    "id": null
+}
+```
+
+#### Unsubscribe
+
+##### ⤴️ Request:
+
+```json
+{
+    "method": "borrowsAccountMargin_unsubscribe",
+    "params": [],
+    "id": 1
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+    "error": null,
+    "result": {
+        "status": "success"
+    },
+    "id": 1
+}
+```

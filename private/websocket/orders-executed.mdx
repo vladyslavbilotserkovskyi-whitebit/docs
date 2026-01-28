@@ -1,4 +1,161 @@
 ---
+title: "Orders Executed"
 asyncapi: "/asyncapi/private/orders_executed.yaml /ws"
-title: Orders Executed
+---
+
+### Orders Executed
+
+#### Query
+
+##### ⤴️ Request:
+
+Market should exist. The maximum limit is 100.
+All possible [order types](#order-types)
+
+```json
+{
+  "id": 11,
+  "method": "ordersExecuted_request",
+  "params": [
+    {
+      "market": "BTC_USDT", // market
+      "order_types": [1, 2] // Order types filter. See above
+    },
+    0,                      // offset
+    30                      // limit
+  ]
+}
+```
+
+##### ⤵️ Response:
+
+All possible [order types](#order-types)
+
+```json
+{
+    "id": 11,
+    "result": {
+        "limit": 100,
+        "offset": 0,
+        "records": [
+            {
+                "id": 1212266594338,              // Order ID
+                "ctime": 1738230617.8867061,      // Created at in Unix time
+                "ftime": 1738230617.8867061,      // Finished at in Unix time
+                "market": "BTC_USDT",             // Market
+                "source": "web",                  // Source
+                "type": 2,                        // Order type. All types in table above
+                "side": 1,                        // Side 1 - sell, 2 - bid
+                "post_only": false,               // Post only flag
+                "ioc": false,                     // IOC flag
+                "price": "0",                     // Order price
+                "amount": "1",                    // Stock amount
+                "deal_stock": "1",                // Stock amount that executed
+                "deal_money": "105366.06693468",  // Money amount that executed
+                "deal_fee": "10.536606693468",    // Charged fee amount in money
+                "client_order_id": "",            // Custom client order id
+                "status": "FILLED",               // Order status. All statuses in table above
+                "fee_asset": "USDT",              // Fee asset type
+                "rpi": false                      // RPI order flag
+            }
+        ]
+    },
+    "error": null
+}
+```
+
+#### Subscribe
+
+Update interval: real-time
+
+##### ⤴️ Request:
+
+```json
+{
+  "id": 12,
+  "method": "ordersExecuted_subscribe",
+  "params": [
+    [
+      "BTC_USDT", // market
+      "ETH_BTC"   // market
+    ],
+    0             // filter executed limit or market orders
+  ]
+}
+```
+
+| Filter | Executed orders  |
+| ------ | ---------------- |
+| 0      | Limit and Market |
+| 1      | Limit            |
+| 2      | Market           |
+
+##### ⤵️ Response:
+
+```json
+{
+  "id": 12,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
+##### 🔄 Update events:
+
+```json
+{
+  "id": null,
+  "method": "ordersExecuted_update",
+    "params": [
+        {
+            "id": 1212907216814,           // Order ID
+            "market": "ETH_BTC",           // Market
+            "type": 1,                     // Order type. All types in table above
+            "side": 2,                     // Side 1 - sell, 2 - bid
+            "post_only": false,            // Post only flag
+            "ioc": false,                  // IOC flag
+            "ctime": 1738251046.7203979,   // Created at in Unix time
+            "mtime": 1738251048.4428461,   // Modified at in Unix time
+            "price": "0.030832",           // Order price
+            "amount": "1",                 // Stock amount
+            "left": "0",                   // Stock amount that left to be executed
+            "deal_stock": "1",             // Stock amount that executed
+            "deal_money": "0.030832",      // Money amount that executed
+            "deal_fee": "0.001",           // Charged fee amount in money
+            "client_order_id": "",
+            "stp": "no",                   // STP flag; [no, co, cn, cb]. No Prevention (no), Cancel Oldest (co), Cancel Newest (cn), Cancel Both (cb)
+            "status": "FILLED",            // Order status. All statuses in table above
+            "position_side": "LONG",        // position side - LONG or SHORT or BOTH
+            "rpi": true                    // RPI order flag
+        }
+    ]
+}
+```
+
+#### Unsubscribe
+
+##### ⤴️ Request:
+
+```json
+{
+  "id": 13,
+  "method": "ordersExecuted_unsubscribe",
+  "params": []
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+  "id": 13,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
 ---

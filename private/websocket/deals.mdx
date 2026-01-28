@@ -1,4 +1,133 @@
 ---
+title: "Deals"
 asyncapi: "/asyncapi/private/deals.yaml /ws"
-title: Deals
+---
+
+### Deals
+
+#### Query
+
+##### ⤴️ Request:
+
+Market should exist. The maximum limit is 100.
+
+```json
+{
+  "id": 14,
+  "method": "deals_request",
+  "params": [
+    "BTC_USDT", // market
+    0,          // offset
+    30          // limit
+  ]
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+    "id": 14,
+    "result": {
+        "limit": 100,
+        "offset": 0,
+        "records": [
+            {
+                "time": 1738230617.8867061,        // Deal time
+                "id": 13663227034,                 // Deal ID
+                "side": 1,                         // Side 1 - sell, 2 - bid
+                "role": 2,                         // Your role. 1 - maker, 2 - taker
+                "price": "105361.32",              // Deal price
+                "amount": "0.160998",              // Stock amount
+                "deal": "16962.96179736",          // Money amount
+                "fee": "1.696296179736",           // Deal fee expressed in asset in "fee_asset"
+                "order_id": 1212266594338,         // Order ID
+                "deal_order_id": 1212266160846,    // Counterparty Order ID
+                "market": "BTC_USDT",              // Market
+                "client_order_id": "",             // Client Order ID
+                "fee_asset": "USDT"                // Fee asset type
+            },
+        ]
+    },
+    "error": null
+}
+```
+
+#### Subscribe
+
+Update interval: real-time
+
+##### ⤴️ Request:
+
+```json
+{
+  "id": 15,
+  "method": "deals_subscribe",
+  "params": [
+    [
+      "BTC_USDT", // market
+      "ETH_BTC"   // market
+    ]
+  ]
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+  "id": 15,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
+##### 🔄 Update events:
+
+```json
+{
+  "id": null,
+  "method": "deals_update",
+  "params": [
+    13674578673,        // Deal ID
+    1738251095.345432,  // Deal time
+    "ETH_BTC",          // Market
+    1212909726406,      // Order ID
+    "0.03084",          // Price
+    "0.2625",           // Stock amount
+    "0.0002625",        // Deal fee
+    "",                 // Custom client order id
+    2,                  // Side 1 - sell, 2 - buy
+    2,                  // Your role. 1 - maker, 2 - taker
+    "ETH"               // Fee asset type
+    ],
+}
+```
+
+#### Unsubscribe
+
+##### ⤴️ Request:
+
+```json
+{
+  "id": 16,
+  "method": "deals_unsubscribe",
+  "params": []
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+  "id": 16,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
 ---

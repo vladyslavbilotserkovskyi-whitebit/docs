@@ -1,4 +1,129 @@
 ---
+title: "Kline"
 asyncapi: "/asyncapi/public/kline.yaml /ws"
-title: Kline
+---
+
+### Kline
+
+#### Query
+
+The requested interval must meet the following conditions:
+
+- If the number is less than 60, then 60 must be divisible by the requested number without a remainder;
+- Less than 3600 (1 hour) - the number must be divisible by 60 without a remainder, and 3600 must be divisible by the requested number without a remainder;
+- Less than 86400 (day) - the number must be whitened by 3600 without a remainder, and 86400 must be divisible by the number without a remainder;
+- Less than 86400 \* 7 (week) - the number must be divisible by 86400 without a remainder;
+- Equal to 86400 \* 7;
+- Equal to 86400 \* 30.
+
+##### ⤴️ Request
+
+```json
+{
+  "id": 2,
+  "method": "candles_request",
+  "params": [
+    "ETH_BTC", // market
+    1659569940, // start time
+    1660894800, // end time
+    3600 // interval in seconds
+  ]
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+    "id": 2,
+    "result": [
+        [
+            1580860800,       // time
+            "0.020543",       // open
+            "0.020553",       // close
+            "0.020614",       // highest
+            "0.02054",        // lowest
+            "7342.597",       // volume in stock
+            "151.095481849",  // volume in deal
+            "ETH_BTC"         // market
+        ],
+    ],
+    "error": null
+}
+```
+
+#### Subscribe
+
+Update interval: 0.5 sec
+
+##### ⤴️ Request
+
+```json
+{
+  "id": 3,
+  "method": "candles_subscribe",
+  "params": [
+    "BTC_USD", // market
+    900 // interval in seconds
+  ]
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 3,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
+##### 🔄 Update events
+
+```json
+{
+  "id": null,
+  "method": "candles_update",
+  "params": [
+    [
+      1580895000, // time
+      "0.020683", // open
+      "0.020683", // close
+      "0.020683", // high
+      "0.020666", // low
+      "504.701", // volume in stock
+      "10.433600491", // volume in money (deal)
+      "ETH_BTC" // market
+    ]
+  ]
+}
+```
+
+#### Unsubscribe
+
+##### ⤴️ Request
+
+```json
+{
+  "id": 4,
+  "method": "candles_unsubscribe",
+  "params": []
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 4,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
 ---

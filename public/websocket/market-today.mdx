@@ -1,4 +1,113 @@
 ---
+title: "Market statistics for current day UTC"
 asyncapi: "/asyncapi/public/market_today.yaml /ws"
-title: Market statistics for current day UTC
+---
+
+### Market statistics for current day UTC
+
+#### Query
+
+##### ⤴️ Request
+
+```json
+{
+  "id": 14,
+  "method": "marketToday_query",
+  "params": [
+    "ETH_BTC" // only one market per request
+  ]
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 14,
+  "result": {
+    "last": "0.020981", // last price
+    "open": "0.02035", // open price that was at 'now - period' time
+    "high": "0.020988", // highest price
+    "low": "0.020281", // lowest price
+    "volume": "135220.218", // volume in stock
+    "deal": "2776.587022649" // volume in money
+  },
+  "error": null
+}
+```
+
+#### Subscribe
+
+Update interval: 1 sec
+
+##### ⤴️ Request
+
+```json
+{
+    "id": 15,
+    "method": "marketToday_subscribe",
+    "params": [
+        "ETH_BTC", // markets
+        "BTC_USDT",
+    ]
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 15,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
+##### 🔄 Update events
+
+```json
+{
+  "id": null,
+  "method": "marketToday_update",
+  "params": [
+    "ETH_BTC", // market
+    {
+      // response same as 'market_request'
+      "last": "0.020964", // last price
+      "open": "0.020349", // open price that was at 'now - period' time
+      "high": "0.020997", // highest price
+      "low": "0.020281", // lowest price
+      "volume": "135574.476", // volume in stock
+      "deal": "2784.413999488" // volume in money
+    }
+  ]
+}
+```
+
+#### Unsubscribe
+
+##### ⤴️ Request
+
+```json
+{
+  "id": 16,
+  "method": "marketToday_unsubscribe",
+  "params": []
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 16,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
 ---

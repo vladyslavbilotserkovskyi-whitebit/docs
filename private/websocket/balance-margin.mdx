@@ -1,4 +1,130 @@
 ---
+title: "Balance Margin"
 asyncapi: "/asyncapi/private/balance_margin.yaml /ws"
-title: Balance Margin
+---
+
+### Balance Margin
+
+#### Query
+
+Request for amount on margin balance.
+Balance available for [margin trade](./../glossary.md#margin-trading) is equal to `balance * leverage` and it depends on liquidity in [orderbook](./../glossary.md#order-book) and your open positions.
+When you open position, your balance will not change, but amount available for [trade](./../glossary.md#deal-trade) will decrease
+
+##### ⤴️ Request:
+
+```json
+{
+  "id": 2,
+  "method": "balanceMargin_request",
+  "params": [
+    "BTC", // asset
+    "USDT" // asset
+  ]
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+  "error": null,
+  "result": {
+    "BTC": {
+      "balance": "0.0006092",                   // total amount on collateral balance
+      "borrow": "0",                            // borrowed amount
+      "available_without_borrow": "0.0006092",  // available amount to transfer from collateral balance without borrowing
+      "available_with_borrow": "0.00288701"     // available amount to transfer  from collateral balance with borrowing
+    },
+    "USDT": {
+      "balance": "0.00538073",                  // total amount on collateral balance
+      "borrow": "0",                            // borrowed amount
+      "available_without_borrow": "0.00538073", // available amount to transfer from collateral balance without borrowing
+      "available_with_borrow": "28.43739825"    // available amount to transfer  from collateral balance with borrowing
+    }
+  },
+  "id": 1
+}
+```
+
+#### Subscribe
+
+Subscribe to receive updates in [spot balances](./../glossary.md#balance-spotbalance-trade).
+
+Update interval: 1.5 sec
+
+##### ⤴️ Request:
+
+```json
+{
+  "id": 3,
+  "method": "balanceMargin_subscribe",
+  "params": [
+    "BTC", // asset
+    "USDT" // asset
+  ]
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+  "id": 3,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
+##### 🔄 Update events:
+
+```json
+{
+  "method": "balanceMargin_update",
+  "params": [
+    {
+      "a": "BTC",         // asset ticker
+      "B": "0.0006092",   // total amount on collateral balance
+      "b": "0",           // borrowed amount
+      "av": "0.0006092",  // available amount to transfer from collateral balance without borrowing
+      "ab": "0.00288701"  // available amount to transfer  from collateral balance with borrowing
+    },
+    {
+      "a": "USDT",        // asset ticker
+      "B": "0.00538073",  // total amount on collateral balance
+      "b": "0",           // borrowed amount
+      "av": "0.00538073", // available amount to transfer from collateral balance without borrowing
+      "ab": "28.43739825" // available amount to transfer  from collateral balance with borrowing
+    }
+  ],
+  "id": null
+}
+```
+
+#### Unsubscribe
+
+##### ⤴️ Request:
+
+```json
+{
+  "id": 4,
+  "method": "balanceMargin_unsubscribe",
+  "params": []
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+  "id": 4,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
 ---

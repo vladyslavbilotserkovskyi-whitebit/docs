@@ -1,4 +1,37 @@
 ---
+title: "WebSocket Token"
 asyncapi: "/asyncapi/private/websocket_token.yaml /ws"
-title: WebSocket Token
+---
+
+### Websocket token
+
+```
+[POST] /api/v4/profile/websocket_token
+```
+
+This V4 endpoint can be used to retrieve the websocket token for user.
+
+❗ Rate limit 10 requests/60 sec.
+
+**Request BODY raw:**
+
+```json
+{
+  "request": "{{request}}",
+  "nonce": "{{nonce}}"
+}
+```
+
+**Response:**
+
+Available statuses:
+
+- `Status 200`
+
+```json
+{
+  "websocket_token": "your_current_token"
+}
+```
+
 ---

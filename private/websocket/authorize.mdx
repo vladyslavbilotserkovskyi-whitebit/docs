@@ -1,4 +1,38 @@
 ---
+title: "Authorize"
 asyncapi: "/asyncapi/private/authorize.yaml /ws"
-title: Authorize
+---
+
+### Authorize
+
+When you establish WS connection, you should authorize this ws connection via `authorize` method.
+After successful authorization you will be able to send requests for balances, [orders](./../glossary.md#orders) etc.
+
+It only needs to be done successfully once.
+
+##### ⤴️ Request:
+
+```json
+{
+  "id": 0,
+  "method": "authorize",
+  "params": [
+    "<get_your_token_via_api>", // WebSocket Token,
+    "public"                    // constant string, always should be "public"
+  ]
+}
+```
+
+##### ⤵️ Response:
+
+```json
+{
+  "id": 0,
+  "result": {
+    "status": "success"
+  },
+  "error": null
+}
+```
+
 ---

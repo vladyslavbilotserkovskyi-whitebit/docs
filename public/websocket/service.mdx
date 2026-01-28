@@ -1,4 +1,52 @@
 ---
+title: "Service"
 asyncapi: "/asyncapi/public/service.yaml /ws"
-title: Service
+---
+
+### Service
+
+#### Ping
+
+##### ⤴️ Request
+
+```json
+{
+  "id": 0,
+  "method": "ping",
+  "params": []
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 0,
+  "result": "pong",
+  "error": null
+}
+```
+
+#### Time
+
+##### ⤴️ Request
+
+```json
+{
+  "id": 1,
+  "method": "time",
+  "params": []
+}
+```
+
+##### ⤵️ Response
+
+```json
+{
+  "id": 1,
+  "result": 1493285895,
+  "error": null
+}
+```
+
 ---
