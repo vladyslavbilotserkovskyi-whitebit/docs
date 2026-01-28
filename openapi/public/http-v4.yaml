@@ -185,6 +185,15 @@ paths:
                       type: string
                       description: Change in percent between open and last prices
                       example: "0.57"
+              example:
+                BTC_USDT:
+                  base_id: 1
+                  quote_id: 825
+                  last_price: "9164.09"
+                  quote_volume: "43341942.90416876"
+                  base_volume: "4723.286463"
+                  isFrozen: false
+                  change: "0.57"
         'default':
           description: Error response
           content:
@@ -217,6 +226,72 @@ paths:
                 type: object
                 additionalProperties:
                   $ref: '#/components/schemas/Asset'
+              example:
+                BTC:
+                  name: "Bitcoin"
+                  unified_cryptoasset_id: 1
+                  can_withdraw: true
+                  can_deposit: true
+                  min_withdraw: "0.001"
+                  max_withdraw: "2"
+                  maker_fee: "0.1"
+                  taker_fee: "0.1"
+                  min_deposit: "0.0001"
+                  max_deposit: "0"
+                  currency_precision: 18
+                  is_memo: false
+                  memo:
+                    deposit: false
+                    withdraw: false
+                  networks:
+                    deposits: ["BTC"]
+                    withdraws: ["BTC"]
+                    default: "BTC"
+                  limits:
+                    deposit:
+                      BTC:
+                        min: "0.001"
+                    withdraw:
+                      BTC:
+                        min: "0.002"
+                  confirmations:
+                    BTC: 2
+                USDT:
+                  name: "Tether US"
+                  unified_cryptoasset_id: 825
+                  can_withdraw: true
+                  can_deposit: true
+                  min_withdraw: "5"
+                  max_withdraw: "0"
+                  maker_fee: "0.1"
+                  taker_fee: "0.1"
+                  min_deposit: "0"
+                  max_deposit: "0"
+                  currency_precision: 6
+                  is_memo: false
+                  memo:
+                    deposit: false
+                    withdraw: false
+                  networks:
+                    deposits: ["ERC20", "TRC20", "OMNI", "BEP20"]
+                    withdraws: ["ERC20", "TRC20", "OMNI", "BEP20"]
+                    default: "ERC20"
+                  limits:
+                    deposit:
+                      ERC20:
+                        min: "5"
+                        max: "1000"
+                      TRC20:
+                        min: "5"
+                    withdraw:
+                      ERC20:
+                        min: "10"
+                        max: "1000"
+                      TRC20:
+                        min: "10"
+                  confirmations:
+                    ERC20: 20
+                    TRC20: 20
         'default':
           description: Error response
           content:
@@ -228,7 +303,7 @@ paths:
     get:
       summary: Orderbook
       description: |
-        This endpoint retrieves the current order book as two arrays (bids / asks) with additional parameters.
+        This endpoint retrieves the current [order book](/glossary#order-book) as two arrays ([bids](/glossary#bid) / [asks](/glossary#ask)) with additional parameters.
 
         <Note>
         Response is cached for: 100 ms
@@ -321,7 +396,7 @@ paths:
     get:
       summary: Recent Trades
       description: |
-        This endpoint retrieves the trades that have been executed recently on the requested market.
+        This endpoint retrieves the [trades](/glossary#deal-trade) that have been executed recently on the requested [market](/glossary#market).
 
         <Note>
         Response is cached for: 1 second
@@ -383,6 +458,10 @@ paths:
                       description: "Used to determine whether or not the transaction originated as a buy or sell. Buy – Identifies an ask that was removed from the order book. Sell – Identifies a bid that was removed from the order book."
                       enum: [buy, sell]
                       example: sell
+                    rpi:
+                      type: boolean
+                      description: Indicates whether the trade involved a Retail Price Improvement (RPI) order
+                      example: true
         'default':
           description: Error response
           content:
@@ -394,7 +473,7 @@ paths:
     get:
       summary: Fee
       description: |
-        This endpoint retrieves the list of fees and min/max amount for deposits and withdraws
+        This endpoint retrieves the list of [fees](/glossary#fee) and min/max amount for deposits and withdraws
 
         <Note>
         Response is cached for: 1 second
@@ -415,6 +494,52 @@ paths:
                 type: object
                 additionalProperties:
                   $ref: '#/components/schemas/FeeInfo'
+              example:
+                "USDT (ERC20)":
+                  ticker: "USDT"
+                  name: "Tether US"
+                  providers: []
+                  deposit:
+                    min_amount: "0.0005"
+                    max_amount: "0.1"
+                    fixed: "0.0005"
+                    flex:
+                      min_fee: "100"
+                      max_fee: "1000"
+                      percent: "10"
+                  withdraw:
+                    min_amount: "0.001"
+                    max_amount: "0"
+                    fixed: null
+                    flex: null
+                  is_depositable: true
+                  is_withdrawal: true
+                  is_api_withdrawal: true
+                  is_api_depositable: true
+                USD:
+                  ticker: "USD"
+                  name: "United States Dollar"
+                  providers: ["USD_ADVCASH", "USD_CAPITALIST", "USD_EPAY_COM", "USD_PERFECT_MONEY", "USD_VISAMASTER_INTERKASSA"]
+                  deposit:
+                    USD_VISAMASTER_INTERKASSA:
+                      min_amount: "10"
+                      max_amount: "1500"
+                      fixed: null
+                      flex: null
+                      is_depositable: false
+                      is_api_depositable: true
+                      name: "USD Visa/MasterCard Interkassa"
+                      ticker: "USD_VISAMASTER_INTERKASSA"
+                  withdraw:
+                    USD_VISAMASTER_INTERKASSA:
+                      min_amount: "20"
+                      max_amount: "1500"
+                      fixed: null
+                      flex: null
+                      is_withdrawal: false
+                      is_api_withdrawal: true
+                      name: "USD Visa/MasterCard Interkassa"
+                      ticker: "USD_VISAMASTER_INTERKASSA"
         'default':
           description: Error response
           content:
@@ -482,7 +607,7 @@ paths:
     get:
       summary: Collateral Markets List
       description: |
-        This endpoint returns the list of markets that available for collateral trading
+        This endpoint returns the list of [markets](/glossary#market) that available for [collateral](/glossary#collateral) trading
 
         <Note>
         Response is cached for: 1 second
